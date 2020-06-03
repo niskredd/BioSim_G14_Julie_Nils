@@ -1,0 +1,3 @@
+##Animal class
+
+###Structure
