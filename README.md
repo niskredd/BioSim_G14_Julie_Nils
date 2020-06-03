@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-Hundekjeks testddd
-=======
-Hallais
->>>>>>> master
+Hundekjeks
 
 ## Authors
 
