@@ -7,3 +7,5 @@
  
 
 Nils endret her :) 
+
+## Exercise 1 
