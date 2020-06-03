@@ -1,28 +1,44 @@
 from scipy.stats import norm
+from math import exp
+from numpy import random
 
-class Herbivore():
+class Herbivore:
     """
     subclass of animal class
 
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, params):
+        self.params = params
+        self.a = 0
+        self.w = norm.rvs(
+            loc=self.params(sigma_birth),scale=self.params(w_birth)
+        )
+        self.phi = 0
+
 
     def age(self):
-        self.age += 1
+        self.a += 1
+        return self.a
 
     def weight(self):
         # depends on feeding
-        birth_weight = norm.rvs(loc=1.5,scale=8.0) # normal distribtion
-        pass
+        self.w += F * self.params(beta) # should probably be placed in animal subclass where F will be defined
+        self.w -= self.w * self.params(eta)
+        return self.w
 
     def fitness(self):
-        # depends on age and weight
-        pass
+        if self.w <= 0:
+            self.phi = 0
+        else:
+            self.phi = (
+                    1/(1 + exp**(self.a - self.params(a_half)) * self.params(phi_age))
+                    * (1 + exp**(self.w - self.params(w_half)) * self.params(phi_weight))
+        return self.phi
 
     def migration(self):
         # cannot enter water, nor feed in desert
+        # randomly add or subtract 1 from x or y
         pass
 
     def procreation(self):
@@ -31,5 +47,11 @@ class Herbivore():
 
     def death(self):
         # can be killed by carnivore
-        pass
-
+        if self.w == 0:
+            return True
+        else:
+            probability = self.params(omega)*(1 - self.phi)
+            if random.rand() < probability:
+                return False
+            else:
+                return False
