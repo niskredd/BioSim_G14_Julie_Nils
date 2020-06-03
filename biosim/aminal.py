@@ -14,36 +14,41 @@ params = {'w_birth': 8.,
           'F': 10.}
 
 
-class animal:
-    age = 0
-    weight = 0
-    pos = (0, 0)
-    fitness = 0
-    params = {}
+class Animal:
 
-    def __init__(self, age, pos, weight, param):
+    def __init__(self, age, pos, weight):
         self.age = age
         self.pos = pos
         self.weight = weight
-        self.params = param
 
-    def age_update(self):
+    def _age_update(self):
         self.age = self.age + 1
 
-    def weight_update(self, food):
-        pass
+    def _weight_update(self, gain):
+        self.weight = self.weight + gain
 
-    def clac_fitness(self):
+    def fitness_update(self):
         pass
 
     def ret_pos(self):
         return self.pos
 
-    def change_pos(self):
+    def position_update(self):
         pass
 
 
-class herbivore(animal):
+class Herbivore(Animal):
+
+    def __init__(self, age, pos, weight, param):
+        super.__init__(age, pos, weight)
+        self.params = param
+
+    def eat(self, food):
+        gain = params.beta * params.F * food
+        self._weight_update(gain)
+
+
+class Carnivore(Animal):
 
     def __init__(self):
         super.__init__()
