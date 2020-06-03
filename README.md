@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 Hundekjeks testddd
+=======
+Hallais
+>>>>>>> master
 
 ## Authors
 
