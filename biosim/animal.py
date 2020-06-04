@@ -63,11 +63,10 @@ class Animal:
 
 class Herbivore(Animal):
 
-    def amount_fodder(self):
-
-
     def eat(self, food):
-        gain = self.params['beta'] * self.food
+        # food is based on Tile class calculation
+        f_per_herb = 10 if food > self.params['F'] else f_per_herb = food # why is food not used here?
+        gain = self.params['beta'] * f_per_herb
         self._weight_update(gain)
 
     def update_status(self, food):
