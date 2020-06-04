@@ -33,10 +33,6 @@ class Animal:
                     1 / (1 + np.exp((self.a - self.params['a_half']) * self.params['phi_age']))
                     * (1 + np.exp((self.w - self.params['w_half']) * self.params['phi_weight'])))
 
-    def position_update(self):
-        # rand + check if water
-        pass
-
     def birth(self, num_animals, param):
         if self.w < self.params['zeta'](self.params['w_birth'] + self.params['sigma_birth']):
             return None
@@ -63,7 +59,7 @@ class Animal:
 
 class Herbivore(Animal):
 
-    def eat(self, food):
+    def weight_increase(self, food):
         # food is based on Tile class calculation
         f_per_herb = 10 if food > self.params['F'] else f_per_herb = food # why is food not used here?
         gain = self.params['beta'] * f_per_herb
