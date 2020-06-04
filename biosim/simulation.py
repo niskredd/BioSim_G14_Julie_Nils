@@ -38,7 +38,8 @@ carn_params = {'w_birth': 6.,
                'F': 50.,
                'DeltaPhiMax': 10.}
 
-from .aminal import *
+
+from .animal import Herbivore
 
 
 class BioSim:
@@ -59,6 +60,8 @@ class BioSim:
 
 
 if __name__ == "__main__":
-    herb = Herbivore(0, (1, 1), 20, params)
+    herb = Herbivore(0, (1, 1), 20, herb_params)
+
+    herb.update_status()
 
     sim = BioSim()

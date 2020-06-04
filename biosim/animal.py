@@ -32,6 +32,14 @@ class Herbivore(Animal):
         gain = self.params('beta') * self.params('F') * food
         self._weight_update(gain)
 
+    def update_status(self):
+        self.fitness_update()
+        """
+        Birth and death
+        update food and weight
+        """
+        self._age_update()
+
 
 class Carnivore(Animal):
 
