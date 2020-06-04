@@ -2,6 +2,7 @@ from scipy.stats import norm
 from math import exp
 from numpy import random
 
+
 class Herbivore:
     """
     subclass of animal class
@@ -12,10 +13,9 @@ class Herbivore:
         self.params = params
         self.a = 0
         self.w = norm.rvs(
-            loc=self.params(sigma_birth),scale=self.params(w_birth)
+            loc=self.params['sigma_birth'],scale=self.params['w_birth']
         )
         self.phi = 0
-
 
     def age(self):
         self.a += 1
@@ -23,8 +23,8 @@ class Herbivore:
 
     def weight(self):
         # depends on feeding
-        self.w += F * self.params(beta) # should probably be placed in animal subclass where F will be defined
-        self.w -= self.w * self.params(eta)
+        self.w += F * self.params['beta'] # should probably be placed in animal subclass where F will be defined
+        self.w -= self.w * self.params['eta']
         return self.w
 
     def fitness(self):
@@ -32,8 +32,8 @@ class Herbivore:
             self.phi = 0
         else:
             self.phi = (
-                    1/(1 + exp**(self.a - self.params(a_half)) * self.params(phi_age))
-                    * (1 + exp**(self.w - self.params(w_half)) * self.params(phi_weight))
+                    1/(1 + exp**(self.a - self.params['a_half']) *
+                       self.params['phi_age'])) * (1 + exp** (self.w - self.params['w_half']) * self.params['phi_weight'])
         return self.phi
 
     def migration(self):
@@ -50,8 +50,8 @@ class Herbivore:
         if self.w == 0:
             return True
         else:
-            probability = self.params(omega)*(1 - self.phi)
+            probability = self.params['omega']*(1 - self.phi)
             if random.rand() < probability:
                 return False
             else:
-                return False
+                return True
