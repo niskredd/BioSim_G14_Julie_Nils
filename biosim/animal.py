@@ -34,6 +34,7 @@ class Animal:
                     * (1 + np.exp((self.w - self.params['w_half']) * self.params['phi_weight'])))
 
     def position_update(self):
+        # rand + check if water
         pass
 
     def birth(self, num_animals, param):
@@ -62,8 +63,11 @@ class Animal:
 
 class Herbivore(Animal):
 
+    def amount_fodder(self):
+
+
     def eat(self, food):
-        gain = self.params['beta'] * self.params['F']
+        gain = self.params['beta'] * self.food
         self._weight_update(gain)
 
     def update_status(self, food):
