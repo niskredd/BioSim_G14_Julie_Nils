@@ -25,7 +25,7 @@ class Animal:
 class Herbivore(Animal):
 
     def eat(self, food):
-        gain = self.params('beta') * self.params('F')
+        gain = self.params['beta'] * self.params['F']
         self._weight_update(gain)
 
     def update_status(self):
