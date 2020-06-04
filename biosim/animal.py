@@ -1,16 +1,16 @@
-
 class Animal:
 
-    def __init__(self, age, pos, weight):
-        self.age = age
+    def __init__(self, age, pos, weight, param):
+        self.a = age
         self.pos = pos
-        self.weight = weight
+        self.w = weight
+        self.params = param
 
     def _age_update(self):
-        self.age = self.age + 1
+        self.a += 1
 
     def _weight_update(self, gain):
-        self.weight = self.weight + gain
+        self.w += gain
 
     def fitness_update(self):
         pass
@@ -23,10 +23,6 @@ class Animal:
 
 
 class Herbivore(Animal):
-
-    def __init__(self, age, pos, weight, param):
-        super.__init__(age, pos, weight)
-        self.params = param
 
     def eat(self, food):
         gain = self.params('beta') * self.params('F') * food
