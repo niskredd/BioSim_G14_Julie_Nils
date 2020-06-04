@@ -1,4 +1,16 @@
 
+class Island:
+
+    def __init__(self, ):
+        pass
+
+    """
+    Return list of tiles with animals
+    """
+    def check_map(self):
+        pass
+
+
 class Tile:
 
     def __init__(self, grid_pos, food):
