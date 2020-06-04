@@ -25,7 +25,7 @@ class Animal:
 class Herbivore(Animal):
 
     def eat(self, food):
-        gain = self.params('beta') * self.params('F') * food
+        gain = self.params('beta') * self.params('F')
         self._weight_update(gain)
 
     def update_status(self):
@@ -39,5 +39,10 @@ class Herbivore(Animal):
 
 class Carnivore(Animal):
 
-    def __init__(self, age, pos, weight):
-        super.__init__(age, pos, weight)
+    def update_status(self):
+        self.fitness_update()
+        """
+        Birth and death
+        update food and weight
+        """
+        self._age_update()
