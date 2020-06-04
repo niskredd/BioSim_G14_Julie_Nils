@@ -5,10 +5,23 @@ from scipy.stats import norm
 
 class Animal:
 
-    def __init__(self, age, pos, weight, param):
+    params = {'w_birth': 8.,
+              'sigma_birth': 1.5,
+              'beta': 0.9,
+              'eta': 0.05,
+              'a_half': 40.,
+              'phi_age': 0.2,
+              'w_half': 10.,
+              'phi_weight': 0.1,
+              'mu': 0.25,
+              'gamma': 0.2,
+              'zeta': 3.5,
+              'xi': 1.2,
+              'omega': 0.4,
+              'F': 10.}
+
+    def __init__(self, age, weight):
         self.a = age
-        self.pos = pos
-        self.params = param
         if age == 0:
             self._new_born()
         else:
@@ -31,7 +44,7 @@ class Animal:
         else:
             self.phi = (
                     1 / (1 + np.exp((self.a - self.params['a_half']) * self.params['phi_age']))
-                    * (1 + np.exp((self.w - self.params['w_half']) * self.params['phi_weight'])))
+                    * 1 / (1 + np.exp(-((self.w - self.params['w_half']) * self.params['phi_weight']))))
 
     def birth(self, num_animals, param):
         if self.w < self.params['zeta'](self.params['w_birth'] + self.params['sigma_birth']):
@@ -39,7 +52,7 @@ class Animal:
         else:
             prob = min(1, self.params['gamma'] * self.phi * (num_animals - 1))
             if random.rand() < prob:
-                new_born = Herbivore(0, self.pos, 0, param)
+                new_born = Herbivore(0, 0)
                 self.w = new_born.w * self.params['zeta']
 
                 return new_born
@@ -61,13 +74,12 @@ class Herbivore(Animal):
 
     def weight_increase(self, food):
         # food is based on Tile class calculation
-        f_per_herb = 10 if food > self.params['F'] else f_per_herb = food # why is food not used here?
-        gain = self.params['beta'] * f_per_herb
+        gain = self.params['beta'] * food
         self._weight_update(gain)
 
     def update_status(self, food):
         self.fitness_update()
-        self.eat(food)
+        self.weight_increase(food)
         self._age_update()
 
 
@@ -75,5 +87,5 @@ class Carnivore(Animal):
 
     def update_status(self, food):
         self.fitness_update()
-        self.eat(food)
+        self.weight_increase(food)
         self._age_update()
