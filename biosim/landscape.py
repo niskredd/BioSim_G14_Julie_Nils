@@ -24,3 +24,7 @@ class Tile:
 
     def update_food_amount(self):
         pass
+
+
+if __name__ == '__main__':
+    pass
