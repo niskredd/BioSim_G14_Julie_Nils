@@ -54,7 +54,7 @@ class Tile:
                 print('dead weight')
             else:
                 probability = n.params['omega'] * (1 - n.phi)
-                if random.rand() > probability:
+                if random.random() < probability:
                     self.herb.pop(index)
                     print('dead prob')
             index += 1
