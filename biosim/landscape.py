@@ -27,13 +27,13 @@ class Tile:
         return len(self.carn), len(self.herb)
 
     def update_fodder_amount(self):
-        self.fodder = 800  # given highland
+        self.fodder = 800  # given lowland
 
     def fodder_per_herb(self):
         return self.fodder / self.herb.__len__()
 
     def fauna(self, species, age, weight):
-        self.herb.append(Herbivore)
+        self.herb.append(Herbivore(age, weight))
 
     def birth(self, animal):
         if animal.w < animal.params['zeta'](animal.params['w_birth']
@@ -63,18 +63,11 @@ class Tile:
             if self.fodder >= 10:
                 animal_list[animal].weight_increase(10)
                 self.fodder -= 10
-
-    def feed_animals(self, a_list):
-        for a in a_list:
-            if self.fodder > 0:
-                if self.fodder <= 10:
-                    self.fodder = 0
-                    a_list[a].weight_increase(self.fodder)
-                else:
-                    self.fodder -= 10
-                    a_list[a].weight_increase(10)
+            elif 0 > self.fodder > 10:
+                animal_list[animal].weight_increase(self.fodder)
+                self.fodder = 0
             else:
-                return 0
+                break
 
     def animal_ageing(self):
         for n in self.herb:
@@ -96,7 +89,7 @@ if __name__ == '__main__':
     mini_map.fauna('Herbivore', 10, 12.5)
     mini_map.fauna('Herbivore', 9, 10.5)
 
-    while teller > 100:
+    while teller < 100:
         animals_alive = shuffle_list(mini_map.herb, mini_map.herb.__len__())
         mini_map.feed_animals(animals_alive)
 
