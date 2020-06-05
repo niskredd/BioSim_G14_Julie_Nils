@@ -1,6 +1,6 @@
 from biosim.animal import *
 import time
-from random import sample
+from random import sample, random
 
 
 class Island:
@@ -30,7 +30,10 @@ class Tile:
         self.fodder = 800  # given lowland
 
     def fauna(self, species, age, weight):
-        self.herb.append(Herbivore(age, weight))
+        if species == "Herbivore":
+            self.herb.append(Herbivore(age, weight))
+        elif species == "Carnivore":
+            self.herb.append(Herbivore(age, weight))
 
     def birth(self, ind):
 
@@ -91,8 +94,13 @@ if __name__ == '__main__':
 
     mini_map.fauna('Herbivore', 10, 12.5)
     mini_map.fauna('Herbivore', 9, 10.5)
+    mini_map.fauna('Herbivore', 10, 12.5)
+    mini_map.fauna('Herbivore', 9, 10.5)
+    mini_map.fauna('Herbivore', 10, 12.5)
+    mini_map.fauna('Herbivore', 9, 10.5)
 
     while teller < 100:
+
         animals_alive = shuffle_list(mini_map.herb, mini_map.herb.__len__())
         mini_map.feed_animals(animals_alive)
 
@@ -107,10 +115,10 @@ if __name__ == '__main__':
         print(mini_map.update_num_animals())
         print(mini_map.fodder)
 
-        sum = 0
+        sum_1 = 0
         for animal in mini_map.herb:
             sum += animal.w
-        print(sum/mini_map.herb.__len__())
+        print(sum_1/mini_map.herb.__len__())
 
         mini_map.fodder = 300
 

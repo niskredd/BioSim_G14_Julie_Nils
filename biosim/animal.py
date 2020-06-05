@@ -1,4 +1,3 @@
-from numpy import random
 import numpy as np
 from scipy.stats import norm
 
@@ -86,7 +85,7 @@ class Carnivore(Animal):
              'F': 50.,
              'DeltaPhiMax': 10.})
 
-    def update_status(self, food):
+    def update_status(self):
         self.fitness_update()
-        self.weight_increase(food)
-        self._age_update()
+        self.weight_update()
+        self.age_update()
