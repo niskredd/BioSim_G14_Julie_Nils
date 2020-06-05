@@ -43,33 +43,40 @@ class Tile:
             prob = min(1, animal.params['gamma'] * animal.phi * (animal.herb.__len__() - 1))
             if random.rand() < prob:
                 new_born = Herbivore(0, 0)
-                animal.w = new_born.w * animal.params['zeta']
+                animal.w_gain -= new_born.w * animal.params['zeta']
 
                 return new_born
             else:
                 return None
 
     def death(self):
-        if self.w == 0:
-            return True
-        else:
-            probability = self.params['omega'] * (1 - self.phi)
-            if random.rand() < probability:
-                return False
+        for n in self.herb:
+            if self.herb[n].w == 0:
+                self.herb[n].pop()
             else:
-                return True
+                probability = self.herb[n].params['omega'] * (1 - self.herb[n].phi)
+                if random.rand(0, 1) > probability:
+                    self.herb[n].pop()
 
     def feed_animals(self, a_list):
-        for i in a_list:
+        for n in a_list:
             if self.fodder > 0:
                 if self.fodder <= 10:
                     self.fodder = 0
-                    a_list[i].weight_increase(self.fodder)
+                    a_list[n].weight_increase(self.fodder)
                 else:
                     self.fodder -= 10
-                    a_list[i].weight_increase(10)
+                    a_list[n].weight_increase(10)
             else:
                 return 0
+
+    def animal_ageing(self):
+        for n in self.herb:
+            self.herb[n].age_update()
+
+    def animal_weight(self):
+        for n in self.herb:
+            self.herb[n].weight_update()
 
 
 def shuffle_list(a_list, a_len):
@@ -87,17 +94,15 @@ if __name__ == '__main__':
         animals_alive = shuffle_list(mini_map.herb, mini_map.herb.__len__())
         mini_map.feed_animals(animals_alive)
 
-        """
-        update animal info
-        """
-
         new = mini_map.birth(mini_map.herb[0])
         if new is not None:
             mini_map.herb.append(new)
 
-        """
-        death
-        """
+        mini_map.animal_ageing()
+        mini_map.animal_weight()
+
+        mini_map.death()
+
         mini_map.fodder = 300
 
         print(mini_map.update_num_animals())
