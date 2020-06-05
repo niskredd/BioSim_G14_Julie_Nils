@@ -56,10 +56,10 @@ class Herbivore(Animal):
         # food is based on Tile class calculation
         self.w_gain += self.params['beta'] * food
 
-    def update_status(self, food):
+    def update_status(self):
         self.fitness_update()
-        self.weight_increase(food)
-        self._age_update()
+        self.weight_update()
+        self.age_update()
 
 
 class Carnivore(Animal):
