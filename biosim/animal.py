@@ -5,7 +5,7 @@ from scipy.stats import norm
 
 class Animal:
 
-    params = {'w_birth': 8.,
+    params = {'w_birth': 8.0,
               'sigma_birth': 1.5,
               'beta': 0.9,
               'eta': 0.05,
@@ -46,8 +46,10 @@ class Animal:
             self.phi = 0
         else:
             self.phi = (
-                    1 / (1 + np.exp((self.a - self.params['a_half']) * self.params['phi_age']))
-                    * 1 / (1 + np.exp(-((self.w - self.params['w_half']) * self.params['phi_weight']))))
+                    1 / (1 + np.exp((self.a - self.params['a_half'])
+                                    * self.params['phi_age']))
+                    * 1 / (1 + np.exp(-((self.w - self.params['w_half'])
+                                        * self.params['phi_weight']))))
 
 
 class Herbivore(Animal):
@@ -65,7 +67,7 @@ class Herbivore(Animal):
 class Carnivore(Animal):
 
     def __init__(self, age, weight):
-        super.__init__(age, weight) #
+        super.__init__(age, weight)
         Animal.__init__(self, age, weight)
         self.params.update(
             {'w_birth': 6.,
