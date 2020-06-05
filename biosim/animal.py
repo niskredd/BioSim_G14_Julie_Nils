@@ -55,6 +55,16 @@ class Animal:
             else:
                 return False
 
+    def death_prob(self):
+        if self.w == 0:
+            return True
+            print('dead weight')
+        else:
+            probability = self.params['omega'] * (1 - self.phi)
+            if random() < probability:
+                return True
+                print('dead prob')
+
     def fitness_update(self):
         if self.w <= 0:
             self.phi = 0
