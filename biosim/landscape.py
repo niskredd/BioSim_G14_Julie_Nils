@@ -14,6 +14,10 @@ class Island:
     def check_map(self):
         pass
 
+    def adding_animals(self, tile, animals_to_add):
+        for ind in animals_to_add:
+            tile.fauna(ind)
+
 
 class Tile:
 
@@ -25,9 +29,6 @@ class Tile:
 
     def update_num_animals(self):
         return len(self.carn), len(self.herb)
-
-    def update_fodder_amount(self):
-        self.fodder = 800  # given lowland
 
     def fauna(self, species, age, weight):
         if species == "Herbivore":
@@ -44,15 +45,9 @@ class Tile:
 
     def death(self):
         index = 0
-        for n in self.herb:
-            if n.w == 0:
+        for ind in self.herb:
+            if ind.death_prob():
                 self.herb.pop(index)
-                print('dead weight')
-            else:
-                probability = n.params['omega'] * (1 - n.phi)
-                if random() < probability:
-                    self.herb.pop(index)
-                    print('dead prob')
             index += 1
 
     def feed_animals(self, animal_list):
@@ -74,9 +69,28 @@ class Tile:
         for n in self.herb:
             n.update_status()
 
+    def shuffle_list(self, a_list, a_len):
+        return sample(a_list, a_len)
 
-def shuffle_list(a_list, a_len):
-    return sample(a_list, a_len)
+
+class Highland(Tile):
+
+    def __init__(self, grid_pos):
+        Tile.__init__(grid_pos)
+        self.fodder = 300
+
+    def update_fodder_amount(self):
+        self.fodder = 300
+
+
+class Lowland(Tile):
+
+    def __init__(self, grid_pos):
+        Tile.__init__(grid_pos)
+        self.fodder = 800
+
+    def update_fodder_amount(self):
+        self.fodder = 800
 
 
 if __name__ == '__main__':
@@ -92,7 +106,7 @@ if __name__ == '__main__':
 
     while teller < 100:
 
-        animals_alive = shuffle_list(mini_map.herb, mini_map.herb.__len__())
+        animals_alive = mini_map.shuffle_list(mini_map.herb, mini_map.herb.__len__())
         mini_map.feed_animals(animals_alive)
 
         mini_map.birth()
