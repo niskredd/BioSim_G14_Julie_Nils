@@ -35,12 +35,12 @@ class Tile:
         elif species == "Carnivore":
             self.herb.append(Herbivore(age, weight))
 
-    def birth(self, ind):
-
-        if ind.birth_prob(self.herb.__len__()):
-            new_born = Herbivore(0, 0)
-            ind.weight_decrease(new_born.w)
-            self.herb.append(new_born)
+    def birth(self):
+        for ind in self.herb:
+            if ind.birth_prob(self.herb.__len__()):
+                new_born = Herbivore(0, 0)
+                ind.weight_decrease(new_born.w)
+                self.herb.append(new_born)
 
     def death(self):
         index = 0
@@ -95,18 +95,23 @@ if __name__ == '__main__':
         animals_alive = shuffle_list(mini_map.herb, mini_map.herb.__len__())
         mini_map.feed_animals(animals_alive)
 
+        mini_map.birth()
+
         mini_map.animal_update()
 
         mini_map.death()
 
-        print(mini_map.update_num_animals())
-        print(mini_map.fodder)
+        print("Year: " + str(teller))
+        print("Number of animals: " + str(mini_map.update_num_animals()))
 
         sum_1 = 0
+        sum_2 = 0
         for animal in mini_map.herb:
             sum_1 += animal.w
-            mini_map.birth(animal)
-        print(sum_1/mini_map.herb.__len__())
+            sum_2 += animal.a
+
+        print("Avg weight: " + str(sum_1 / mini_map.herb.__len__()))
+        print("Avg age: " + str(sum_2 / mini_map.herb.__len__()))
 
         mini_map.fodder = 300
 
