@@ -5,7 +5,7 @@ from random import sample
 
 class Island:
 
-    def __init__(self, ):
+    def __init__(self):
         pass
 
     """
@@ -32,15 +32,17 @@ class Tile:
     def fauna(self, species, age, weight):
         self.herb.append(Herbivore(age, weight))
 
-    def birth(self, animal):
-        if animal.w < animal.params['zeta']*(animal.params['w_birth']
-                                             + animal.params['sigma_birth']):
+    def birth(self, ind):
+
+        if ind.w < ind.params['zeta']*(ind.params['w_birth']
+                                       + ind.params['sigma_birth']):
             return None
         else:
-            prob = min(1, animal.params['gamma'] * animal.phi * (self.herb.__len__() - 1))
+            prob = min(1, ind.params['gamma'] * ind.phi * (
+                    self.herb.__len__() - 1))
             if random.rand() < prob:
                 new_born = Herbivore(0, 0)
-                animal.w_gain -= new_born.w * animal.params['zeta']
+                ind.w_gain -= new_born.w * ind.params['zeta']
 
                 return new_born
             else:
@@ -59,13 +61,13 @@ class Tile:
                     print('dead prob')
             index += 1
 
-    def feed_animals(self, animal_list): # forslag til forkorting av feed_animals
-        for animal in animal_list:
+    def feed_animals(self, animal_list):
+        for a in animal_list:
             if self.fodder >= 10:
-                animal.weight_increase(10)
+                a.weight_increase(10)
                 self.fodder -= 10
             elif 0 > self.fodder > 10:
-                animal.weight_increase(self.fodder)
+                a.weight_increase(self.fodder)
                 self.fodder = 0
             else:
                 break
