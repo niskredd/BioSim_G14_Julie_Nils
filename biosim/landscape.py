@@ -58,15 +58,21 @@ class Tile:
                 if random.rand(0, 1) > probability:
                     self.herb[n].pop()
 
+    def animal_eat(self, animal_list): # forslag til forkorting av feed_animals
+        for animal in animal_list:
+            if self.fodder >= 10:
+                animal_list[animal].weight_increase(10)
+                self.fodder -= 10
+
     def feed_animals(self, a_list):
-        for n in a_list:
+        for a in a_list:
             if self.fodder > 0:
                 if self.fodder <= 10:
                     self.fodder = 0
-                    a_list[n].weight_increase(self.fodder)
+                    a_list[a].weight_increase(self.fodder)
                 else:
                     self.fodder -= 10
-                    a_list[n].weight_increase(10)
+                    a_list[a].weight_increase(10)
             else:
                 return 0
 
