@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.stats import norm
-import random
+from random import random
 
 
 class Animal:
@@ -42,7 +42,7 @@ class Animal:
         self.w_gain = 0
 
     def weight_decrease(self, newborn_weight):
-        self.w -= newborn_weight * animal.params['zeta']
+        self.w -= newborn_weight * self.params['zeta']
 
     def birth_prob(self, num_animals):
         if self.w < self.params['zeta']*(self.params['w_birth']
@@ -50,7 +50,7 @@ class Animal:
             return False
         else:
             prob = min(1, self.params['gamma'] * self.phi * (num_animals - 1))
-            if random.rand() < prob:
+            if random() < prob:
                 return True
             else:
                 return False
