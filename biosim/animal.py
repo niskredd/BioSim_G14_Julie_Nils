@@ -41,6 +41,9 @@ class Animal:
         self.w -= self.w * self.params['eta']
         self.w_gain = 0
 
+    def weight_decrease(self, newborn_weight):
+        self.w -= newborn_weight * animal.params['zeta']
+
     def birth_prob(self, num_animals):
         if self.w < self.params['zeta']*(self.params['w_birth']
                                          + self.params['sigma_birth']):
