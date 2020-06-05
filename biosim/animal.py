@@ -46,29 +46,6 @@ class Animal:
                     1 / (1 + np.exp((self.a - self.params['a_half']) * self.params['phi_age']))
                     * 1 / (1 + np.exp(-((self.w - self.params['w_half']) * self.params['phi_weight']))))
 
-    def birth(self, num_animals, param):
-        if self.w < self.params['zeta'](self.params['w_birth'] + self.params['sigma_birth']):
-            return None
-        else:
-            prob = min(1, self.params['gamma'] * self.phi * (num_animals - 1))
-            if random.rand() < prob:
-                new_born = Herbivore(0, 0)
-                self.w = new_born.w * self.params['zeta']
-
-                return new_born
-            else:
-                return None
-
-    def death(self):
-        if self.w == 0:
-            return True
-        else:
-            probability = self.params['omega'] * (1 - self.phi)
-            if random.rand() < probability:
-                return False
-            else:
-                return True
-
 
 class Herbivore(Animal):
 
@@ -84,6 +61,25 @@ class Herbivore(Animal):
 
 
 class Carnivore(Animal):
+
+    def __init__(self, age, weight):
+        super.__init__(age, weight)
+        self.params.update(
+            {'w_birth': 6.,
+             'sigma_birth': 1.,
+             'beta': 0.75,
+             'eta': 0.125,
+             'a_half': 40.,
+             'phi_age': 0.3,
+             'w_half': 4.,
+             'phi_weight': 0.4,
+             'mu': 0.4,
+             'gamma': 0.8,
+             'zeta': 3.5,
+             'xi': 1.5,
+             'omega': 0.8,
+             'F': 50.,
+             'DeltaPhiMax': 10.})
 
     def update_status(self, food):
         self.fitness_update()
