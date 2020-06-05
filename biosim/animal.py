@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.stats import norm
+import random
 
 
 class Animal:
@@ -39,6 +40,17 @@ class Animal:
         self.w += self.w_gain
         self.w -= self.w * self.params['eta']
         self.w_gain = 0
+
+    def birth_prob(self, num_animals):
+        if self.w < self.params['zeta']*(self.params['w_birth']
+                                         + self.params['sigma_birth']):
+            return False
+        else:
+            prob = min(1, self.params['gamma'] * self.phi * (num_animals - 1))
+            if random.rand() < prob:
+                return True
+            else:
+                return False
 
     def fitness_update(self):
         if self.w <= 0:

@@ -37,19 +37,10 @@ class Tile:
 
     def birth(self, ind):
 
-        if ind.w < ind.params['zeta']*(ind.params['w_birth']
-                                       + ind.params['sigma_birth']):
-            return None
-        else:
-            prob = min(1, ind.params['gamma'] * ind.phi * (
-                    self.herb.__len__() - 1))
-            if random.rand() < prob:
-                new_born = Herbivore(0, 0)
-                ind.w_gain -= new_born.w * ind.params['zeta']
-
-                return new_born
-            else:
-                return None
+        if ind.birth_prob():
+            new_born = Herbivore(0, 0)
+            ind.weight_decrease(new_born.w)
+            self.herb.append(new_born)
 
     def death(self):
         index = 0
@@ -104,9 +95,7 @@ if __name__ == '__main__':
         animals_alive = shuffle_list(mini_map.herb, mini_map.herb.__len__())
         mini_map.feed_animals(animals_alive)
 
-        new = mini_map.birth(mini_map.herb[0])
-        if new is not None:
-            mini_map.herb.append(new)
+        mini_map.birth()
 
         mini_map.animal_update()
 
