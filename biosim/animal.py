@@ -27,16 +27,19 @@ class Animal:
         else:
             self.w = weight
         self.phi = 0
+        self.w_gain = 0
 
     def _new_born(self):
         self.w = norm.rvs(
             loc=self.params['sigma_birth'], scale=self.params['w_birth'])
 
-    def _age_update(self):
+    def age_update(self):
         self.a += 1
 
-    def _weight_update(self, gain):
-        self.w += gain
+    def weight_update(self):
+        self.w += self.w_gain
+        self.w -= self.w * self.params['eta']
+        self.w_gain = 0
 
     def fitness_update(self):
         if self.w <= 0:
@@ -51,8 +54,7 @@ class Herbivore(Animal):
 
     def weight_increase(self, food):
         # food is based on Tile class calculation
-        gain = self.params['beta'] * food
-        self._weight_update(gain)
+        self.w_gain += self.params['beta'] * food
 
     def update_status(self, food):
         self.fitness_update()
