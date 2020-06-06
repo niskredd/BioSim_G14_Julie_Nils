@@ -93,6 +93,13 @@ class Lowland(Tile):
         self.fodder = 800
 
 
+class Desert(Tile):
+
+    def __init__(self, grid_pos):
+        Tile.__init__(grid_pos)
+        self.fodder = 0
+
+
 if __name__ == '__main__':
     teller = 0
     mini_map = Tile((1, 1))
