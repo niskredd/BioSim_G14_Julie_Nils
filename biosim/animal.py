@@ -91,7 +91,6 @@ class Herbivore(Animal):
 class Carnivore(Animal):
 
     def __init__(self, age, weight):
-        super.__init__(age, weight)
         Animal.__init__(self, age, weight)
         self.params.update(
             {'w_birth': 6.,
