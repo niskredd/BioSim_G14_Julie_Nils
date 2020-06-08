@@ -117,27 +117,21 @@ class Carnivore(Animal):
               'F': 50.,
               'DeltaPhiMax': 10.}
 
-    def kill_herb_prob(self, herb_phi):
+    def prey(self, herbivore):
         """
-        Calculates the probability of the carnivore killing a herbivore.
-        :param herb_phi: the herbivore's fitness
-        :return: probability
-        """
-        if self.phi < herb_phi:
-            prob = 0
-        elif 0 < self.phi - herb_phi < self.params['DeltaPhiMax']:
-            prob = (self.phi - herb_phi)/self.params['DeltaPhiMax']
-        else:
-            prob = 1
-        return prob
+        Calculates the probability of the carnivore killing a herbivore and
+        determines whether the
 
-    @staticmethod
-    def kills_herb(prob):
-        """
-        Determines whether or not the carnivore will kill a herbivore.
-        :param prob: kill_herb_prob
+        :param herbivore: the herbivore class
         :return: bool
         """
+        if self.phi < herbivore.phi:
+            prob = 0
+        elif 0 < self.phi - herbivore.phi < self.params['DeltaPhiMax']:
+            prob = (self.phi - herbivore.phi)/self.params['DeltaPhiMax']
+        else:
+            prob = 1
+
         if random() < prob:
             return True
         else:
