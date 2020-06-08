@@ -50,10 +50,10 @@ class Animal:
 
     def feed(self, fodder):
         if fodder >= self.params['F']:
-            a.weight_increase(self.params['F'])
+            self.weight_increase(self.params['F'])
             return self.params['F']
-        elif 0 > fodder > self.params['F']:
-            a.weight_increase(fodder)
+        elif 0 < fodder < self.params['F']:
+            self.weight_increase(fodder)
             return fodder
         else:
             return 0
@@ -112,7 +112,7 @@ class Carnivore(Animal):
     Weight increase depends on the weight of their prey.
     """
     params = {'w_birth': 6.,
-              'sigma_bir1th': 1.,
+              'sigma_birth': 1.,
               'beta': 0.75,
               'eta': 0.125,
               'a_half': 40.,
@@ -138,7 +138,7 @@ class Carnivore(Animal):
         if self.phi < herbivore.phi:
             prob = 0
         elif 0 < self.phi - herbivore.phi < self.params['DeltaPhiMax']:
-            prob = (self.phi - herbivore.phi)/self.params['DeltaPhiMax']
+            prob = (self.phi - herbivore.phi) / self.params['DeltaPhiMax']
         else:
             prob = 1
 
@@ -155,6 +155,6 @@ class Carnivore(Animal):
         :return: weight increase
         """
         if w_herb > self.params['F']:
-            self.w += self.params['F']*self.params['beta']
+            self.w += self.params['F'] * self.params['beta']
         else:
-            self.w += w_herb*self.params['beta']
+            self.w += w_herb * self.params['beta']
