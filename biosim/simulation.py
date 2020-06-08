@@ -7,24 +7,7 @@
 __author__ = 'Julie Martin, Nils Skreddernes'
 __email__ = ''
 
-carn_params = {'w_birth': 6.,
-               'sigma_birth': 1.,
-               'beta': 0.75,
-               'eta': 0.125,
-               'a_half': 40.,
-               'phi_age': 0.3,
-               'w_half': 4.,
-               'phi_weight': 0.4,
-               'mu': 0.4,
-               'gamma': 0.8,
-               'zeta': 3.5,
-               'xi': 1.5,
-               'omega': 0.8,
-               'F': 50.,
-               'DeltaPhiMax': 10.}
-
-
-from .animal import Herbivore
+from biosim.landscape import Island
 
 
 class BioSim:
@@ -45,8 +28,4 @@ class BioSim:
 
 
 if __name__ == "__main__":
-    herb = Herbivore(0, (1, 1), 20, herb_params)
-
-    herb.update_status()
-
-    sim = BioSim()
+    pass
