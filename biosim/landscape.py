@@ -223,8 +223,14 @@ if __name__ == '__main__':
     mini_map.fauna('Herbivore', 9, 20)
     mini_map.fauna('Herbivore', 9, 20)
     mini_map.fauna('Herbivore', 9, 20)
+    mini_map.fauna('Herbivore', 9, 20)
+    mini_map.fauna('Herbivore', 9, 20)
+    mini_map.fauna('Herbivore', 9, 20)
+    mini_map.fauna('Herbivore', 9, 20)
+    mini_map.fauna('Herbivore', 9, 20)
 
     mini_map.fauna('Carnivore', 10, 12.5)
+    mini_map.fauna('Carnivore', 9, 10.5)
     mini_map.fauna('Carnivore', 9, 10.5)
     mini_map.fauna('Carnivore', 9, 10.5)
 
