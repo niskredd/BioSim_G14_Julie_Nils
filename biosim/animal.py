@@ -68,6 +68,11 @@ class Animal:
 
 
 class Herbivore(Animal):
+    """
+    Subclass of Animal class.
+    Herbivores eat plants and their fitness therefore depend on the landscape
+    that surrounds them.
+    """
     params = {'w_birth': 8.0,
               'sigma_birth': 1.5,
               'beta': 0.9,
@@ -89,7 +94,12 @@ class Herbivore(Animal):
 
 
 class Carnivore(Animal):
-
+    """
+    Subclass of Animal class.
+    Carnivores eat meat and their fitness therefore depends on the amount of
+    herbivores available in their surroundings.
+    Weight increase depends on the weight of their prey.
+    """
     def __init__(self, age, weight):
         Animal.__init__(self, age, weight)
         self.params = {'w_birth': 6.,
@@ -109,6 +119,11 @@ class Carnivore(Animal):
                        'DeltaPhiMax': 10.}
 
     def kill_herb_prob(self, herb_phi):
+        """
+        Calculates the probability of the carnivore killing a herbivore.
+        :param herb_phi: the herbivore's fitness
+        :return: probability
+        """
         if self.phi < herb_phi:
             prob = 0
         elif 0 < self.phi - herb_phi < self.params['DeltaPhiMax']:
@@ -118,16 +133,24 @@ class Carnivore(Animal):
         return prob
 
     @staticmethod
-    def kills_herb(self, prob):
+    def kills_herb(prob):
+        """
+        Determines whether or not the carnivore will kill a herbivore.
+        :param prob: kill_herb_prob
+        :return: bool
+        """
         if random() < prob:
             return True
         else:
             return False
 
     def weight_increase(self, w_herb):
-        w_inc = w_herb*self.params['beta']
-
-        if w_inc > F:
-            return self.params['F']
+        """
+        Calculates the carnivore's weight increase after eating prey.
+        :param w_herb: weight of killed herbivore
+        :return: weight increase
+        """
+        if w_herb > self.params['F']:
+            return self.params['F']*self.params['beta']
         else:
-            return w_inc
+            return w_herb*self.params['beta']
