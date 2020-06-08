@@ -6,17 +6,33 @@ from random import sample, random
 class Island:
 
     def __init__(self):
-        pass
+        self.map = ""
+        self.tiles_list = []
 
-    """
-    Return list of tiles with animals
-    """
-    def check_map(self):
-        pass
+    def create_island(self):
+        self.map.split('\n')
+        x = 1
+        y = 1
+        for n in map:
+            for l in n:
+                if l == "W":
+                    self.tiles_list.append(Water((x, y)))
+                elif l == "D":
+                    self.tiles_list.append(Desert((x, y)))
+                elif l == "L":
+                    self.tiles_list.append(Lowland((x, y)))
+                elif l == "H":
+                    self.tiles_list.append(Highland((x, y)))
+            x += 1
+            y += 1
 
     def adding_animals(self, tile, animals_to_add):
         for ind in animals_to_add:
             tile.fauna(ind)
+
+    #Runs one year on tile
+    def tile_update(self):
+        pass
 
 
 class Tile:
@@ -78,6 +94,7 @@ class Highland(Tile):
     def __init__(self, grid_pos):
         Tile.__init__(grid_pos)
         self.fodder = 300
+        self.can_move = True
 
     def update_fodder_amount(self):
         self.fodder = 300
@@ -88,6 +105,7 @@ class Lowland(Tile):
     def __init__(self, grid_pos):
         Tile.__init__(grid_pos)
         self.fodder = 800
+        self.can_move = True
 
     def update_fodder_amount(self):
         self.fodder = 800
@@ -98,6 +116,15 @@ class Desert(Tile):
     def __init__(self, grid_pos):
         Tile.__init__(grid_pos)
         self.fodder = 0
+        self.can_move = True
+
+
+class Water(Tile):
+
+    def __init__(self, grid_pos):
+        Tile.__init__(grid_pos)
+        self.fodder = 0
+        self.can_move = False
 
 
 if __name__ == '__main__':
