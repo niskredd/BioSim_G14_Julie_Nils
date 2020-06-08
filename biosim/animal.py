@@ -107,3 +107,27 @@ class Carnivore(Animal):
                        'omega': 0.8,
                        'F': 50.,
                        'DeltaPhiMax': 10.}
+
+    def kill_herb_prob(self, herb_phi):
+        if self.phi < herb_phi:
+            prob = 0
+        elif 0 < self.phi - herb_phi < self.params['DeltaPhiMax']:
+            prob = (self.phi - herb_phi)/self.params['DeltaPhiMax']
+        else:
+            prob = 1
+        return prob
+
+    @staticmethod
+    def kills_herb(self, prob):
+        if random() < prob:
+            return True
+        else:
+            return False
+
+    def weight_increase(self, w_herb):
+        w_inc = w_herb*self.params['beta']
+
+        if w_inc > F:
+            return self.params['F']
+        else:
+            return w_inc
