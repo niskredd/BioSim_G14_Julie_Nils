@@ -48,6 +48,16 @@ class Animal:
                 return True
                 print('dead prob')
 
+    def feed(self, fodder):
+        if fodder >= self.params['F']:
+            a.weight_increase(self.params['F'])
+            return self.params['F']
+        elif 0 > fodder > self.params['F']:
+            a.weight_increase(fodder)
+            return fodder
+        else:
+            return 0
+
     def fitness_update(self):
         if self.w <= 0:
             self.phi = 0
@@ -117,7 +127,7 @@ class Carnivore(Animal):
               'F': 50.,
               'DeltaPhiMax': 10.}
 
-    def prey(self, herbivore):
+    def kill_herbivore(self, herbivore):
         """
         Calculates the probability of the carnivore killing a herbivore and
         determines whether the

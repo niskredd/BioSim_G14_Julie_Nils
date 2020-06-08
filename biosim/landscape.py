@@ -72,16 +72,22 @@ class Tile:
                 self.herb.pop(index)
             index += 1
 
-    def feed_animals(self, animal_list):
-        for a in animal_list:
-            if self.fodder >= 10:
-                a.weight_increase(10)
-                self.fodder -= 10
-            elif 0 > self.fodder > 10:
-                a.weight_increase(self.fodder)
-                self.fodder = 0
-            else:
-                break
+    def feed_animals(self):
+        herbs = sample(self.herb, len(self.herb))
+        for herb in herbs:
+
+
+
+    def prey(self, carnivore):
+        """
+        Happens after herbivores have eaten.
+        :param carnivore: carnivore individual
+        :return: weight of prey if there is any, else none
+        """
+        for herbivore in self.herb:
+
+        for herbivore in self.herb:
+            carnivore.kill_herbivore(herbivore)
 
     def animal_ageing(self):
         for n in self.herb:
@@ -90,9 +96,6 @@ class Tile:
     def animal_update(self):
         for n in self.herb:
             n.update_status()
-
-    def shuffle_list(self, a_list, a_len):
-        return sample(a_list, a_len)
 
 
 class Highland(Tile):
