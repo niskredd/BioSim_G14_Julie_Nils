@@ -9,22 +9,21 @@ class Test_Animal:
         anim = Animal(5, 10)
         return anim
 
-    def test_age_update(self):
+    def test_age_update(self, create_ani):
         for i in range(3):
-            self.create_ani.age_update()
-        assert 8 == self.create_ani.a
+            create_ani.age_update()
+        assert 8 == create_ani.a
 
-    def test_wight_update(self):
-        self.create_ani.weight_update(5)
-        assert self.create_ani.w == 5
-
-    def test_fitness(self):
-        self.create_ani.fitness_update()
-        assert 1 >= self.create_ani.phi >= 0
+    def test_fitness(self, create_ani):
+        create_ani.fitness_update()
+        assert 1 >= create_ani.phi >= 0
 
     def test__new_born(self):
         an = Animal(0, 0)
         assert an.w != 0
+
+    def test_death(self, create_ani):
+
 
 
 class Test_Herbivore:
@@ -42,5 +41,5 @@ class Test_Carnivore:
         carn = Carnivore(5, 10)
         return carn
 
-    def test_carnivores(self):
-        assert self.create_carn.parms['ganna'] == 0.8
+    def test_carnivores(self, create_carn):
+        assert create_carn.params['gamma'] == 0.8
