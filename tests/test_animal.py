@@ -45,7 +45,7 @@ class Test_Herbivore:
         sum_b = 0
         for i in range(100):
             create_herb.w += 1
-            if create_herb.birth_prob(2+i):
+            if create_herb.birth_prob(2 + i):
                 sum_b += 1
         assert sum_b > 1
 
