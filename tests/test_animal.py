@@ -49,6 +49,11 @@ class Test_Herbivore:
                 sum_b += 1
         assert sum_b > 1
 
+    def test_weight_decrease(self, create_herb):
+        weight = create_herb.w
+        create_herb.weight_decrease(2)
+        assert create_herb.w < weight
+
 
 class Test_Carnivore:
 
