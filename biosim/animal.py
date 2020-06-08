@@ -101,23 +101,21 @@ class Carnivore(Animal):
     herbivores available in their surroundings.
     Weight increase depends on the weight of their prey.
     """
-    def __init__(self, age, weight):
-        Animal.__init__(self, age, weight)
-        self.params = {'w_birth': 6.,
-                       'sigma_bir1th': 1.,
-                       'beta': 0.75,
-                       'eta': 0.125,
-                       'a_half': 40.,
-                       'phi_age': 0.3,
-                       'w_half': 4.,
-                       'phi_weight': 0.4,
-                       'mu': 0.4,
-                       'gamma': 0.8,
-                       'zeta': 3.5,
-                       'xi': 1.5,
-                       'omega': 0.8,
-                       'F': 50.,
-                       'DeltaPhiMax': 10.}
+    params = {'w_birth': 6.,
+              'sigma_bir1th': 1.,
+              'beta': 0.75,
+              'eta': 0.125,
+              'a_half': 40.,
+              'phi_age': 0.3,
+              'w_half': 4.,
+              'phi_weight': 0.4,
+              'mu': 0.4,
+              'gamma': 0.8,
+              'zeta': 3.5,
+              'xi': 1.5,
+              'omega': 0.8,
+              'F': 50.,
+              'DeltaPhiMax': 10.}
 
     def kill_herb_prob(self, herb_phi):
         """
@@ -148,6 +146,7 @@ class Carnivore(Animal):
     def weight_increase(self, w_herb):
         """
         Calculates the carnivore's weight increase after eating prey.
+        :param self:
         :param w_herb: weight of killed herbivore
         :return: weight increase
         """
