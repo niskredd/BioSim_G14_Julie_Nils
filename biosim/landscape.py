@@ -52,6 +52,12 @@ class Tile:
         elif species == "Carnivore":
             self.herb.append(Herbivore(age, weight))
 
+    def adding_animal(self, **animal):
+        if animal['species'] == "Herbivore":
+            self.herb.append(Herbivore(animal['age'], animal['weight']))
+        elif animal['species'] == "Carnivore":
+            self.herb.append(Herbivore(animal['age'], animal['weight']))
+
     def birth(self):
         for ind in self.herb:
             if ind.birth_prob(self.herb.__len__()):
