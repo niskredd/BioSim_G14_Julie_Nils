@@ -13,7 +13,6 @@ class Animal:
         else:
             self.w = weight
         self.phi = 0
-        self.w_gain = 0
 
     def _new_born(self):
         self.w = norm.rvs(
@@ -22,12 +21,10 @@ class Animal:
     def age_update(self):
         self.a += 1
 
-    def weight_update(self):
-        self.w += self.w_gain
+    def yearly_weight_update(self):
         self.w -= self.w * self.params['eta']
-        self.w_gain = 0
 
-    def weight_decrease(self, newborn_weight):
+    def weight_decrease_birth(self, newborn_weight):
         self.w -= newborn_weight * self.params['zeta']
 
     def birth_prob(self, num_animals):
@@ -89,8 +86,12 @@ class Herbivore(Animal):
               'F': 10.}
 
     def weight_increase(self, food):
-        # food is based on Tile class calculation
-        self.w_gain += self.params['beta'] * food
+        """
+        Calculates the herbivore's weight increase after grazing for a year.
+        :param food: amount of fodder consumed
+        :return: weight gain
+        """
+        self.w += self.params['beta'] * food
 
 
 class Carnivore(Animal):
@@ -151,6 +152,6 @@ class Carnivore(Animal):
         :return: weight increase
         """
         if w_herb > self.params['F']:
-            return self.params['F']*self.params['beta']
+            self.w += self.params['F']*self.params['beta']
         else:
-            return w_herb*self.params['beta']
+            self.w += w_herb*self.params['beta']
