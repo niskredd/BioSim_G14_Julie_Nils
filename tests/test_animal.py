@@ -14,24 +14,39 @@ class Test_Animal:
             create_ani.age_update()
         assert 8 == create_ani.a
 
-    def test_fitness(self, create_ani):
-        create_ani.fitness_update()
-        assert 1 >= create_ani.phi >= 0
-
-    def test__new_born(self):
-        an = Animal(0, 0)
-        assert an.w != 0
-
-    def test_death(self, create_ani):
-
-
 
 class Test_Herbivore:
 
     @pytest.fixture()
     def create_herb(self):
         herb = Herbivore(5, 10)
+        herb.fitness_update()
         return herb
+
+    def test_fitness(self, create_herb):
+        create_herb.fitness_update()
+        assert 1 >= create_herb.phi >= 0
+
+    def test__new_born(self):
+        an = Herbivore(0, 0)
+        assert an.w != 0
+
+    def test_death_prob(self, create_herb):
+        sum_d = 0
+        for i in range(10):
+            if create_herb.death_prob():
+                sum_d += 1
+        assert sum_d >= 1
+
+    def test_birth_prob(self, create_herb):
+        assert create_herb.birth_prob(1) == False
+
+        sum_b = 0
+        for i in range(1000):
+            if create_herb.birth_prob(2+i):
+                sum_b += 1
+        assert sum_b > 1
+
 
 
 class Test_Carnivore:
@@ -43,3 +58,4 @@ class Test_Carnivore:
 
     def test_carnivores(self, create_carn):
         assert create_carn.params['gamma'] == 0.8
+        assert create_carn.params['F'] == 50.0
