@@ -44,12 +44,10 @@ class Animal:
     def death_prob(self):
         if self.w == 0:
             return True
-            print('dead weight')
         else:
             probability = self.params['omega'] * (1 - self.phi)
             if random() < probability:
                 return True
-                print('dead prob')
 
     def fitness_update(self):
         if self.w <= 0:
@@ -107,3 +105,14 @@ class Carnivore(Animal):
                        'omega': 0.8,
                        'F': 50.,
                        'DeltaPhiMax': 10.}
+
+
+if __name__ == '__main__':
+    herb = Herbivore(5, 10)
+    herb.fitness_update()
+
+    print(herb.phi)
+
+    for i in range(1000):
+        if herb.birth_prob(i + 2):
+            print("birth " + str(i))
