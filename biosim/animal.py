@@ -60,7 +60,7 @@ class Animal:
 
     def update_status(self):
         self.fitness_update()
-        self.weight_update()
+        self.yearly_weight_update()
         self.age_update()
 
 
