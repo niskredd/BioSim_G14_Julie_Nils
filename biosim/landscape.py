@@ -73,8 +73,16 @@ class Tile:
             index += 1
 
     def feed_animals(self):
-        herbs = sample(self.herb, len(self.herb))
+        herbs = sample(self.herb, self.herb.__len__())
         for herb in herbs:
+            self.fodder -= herb.feed(self.fodder)
+
+        for index in herbs.__len__:
+
+
+        carns = sample(self.carn, self.carn.__len__())
+        for carn in carns:
+            self.
 
 
 
