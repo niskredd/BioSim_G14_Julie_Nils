@@ -4,21 +4,7 @@ from random import random
 
 
 class Animal:
-
-    params = {'w_birth': 8.0,
-              'sigma_birth': 1.5,
-              'beta': 0.9,
-              'eta': 0.05,
-              'a_half': 40.,
-              'phi_age': 0.2,
-              'w_half': 10.,
-              'phi_weight': 0.1,
-              'mu': 0.25,
-              'gamma': 0.2,
-              'zeta': 3.5,
-              'xi': 1.2,
-              'omega': 0.4,
-              'F': 10.}
+    params = None
 
     def __init__(self, age, weight):
         self.a = age
@@ -45,8 +31,8 @@ class Animal:
         self.w -= newborn_weight * self.params['zeta']
 
     def birth_prob(self, num_animals):
-        if self.w < self.params['zeta']*(self.params['w_birth']
-                                         + self.params['sigma_birth']):
+        if self.w < self.params['zeta'] * (self.params['w_birth']
+                                           + self.params['sigma_birth']):
             return False
         else:
             prob = min(1, self.params['gamma'] * self.phi * (num_animals - 1))
@@ -75,41 +61,49 @@ class Animal:
                     * 1 / (1 + np.exp(-((self.w - self.params['w_half'])
                                         * self.params['phi_weight']))))
 
-
-class Herbivore(Animal):
-
-    def weight_increase(self, food):
-        # food is based on Tile class calculation
-        self.w_gain += self.params['beta'] * food
-
     def update_status(self):
         self.fitness_update()
         self.weight_update()
         self.age_update()
+
+
+class Herbivore(Animal):
+    params = {'w_birth': 8.0,
+              'sigma_birth': 1.5,
+              'beta': 0.9,
+              'eta': 0.05,
+              'a_half': 40.,
+              'phi_age': 0.2,
+              'w_half': 10.,
+              'phi_weight': 0.1,
+              'mu': 0.25,
+              'gamma': 0.2,
+              'zeta': 3.5,
+              'xi': 1.2,
+              'omega': 0.4,
+              'F': 10.}
+
+    def weight_increase(self, food):
+        # food is based on Tile class calculation
+        self.w_gain += self.params['beta'] * food
 
 
 class Carnivore(Animal):
 
     def __init__(self, age, weight):
         Animal.__init__(self, age, weight)
-        self.params.update(
-            {'w_birth': 6.,
-             'sigma_birth': 1.,
-             'beta': 0.75,
-             'eta': 0.125,
-             'a_half': 40.,
-             'phi_age': 0.3,
-             'w_half': 4.,
-             'phi_weight': 0.4,
-             'mu': 0.4,
-             'gamma': 0.8,
-             'zeta': 3.5,
-             'xi': 1.5,
-             'omega': 0.8,
-             'F': 50.,
-             'DeltaPhiMax': 10.})
-
-    def update_status(self):
-        self.fitness_update()
-        self.weight_update()
-        self.age_update()
+        self.params = {'w_birth': 6.,
+                       'sigma_bir1th': 1.,
+                       'beta': 0.75,
+                       'eta': 0.125,
+                       'a_half': 40.,
+                       'phi_age': 0.3,
+                       'w_half': 4.,
+                       'phi_weight': 0.4,
+                       'mu': 0.4,
+                       'gamma': 0.8,
+                       'zeta': 3.5,
+                       'xi': 1.5,
+                       'omega': 0.8,
+                       'F': 50.,
+                       'DeltaPhiMax': 10.}
