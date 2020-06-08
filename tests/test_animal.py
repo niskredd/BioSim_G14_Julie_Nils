@@ -33,20 +33,21 @@ class Test_Herbivore:
 
     def test_death_prob(self, create_herb):
         sum_d = 0
-        for i in range(10):
+        for i in range(100):
             if create_herb.death_prob():
                 sum_d += 1
         assert sum_d >= 1
 
     def test_birth_prob(self, create_herb):
         assert create_herb.birth_prob(1) == False
+        create_herb.w = 25
 
         sum_b = 0
-        for i in range(1000):
+        for i in range(100):
+            create_herb.w += 1
             if create_herb.birth_prob(2+i):
                 sum_b += 1
         assert sum_b > 1
-
 
 
 class Test_Carnivore:
