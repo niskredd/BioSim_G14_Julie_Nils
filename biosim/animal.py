@@ -133,3 +133,36 @@ class Carnivore(Animal):
         """
         Calculates the probability of the carnivore killing a herbivore and
         determines whether the
+        """
+        if self.phi <= herbivore.phi:
+            prob = 0
+        elif 0 < self.phi - herbivore.phi < self.params['DeltaPhiMax']:
+            prob = (self.phi - herbivore.phi) / self.params['DeltaPhiMax']
+        else:
+            prob = 1
+
+        if random() < prob:
+            return True
+        else:
+            return False
+
+    def weight_increase(self, w_herb):
+        """
+        Calculates the carnivore's weight increase after eating prey.
+        :param self:
+        :param w_herb: weight of killed herbivore
+        :return: weight increase
+        """
+        if w_herb > self.params['F']:
+            self.w += self.params['F'] * self.params['beta']
+        else:
+            self.w += w_herb * self.params['beta']
+
+
+if __name__ == '__main__':
+    for i in range(30):
+        herb = Herbivore(0, 0)
+
+        herb.fitness_update()
+
+        print(herb.w)
