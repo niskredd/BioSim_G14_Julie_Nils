@@ -15,8 +15,8 @@ class Animal:
         self.phi = 0
 
     def _new_born(self):
-        self.w = norm.rvs(
-            loc=self.params['sigma_birth'], scale=self.params['w_birth'])
+        self.w = np.random.normal(
+            scale=self.params['sigma_birth'], loc=self.params['w_birth'])
 
     def age_update(self):
         self.a += 1
@@ -25,7 +25,7 @@ class Animal:
         self.w -= self.w * self.params['eta']
 
     def weight_decrease_birth(self, newborn_weight):
-        self.w -= newborn_weight * self.params['zeta']
+        self.w -= newborn_weight * self.params['xi']
 
     def birth_prob(self, num_animals):
         if self.w < self.params['zeta'] * (self.params['w_birth']
@@ -39,14 +39,17 @@ class Animal:
                 return False
 
     def death_prob(self):
-        if self.w == 0:
+        if self.w <= 0:
             return True
-            print('dead weight')
         else:
             probability = self.params['omega'] * (1 - self.phi)
             if random() < probability:
                 return True
-                print('dead prob')
+            else:
+                return False
+
+    def weight_increase(self):
+        pass
 
     def feed(self, fodder):
         if fodder >= self.params['F']:
@@ -158,3 +161,12 @@ class Carnivore(Animal):
             self.w += self.params['F'] * self.params['beta']
         else:
             self.w += w_herb * self.params['beta']
+
+
+if __name__ == '__main__':
+    for i in range(30):
+        herb = Herbivore(0, 0)
+
+        herb.fitness_update()
+
+        print(herb.w)
