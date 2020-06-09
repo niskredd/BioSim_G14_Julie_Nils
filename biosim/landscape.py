@@ -28,7 +28,7 @@ class Island:
 
     def adding_animals(self, tile, animals_to_add):
         for ind in animals_to_add:
-            tile.fauna(ind)
+            tile.adding_animal(ind)
 
     #Runs one year on tile
     def tile_update(self):
