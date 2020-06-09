@@ -13,22 +13,19 @@ class Animal:
         else:
             self.w = weight
         self.phi = 0
-        self.w_gain = 0
 
     def _new_born(self):
-        self.w = norm.rvs(
-            loc=self.params['sigma_birth'], scale=self.params['w_birth'])
+        self.w = np.random.normal(
+            scale=self.params['sigma_birth'], loc=self.params['w_birth'])
 
     def age_update(self):
         self.a += 1
 
-    def weight_update(self):
-        self.w += self.w_gain
+    def yearly_weight_update(self):
         self.w -= self.w * self.params['eta']
-        self.w_gain = 0
 
-    def weight_decrease(self, newborn_weight):
-        self.w -= newborn_weight * self.params['zeta']
+    def weight_decrease_birth(self, newborn_weight):
+        self.w -= newborn_weight * self.params['xi']
 
     def birth_prob(self, num_animals):
         if self.w < self.params['zeta'] * (self.params['w_birth']
@@ -42,12 +39,26 @@ class Animal:
                 return False
 
     def death_prob(self):
-        if self.w == 0:
+        if self.w <= 0:
             return True
         else:
             probability = self.params['omega'] * (1 - self.phi)
             if random() < probability:
                 return True
+                print('dead prob')
+
+    def weight_increase(self):
+        pass
+
+    def feed(self, fodder):
+        if fodder >= self.params['F']:
+            self.weight_increase(self.params['F'])
+            return self.params['F']
+        elif 0 < fodder < self.params['F']:
+            self.weight_increase(fodder)
+            return fodder
+        else:
+            return 0
 
     def fitness_update(self):
         if self.w <= 0:
@@ -61,11 +72,16 @@ class Animal:
 
     def update_status(self):
         self.fitness_update()
-        self.weight_update()
+        self.yearly_weight_update()
         self.age_update()
 
 
 class Herbivore(Animal):
+    """
+    Subclass of Animal class.
+    Herbivores eat plants and their fitness therefore depend on the landscape
+    that surrounds them.
+    """
     params = {'w_birth': 8.0,
               'sigma_birth': 1.5,
               'beta': 0.9,
@@ -82,37 +98,38 @@ class Herbivore(Animal):
               'F': 10.}
 
     def weight_increase(self, food):
-        # food is based on Tile class calculation
-        self.w_gain += self.params['beta'] * food
+        """
+        Calculates the herbivore's weight increase after grazing for a year.
+        :param food: amount of fodder consumed
+        :return: weight gain
+        """
+        self.w += self.params['beta'] * food
 
 
 class Carnivore(Animal):
+    """
+    Subclass of Animal class.
+    Carnivores eat meat and their fitness therefore depends on the amount of
+    herbivores available in their surroundings.
+    Weight increase depends on the weight of their prey.
+    """
+    params = {'w_birth': 6.,
+              'sigma_birth': 1.,
+              'beta': 0.75,
+              'eta': 0.125,
+              'a_half': 40.,
+              'phi_age': 0.3,
+              'w_half': 4.,
+              'phi_weight': 0.4,
+              'mu': 0.4,
+              'gamma': 0.8,
+              'zeta': 3.5,
+              'xi': 1.5,
+              'omega': 0.8,
+              'F': 50.,
+              'DeltaPhiMax': 10.}
 
-    def __init__(self, age, weight):
-        Animal.__init__(self, age, weight)
-        self.params = {'w_birth': 6.,
-                       'sigma_bir1th': 1.,
-                       'beta': 0.75,
-                       'eta': 0.125,
-                       'a_half': 40.,
-                       'phi_age': 0.3,
-                       'w_half': 4.,
-                       'phi_weight': 0.4,
-                       'mu': 0.4,
-                       'gamma': 0.8,
-                       'zeta': 3.5,
-                       'xi': 1.5,
-                       'omega': 0.8,
-                       'F': 50.,
-                       'DeltaPhiMax': 10.}
-
-
-if __name__ == '__main__':
-    herb = Herbivore(5, 10)
-    herb.fitness_update()
-
-    print(herb.phi)
-
-    for i in range(1000):
-        if herb.birth_prob(i + 2):
-            print("birth " + str(i))
+    def kill_herbivore(self, herbivore):
+        """
+        Calculates the probability of the carnivore killing a herbivore and
+        determines whether the

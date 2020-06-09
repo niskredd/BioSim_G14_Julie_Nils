@@ -50,20 +50,28 @@ class Tile:
         if species == "Herbivore":
             self.herb.append(Herbivore(age, weight))
         elif species == "Carnivore":
-            self.herb.append(Herbivore(age, weight))
+            self.carn.append(Carnivore(age, weight))
 
     def adding_animal(self, **animal):
         if animal['species'] == "Herbivore":
             self.herb.append(Herbivore(animal['age'], animal['weight']))
         elif animal['species'] == "Carnivore":
-            self.herb.append(Herbivore(animal['age'], animal['weight']))
+            self.herb.append(Carnivore(animal['age'], animal['weight']))
 
     def birth(self):
-        for ind in self.herb:
-            if ind.birth_prob(self.herb.__len__()):
+        herbs = self.herb
+        for ind in herbs:
+            if ind.birth_prob(herbs.__len__()):
                 new_born = Herbivore(0, 0)
-                ind.weight_decrease(new_born.w)
+                ind.weight_decrease_birth(new_born.w)
                 self.herb.append(new_born)
+
+        carns = self.carn
+        for ind in carns:
+            if ind.birth_prob(carns.__len__()):
+                new_born = Carnivore(0, 0)
+                ind.weight_decrease_birth(new_born.w)
+                self.carn.append(new_born)
 
     def death(self):
         index = 0
@@ -72,16 +80,40 @@ class Tile:
                 self.herb.pop(index)
             index += 1
 
-    def feed_animals(self, animal_list):
-        for a in animal_list:
-            if self.fodder >= 10:
-                a.weight_increase(10)
-                self.fodder -= 10
-            elif 0 > self.fodder > 10:
-                a.weight_increase(self.fodder)
-                self.fodder = 0
-            else:
-                break
+        index = 0
+        for ind in self.carn:
+            if ind.death_prob():
+                self.carn.pop(index)
+            index += 1
+
+    def feed_animals(self):
+        herbs = sample(self.herb, self.herb.__len__())
+        for herb in herbs:
+            self.fodder -= herb.feed(self.fodder)
+
+        for index in range(self.herb.__len__()):
+            min_phi = self.herb[0]
+            for herb in self.herb[index:]:
+                if herb.phi < min_phi.phi:
+                    min_phi = herb
+            self.herb.remove(min_phi)
+            self.herb.insert(index, min_phi)
+
+        carns = self.carn
+        for index in range(carns.__len__()):
+            max_phi = carns[0]
+            for carn in carns[index:]:
+                if carn.phi > max_phi.phi:
+                    max_phi = carn
+            carns.remove(max_phi)
+            carns.insert(index, max_phi)
+
+        for carn in carns:
+            for herb in self.herb:
+                if carn.kill_herbivore(herb):
+                    self.herb.remove(herb)
+                    if carn.feed(herb.w) > 0:
+                        break
 
     def animal_ageing(self):
         for n in self.herb:
@@ -91,8 +123,8 @@ class Tile:
         for n in self.herb:
             n.update_status()
 
-    def shuffle_list(self, a_list, a_len):
-        return sample(a_list, a_len)
+        for n in self.carn:
+            n.update_status()
 
 
 class Highland(Tile):
@@ -109,7 +141,7 @@ class Highland(Tile):
 class Lowland(Tile):
 
     def __init__(self, grid_pos):
-        Tile.__init__(grid_pos)
+        Tile.__init__(self, grid_pos)
         self.fodder = 800
         self.can_move = True
 
@@ -135,19 +167,20 @@ class Water(Tile):
 
 if __name__ == '__main__':
     teller = 0
-    mini_map = Tile((1, 1))
+    mini_map = Lowland([1, 1])
 
-    mini_map.fauna('Herbivore', 10, 12.5)
-    mini_map.fauna('Herbivore', 9, 10.5)
-    mini_map.fauna('Herbivore', 10, 12.5)
-    mini_map.fauna('Herbivore', 9, 10.5)
-    mini_map.fauna('Herbivore', 10, 12.5)
-    mini_map.fauna('Herbivore', 9, 10.5)
+    for i in range(50):
+        mini_map.fauna('Herbivore', 5, 20)
 
-    while teller < 100:
+    while teller < 300:
+        print("Year: " + str(teller))
+        print("Number of animals: " + str(mini_map.update_num_animals()))
 
-        animals_alive = mini_map.shuffle_list(mini_map.herb, mini_map.herb.__len__())
-        mini_map.feed_animals(animals_alive)
+        if teller == 30:
+            for i in range(20):
+                mini_map.fauna('Carnivore', 5, 20)
+
+        mini_map.feed_animals()
 
         mini_map.birth()
 
@@ -155,19 +188,28 @@ if __name__ == '__main__':
 
         mini_map.death()
 
-        print("Year: " + str(teller))
-        print("Number of animals: " + str(mini_map.update_num_animals()))
-
         sum_1 = 0
         sum_2 = 0
         for animal in mini_map.herb:
             sum_1 += animal.w
             sum_2 += animal.a
 
-        print("Avg weight: " + str(sum_1 / mini_map.herb.__len__()))
-        print("Avg age: " + str(sum_2 / mini_map.herb.__len__()))
+        sum_3 = 0
+        sum_4 = 0
+        for animal in mini_map.carn:
+            sum_3 += animal.w
+            sum_4 += animal.a
 
-        mini_map.fodder = 300
+        print('\n'+"Herbivore:")
+        print("Avg weight: " + str(sum_1 / max(mini_map.herb.__len__(), 1)))
+        print("Avg age: " + str(sum_2 / max(mini_map.herb.__len__(), 1)))
+
+        print('\n'+"Carnivore: ")
+        print("Avg weight: " + str(sum_3 / max(mini_map.carn.__len__(), 1)))
+        print("Avg age: " + str(sum_4 / max(mini_map.carn.__len__(), 1)))
+        print('\n')
+
+        mini_map.update_fodder_amount()
 
         time.sleep(1)
         teller += 1
