@@ -158,6 +158,9 @@ class Desert(Tile):
         self.fodder = 0
         self.can_move = True
 
+    def update_fodder_amount(self):
+        self.fodder = 0
+
 
 class Water(Tile):
 
@@ -165,6 +168,9 @@ class Water(Tile):
         Tile.__init__(grid_pos)
         self.fodder = 0
         self.can_move = False
+
+    def update_fodder_amount(self):
+        self.fodder = 0
 
 
 if __name__ == '__main__':
