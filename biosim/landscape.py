@@ -63,15 +63,17 @@ class Tile:
         for ind in herbs:
             if ind.birth_prob(herbs.__len__()):
                 new_born = Herbivore(0, 0)
-                ind.weight_decrease_birth(new_born.w)
-                self.herb.append(new_born)
+                if ind.weight_decrease_birth(new_born.w) < ind.w:
+                    ind.weight_decrease_birth(new_born.w)
+                    self.herb.append(new_born)
 
         carns = self.carn
         for ind in carns:
             if ind.birth_prob(carns.__len__()):
                 new_born = Carnivore(0, 0)
-                ind.weight_decrease_birth(new_born.w)
-                self.carn.append(new_born)
+                if ind.weight_decrease_birth(new_born.w) < ind.w:
+                    ind.weight_decrease_birth(new_born.w)
+                    self.carn.append(new_born)
 
     def death(self):
         index = 0
@@ -176,7 +178,7 @@ if __name__ == '__main__':
         print("Year: " + str(teller))
         print("Number of animals: " + str(mini_map.update_num_animals()))
 
-        if teller == 30:
+        if teller == 500:
             for i in range(20):
                 mini_map.fauna('Carnivore', 5, 20)
 

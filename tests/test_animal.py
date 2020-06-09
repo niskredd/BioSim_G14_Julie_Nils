@@ -47,7 +47,7 @@ class Test_Herbivore:
             create_herb.w += 1
             if create_herb.birth_prob(50):
                 sum_b += 1
-        assert 10 < sum_b < 100
+        assert 10 < sum_b < 95
 
     def test_yearly_weight_update(self, create_herb):
         weight = create_herb.w
@@ -80,5 +80,5 @@ class Test_Carnivore:
             res = create_carn.kill_herbivore(create_herb)
             if res:
                 test_val += 1
-        assert 0 < test_val < 5
+        assert 0 < test_val < 6
 

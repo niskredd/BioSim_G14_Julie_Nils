@@ -1,5 +1,4 @@
 import numpy as np
-from scipy.stats import norm
 from random import random
 
 
@@ -26,6 +25,7 @@ class Animal:
 
     def weight_decrease_birth(self, newborn_weight):
         self.w -= newborn_weight * self.params['xi']
+        return newborn_weight * self.params['xi']
 
     def birth_prob(self, num_animals):
         if self.w < self.params['zeta'] * (self.params['w_birth']
@@ -33,19 +33,14 @@ class Animal:
             return False
         else:
             prob = min(1, self.params['gamma'] * self.phi * (num_animals - 1))
-            if random() < prob:
-                return True
-            else:
-                return False
+            return random() < prob
 
     def death_prob(self):
         if self.w <= 0:
             return True
         else:
             probability = self.params['omega'] * (1 - self.phi)
-            if random() < probability:
-                return True
-                print('dead prob')
+            return random() < probability
 
     def weight_increase(self):
         pass
@@ -150,7 +145,8 @@ class Carnivore(Animal):
         """
         Calculates the carnivore's weight increase after eating prey.
         :param self:
-        :param w_herb: weight of killed herbivore
+        :param w_herb: float
+                    weight of killed herbivore
         :return: weight increase
         """
         if w_herb > self.params['F']:
