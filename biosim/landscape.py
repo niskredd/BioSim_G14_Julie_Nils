@@ -223,7 +223,7 @@ if __name__ == '__main__':
 
         sum_5 = 0
         sum_6 = 0
-        for amimal in mini_map.herb:
+        for animal in mini_map.herb:
             sum_5 += animal.phi
 
         for animal in mini_map.carn:
@@ -240,9 +240,9 @@ if __name__ == '__main__':
         print("Avg Fitness: " + str(sum_6 / max(mini_map.carn.__len__(), 1)))
         print('\n')
 
-        if teller == 50:
-            for i in range(20):
-                mini_map.fauna('Carnivore', 5, 20)
+        #if teller == 50:
+        #    for i in range(20):
+        #        mini_map.fauna('Carnivore', 5, 20)
 
         mini_map.feed_animals()
 

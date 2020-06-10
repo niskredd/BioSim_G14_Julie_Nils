@@ -17,13 +17,25 @@ class Animal:
         self.w = np.random.normal(
             scale=self.params['sigma_birth'], loc=self.params['w_birth'])
 
+    def fitness_update(self):
+        """
+        Calculates fitness for the animal class and saves the value to self.phi
+        :return : None
+        """
+        if self.w <= 0:
+            self.phi = 0
+        else:
+            self.phi = (
+                    1 / (1 + np.exp((self.a - self.params['a_half'])
+                                    * self.params['phi_age']))
+                    * 1 / (1 + np.exp(-((self.w - self.params['w_half'])
+                                        * self.params['phi_weight']))))
+
     def age_update(self):
         self.a += 1
-        self.fitness_update()
 
     def yearly_weight_update(self):
         self.w -= self.w * self.params['eta']
-        self.fitness_update()
 
     def weight_decrease_birth(self, newborn_weight): # See comment from landscape
         self.w -= newborn_weight * self.params['xi']
@@ -46,7 +58,7 @@ class Animal:
             probability = self.params['omega'] * (1 - self.phi)
             return random() < probability
 
-    def weight_increase(self):
+    def weight_increase(self, food):
         pass
 
     def feed(self, fodder):
@@ -65,24 +77,10 @@ class Animal:
         else:
             return 0
 
-    def fitness_update(self):
-        """
-        Calculates fittness for the animal class and saves the value to self.phi
-        :return : None
-        """
-        if self.w <= 0:
-            self.phi = 0
-        else:
-            self.phi = (
-                    1 / (1 + np.exp((self.a - self.params['a_half'])
-                                    * self.params['phi_age']))
-                    * 1 / (1 + np.exp(-((self.w - self.params['w_half'])
-                                        * self.params['phi_weight']))))
-
     def update_status(self):
-        self.fitness_update()
         self.yearly_weight_update()
         self.age_update()
+        self.fitness_update()
 
 
 class Herbivore(Animal):

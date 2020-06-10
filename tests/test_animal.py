@@ -9,22 +9,29 @@ class TestAnimal:
         anim = Animal(5, 10)
         return anim
 
-    def test_newborn_weight(self):
-        w_nb = Herbivore(0, 0).w
+    def test_phi_is_zero_when_w_is_zero(self, create_ani):
+        if create_ani.w == 0:
+            assert create_ani.phi == 0
+
+    def test_w_new_born_normal_distribution(self):
+        w_nb = []
+        for i in range(100):
+            w_nb.append(Herbivore(0, 0).w)
+
         w_nb_min = \
             Herbivore.params['w_birth'] - Herbivore.params['sigma_birth']
         w_nb_max = \
             Herbivore.params['w_birth'] + Herbivore.params['sigma_birth']
-        assert w_nb_min <= w_nb <= w_nb_max
+        assert w_nb_min <= sum(w_nb)/len(w_nb) <= w_nb_max
 
     def test_age_update(self, create_ani):
         for i in range(3):
             create_ani.age_update()
         assert 8 == create_ani.a
 
-    def test_yearly_weight_update(self, create_ani):
-        create_ani.age_update()
-        assert create_ani.w == 5 + create_ani
+    def test_death_prob_if_w_is_zero(self, create_ani):
+        if create_ani.w == 0:
+            assert create_ani.death_prob()
 
 
 class TestHerbivore:
@@ -39,7 +46,7 @@ class TestHerbivore:
         create_herb.fitness_update()
         assert 1 >= create_herb.phi >= 0
 
-    def test__new_born(self):
+    def test_w_new_born_is_not_zero(self):
         an = Herbivore(0, 0)
         assert an.w != 0
 
@@ -48,7 +55,7 @@ class TestHerbivore:
         for i in range(100):
             if create_herb.death_prob():
                 sum_d += 1
-        assert 10 < sum_d < 35
+        assert 0 <= sum_d <= 100
 
     def test_birth_prob(self, create_herb):
         assert create_herb.birth_prob(1) == False
@@ -61,10 +68,15 @@ class TestHerbivore:
                 sum_b += 1
         assert 10 < sum_b < 95
 
-    def test_yearly_weight_update(self, create_herb):
+    def test_yearly_weight_update_increases_w(self, create_herb):
         weight = create_herb.w
         create_herb.yearly_weight_update()
         assert create_herb.w < weight
+
+    def test_yearly_weight_update_increases_right_amount(self, create_herb):
+        weight = create_herb.w
+        create_herb.yearly_weight_update()
+        assert create_herb.w == weight - weight*create_herb.params['eta']
 
 
 class TestCarnivore:
@@ -92,5 +104,5 @@ class TestCarnivore:
             res = create_carn.kill_herbivore(create_herb)
             if res:
                 test_val += 1
-        assert 0 < test_val < 6
+        assert 0 <= test_val <= 100
 
