@@ -107,6 +107,12 @@ class TestHerbivore:
         herbivore.fitness_update()
         assert herbivore.phi == pytest.approx(1/4)
 
+    def test_yearly_weight_update(self, create_herb):
+        weight_1 = create_herb.w
+        create_herb.yearly_weight_update()
+        weight_2 = create_herb.w
+        assert weight_1 < weight_2
+
     def test_death_prob(self, create_herb):
         sum_d = 0
         for i in range(100):
