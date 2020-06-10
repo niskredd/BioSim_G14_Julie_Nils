@@ -78,7 +78,7 @@ class TestHerbivore:
         """
         tests if age of newborn is zero
         """
-        newborn = Herbivore(0,0)
+        newborn = Herbivore(0, 0)
         assert newborn.a == 0
 
     def test_fitness_between_one_and_zero(self, create_herb):
@@ -95,8 +95,17 @@ class TestHerbivore:
         phi_fed = create_herb.phi
         assert phi_unfed < phi_fed
 
-    #def fitness_increase_calculates_right(self):
-    #    assert Herbivore(0,0).phi ==
+    def test_fitness_update_gives_right_value(self, create_herb):
+        assert create_herb.phi == pytest.approx(0.7303925)
+
+    def test_fitness_update_given_parameters(self, create_herb):
+        herbivore = create_herb
+        herbivore.params['a_half'] = 0
+        herbivore.params['phi_age'] = 0
+        herbivore.params['phi_weight'] = 0
+        herbivore.params['w_half'] = 0
+        herbivore.fitness_update()
+        assert herbivore.phi == pytest.approx(1/4)
 
     def test_death_prob(self, create_herb):
         sum_d = 0
@@ -106,7 +115,7 @@ class TestHerbivore:
         assert 0 <= sum_d <= 100
 
     def test_birth_prob(self, create_herb):
-        assert create_herb.birth_prob(1) == False
+        assert create_herb.birth_prob(1) is False
         create_herb.w = 25
 
         sum_b = 0
@@ -143,4 +152,3 @@ class TestCarnivore:
             if res:
                 test_val += 1
         assert 0 <= test_val <= 100
-

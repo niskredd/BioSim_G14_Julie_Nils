@@ -10,7 +10,7 @@ __email__ = ''
 
 from biosim.animal import *
 import time
-from random import sample, random
+from random import sample
 
 
 class Island:
@@ -87,8 +87,8 @@ class Tile:
         for ind in self.carn:
             if ind.birth_prob(self.carn.__len__()):
                 new_born = Carnivore(0, 0)
-                if ind.weight_birth_check(new_born.w) < ind.w:
-                    ind.weight_decrease_birth(new_born.w)
+                if ind.weight_decrease_birth(new_born.w) < ind.w:
+                    ind.w -= ind.weight_decrease_birth(new_born.w)
                     carns.append(new_born)
         self.carn.extend(carns)
 
@@ -242,9 +242,9 @@ if __name__ == '__main__':
         print("Avg Fitness: " + str(sum_6 / max(mini_map.carn.__len__(), 1)))
         print('\n')
 
-        #if teller == 50:
-        #    for i in range(20):
-        #        mini_map.fauna('Carnivore', 5, 20)
+        if teller == 50:
+            for i in range(20):
+                mini_map.fauna('Carnivore', 5, 20)
 
         mini_map.feed_animals()
 

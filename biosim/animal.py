@@ -40,9 +40,6 @@ class Animal:
     def weight_decrease_birth(self, newborn_weight): # See comment from landscape
         return newborn_weight * self.params['xi']
 
-   # def weight_birth_check(self, newborn_weight):
-    #    return newborn_weight * self.params['xi']
-
     def birth_prob(self, num_animals):
         if self.w < self.params['zeta'] * (self.params['w_birth']
                                            + self.params['sigma_birth']):
