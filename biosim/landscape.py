@@ -16,30 +16,45 @@ from random import sample, random
 class Island:
 
     def __init__(self, map):
-        self.tiles_list = []
         """
         Uses the data form the constuctor to create the island, the string is
         converted to a list of tiles
         :return:
                 None
         """
-        maps = map.split("\n")
-        x = 1
-        y = 1
-        for line in maps:
-            for letter in line:
-                if letter == "W":
-                    self.tiles_list.append(Water((x, y)))
-                elif letter == "D":
-                    self.tiles_list.append(Desert((x, y)))
-                elif letter == "L":
-                    self.tiles_list.append(Lowland((x, y)))
-                elif letter == "H":
-                    self.tiles_list.append(Highland((x, y)))
-            x += 1
-            y += 1
+        self.tiles_list = []
+        if len(map) > 1:
+            maps = map.split("\n")
+            x = 1
+            for line in maps:
+                y = 1
+                for letter in line:
+                    if letter == "W":
+                        self.tiles_list.append(Water((x, y)))
+                    elif letter == "D":
+                        self.tiles_list.append(Desert((x, y)))
+                    elif letter == "L":
+                        self.tiles_list.append(Lowland((x, y)))
+                    elif letter == "H":
+                        self.tiles_list.append(Highland((x, y)))
+                    print(str(x) + ", " + str(y))
+                    y += 1
+                x += 1
+        else:
+            x = 1
+            y = 1
+            if map == "W":
+                self.tiles_list.append(Water((x, y)))
+            elif map == "D":
+                self.tiles_list.append(Desert((x, y)))
+            elif map == "L":
+                self.tiles_list.append(Lowland((x, y)))
+            elif map == "H":
+                self.tiles_list.append(Highland((x, y)))
 
-    def adding_animals(self, tile, animals_to_add):
+            print("One tile:   " + str(map))
+
+    def adding_animals(self, *tile, animals_to_add):
         """
         Adding animals til the each tile on the island,
         all animals, both species
@@ -50,9 +65,9 @@ class Island:
                 None
         """
         for tile_e in self.tiles_list:
-            if tile == tile_e.gridpos:
+            if tile == tile_e.grid_pos:
                 for ind in animals_to_add:
-                    tile.adding_animal(ind)
+                    tile.adding_animal(**ind)
 
     def tile_update(self):
         """
@@ -85,10 +100,10 @@ class Tile:
         elif species == "Carnivore":
             self.carn.append(Carnivore(age, weight))
 
-    def adding_animal(self, **animal_dir):
+    def adding_animal(self, animal_dir):
         """
         Adds animals to this tiles
-        :param animal: {:}
+        :param animal_dir: {:}
                       directory
         :return:
         """
@@ -225,6 +240,36 @@ class Water(Tile):
 
 
 if __name__ == '__main__':
+    island = Island("L")
+    ani_pip = [{'species': 'Herbivore', 'age': 1, 'weight': 10.},
+               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+               {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+               {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+               {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+               {'species': 'Carnivore', 'age': 1, 'weight': 10.}]
+
+    island.adding_animals((1, 1), ani_pip)
+
+    for i in range(10):
+        island.tile_update()
+        for tile in island.tiles_list:
+            print(tile.carn.__len__())
+            print(tile.herb.__len__())
+"""
+if __name__ == '__main__':
     teller = 0
     mini_map = Lowland([1, 1])
 
@@ -282,3 +327,4 @@ if __name__ == '__main__':
 
         time.sleep(1)
         teller += 1
+        """
