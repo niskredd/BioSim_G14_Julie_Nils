@@ -8,6 +8,7 @@ __author__ = 'Julie Martin, Nils Skreddernes'
 __email__ = ''
 
 from biosim.landscape import Island
+from biosim.visual import Visual_Plot
 
 
 class BioSim:
@@ -19,6 +20,7 @@ class BioSim:
         self.ymax_animals = ymax_animals
         self.cmax_animals = cmax_animals
         self.hist_specs = hist_specs
+        self.Island = Island(island_map)
 
     def set_animal_parameters(self, species, params):
         pass

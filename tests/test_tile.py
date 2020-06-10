@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*-
+
+"""
+
+"""
+
+__author__ = 'Julie Martin, Nils Skreddernes'
+__email__ = ''
+
+
 import pytest
 from biosim.landscape import Lowland
 

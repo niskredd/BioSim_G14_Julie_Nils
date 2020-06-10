@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*-
+
+"""
+
+"""
+
+__author__ = 'Julie Martin, Nils Skreddernes'
+__email__ = ''
+
+
 from biosim.animal import *
 import time
 from random import sample, random
@@ -70,7 +80,7 @@ class Tile:
                 new_born = Herbivore(0, 0)
                 if ind.weight_birth_check(new_born.w) < ind.w:
                     ind.weight_decrease_birth(new_born.w)
-                    self.herb.append(new_born) #  You are also appending inside a for loop. which creates a confused for loop. See Hans Plessers note on that. You should never update a list while iterating over it.
+                    self.herb.append(new_born)
 
         carns = self.carn
         for ind in carns:
@@ -78,7 +88,7 @@ class Tile:
                 new_born = Carnivore(0, 0)
                 if ind.weight_birth_check(new_born.w) < ind.w:
                     ind.weight_decrease_birth(new_born.w)
-                    self.carn.append(new_born) # Same here
+                    self.carn.append(new_born)
 
     def death(self):
         index = 0
