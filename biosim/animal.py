@@ -46,6 +46,12 @@ class Animal:
         pass
 
     def feed(self, fodder):
+        """
+        Function checks the amount of fodder that the animal can take
+        :param fodder: int
+                    fodder avalble
+        :return:
+        """
         if fodder >= self.params['F']:
             self.weight_increase(self.params['F'])
             return self.params['F']
@@ -56,6 +62,10 @@ class Animal:
             return 0
 
     def fitness_update(self):
+        """
+        Calculates fittness for the animal class and saves the value to self.phi
+        :return : None
+        """
         if self.w <= 0:
             self.phi = 0
         else:
