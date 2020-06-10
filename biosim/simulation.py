@@ -13,7 +13,7 @@ from biosim.visual import Visual_Plot
 
 class BioSim:
 
-    def __init__(self, island_map, ini_pop, seed, ymax_animals, cmax_animals, hist_specs):
+    def __init__(self, island_map, ini_pop, seed=1, ymax_animals=0, cmax_animals=0, hist_specs=0):
         self.island_map = island_map
         self.ini_pop = ini_pop
         self.seed = seed
@@ -29,8 +29,45 @@ class BioSim:
         pass
 
     def add_population(self):
-        pass
+        print(self.ini_pop['loc'])
+        print(self.ini_pop['pop'])
+        Island.adding_animals(self.ini_pop['loc'], self.ini_pop['pop'])
+
+    def island_update(self, years):
+        for i in range(years):
+            self.Island.tile_update()
+
+    def print_res(self):
+        for tile in Island.tiles_list:
+            print(tile.carn.__len__())
+            print(tile.herb.__len__())
 
 
 if __name__ == "__main__":
-    pass
+    pop = {'loc': (1, 1),
+           'pop': [{'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Carnivore', 'age': 1, 'weight': 10.}]}
+
+    sim = BioSim("L", pop)
+    sim.add_population()
+
+    sim.island_update(200)
+
+    sim.print_res()
