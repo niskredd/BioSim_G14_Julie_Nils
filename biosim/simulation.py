@@ -26,6 +26,9 @@ class BioSim:
     def set_landscape_parameters(self, lscape, params):
         pass
 
+    def add_population(self):
+        pass
+
 
 if __name__ == "__main__":
     pass
