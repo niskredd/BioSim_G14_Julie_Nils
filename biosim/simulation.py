@@ -29,8 +29,6 @@ class BioSim:
         pass
 
     def add_population(self):
-        print(self.ini_pop['loc'])
-        print(self.ini_pop['pop'])
         Island.adding_animals(self.ini_pop['loc'], self.ini_pop['pop'])
 
     def island_update(self, years):
