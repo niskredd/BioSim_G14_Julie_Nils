@@ -2,20 +2,32 @@ import pytest
 from biosim.animal import Animal, Herbivore, Carnivore
 
 
-class Test_Animal:
+class TestAnimal:
 
     @pytest.fixture()
     def create_ani(self):
         anim = Animal(5, 10)
         return anim
 
+    def test_newborn_weight(self):
+        w_nb = Herbivore(0, 0).w
+        w_nb_min = \
+            Herbivore.params['w_birth'] - Herbivore.params['sigma_birth']
+        w_nb_max = \
+            Herbivore.params['w_birth'] + Herbivore.params['sigma_birth']
+        assert w_nb_min <= w_nb <= w_nb_max
+
     def test_age_update(self, create_ani):
         for i in range(3):
             create_ani.age_update()
         assert 8 == create_ani.a
 
+    def test_yearly_weight_update(self, create_ani):
+        create_ani.age_update()
+        assert create_ani.w == 5 + create_ani
 
-class Test_Herbivore:
+
+class TestHerbivore:
 
     @pytest.fixture()
     def create_herb(self):
@@ -55,7 +67,7 @@ class Test_Herbivore:
         assert create_herb.w < weight
 
 
-class Test_Carnivore:
+class TestCarnivore:
 
     @pytest.fixture()
     def create_carn(self):

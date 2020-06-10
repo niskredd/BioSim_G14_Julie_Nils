@@ -8,12 +8,12 @@ class Animal:
     def __init__(self, age, weight):
         self.a = age
         if age == 0:
-            self._new_born()
+            self.w_new_born()
         else:
             self.w = weight
         self.phi = 0
 
-    def _new_born(self):
+    def w_new_born(self):
         self.w = np.random.normal(
             scale=self.params['sigma_birth'], loc=self.params['w_birth'])
 
@@ -76,6 +76,7 @@ class Animal:
 # then ALL animals Migrate
 # then ALL animals Age
 # then ALL animals Loses weight etc. They do not go through the whole cycle individually.
+
 
 class Herbivore(Animal):
     """
