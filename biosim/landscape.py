@@ -98,21 +98,23 @@ class Tile:
             self.herb.append(Carnivore(animal_dir['age'], animal_dir['weight']))
 
     def birth(self):
-        herbs = self.herb
-        for ind in herbs:
-            if ind.birth_prob(herbs.__len__()):
+        herbs = []
+        for ind in self.herb:
+            if ind.birth_prob(self.herb.__len__()):
                 new_born = Herbivore(0, 0)
-                if ind.weight_birth_check(new_born.w) < ind.w:
-                    ind.weight_decrease_birth(new_born.w)
-                    self.herb.append(new_born)
+                if ind.weight_decrease_birth(new_born.w) < ind.w:
+                    ind.w -= ind.weight_decrease_birth(new_born.w)
+                    herbs.append(new_born)
+        self.herb.extend(herbs)
 
-        carns = self.carn
-        for ind in carns:
-            if ind.birth_prob(carns.__len__()):
+        carns = []
+        for ind in self.carn:
+            if ind.birth_prob(self.carn.__len__()):
                 new_born = Carnivore(0, 0)
                 if ind.weight_birth_check(new_born.w) < ind.w:
                     ind.weight_decrease_birth(new_born.w)
-                    self.carn.append(new_born)
+                    carns.append(new_born)
+        self.carn.extend(carns)
 
     def death(self):
         index = 0
@@ -247,7 +249,7 @@ if __name__ == '__main__':
 
         sum_5 = 0
         sum_6 = 0
-        for amimal in mini_map.herb:
+        for animal in mini_map.herb:
             sum_5 += animal.phi
 
         for animal in mini_map.carn:
@@ -264,9 +266,9 @@ if __name__ == '__main__':
         print("Avg Fitness: " + str(sum_6 / max(mini_map.carn.__len__(), 1)))
         print('\n')
 
-        if teller == 50:
-            for i in range(20):
-                mini_map.fauna('Carnivore', 5, 20)
+        #if teller == 50:
+        #    for i in range(20):
+        #        mini_map.fauna('Carnivore', 5, 20)
 
         mini_map.feed_animals()
 
