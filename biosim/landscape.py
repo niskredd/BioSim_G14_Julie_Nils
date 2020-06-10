@@ -68,7 +68,7 @@ class Tile:
         for ind in herbs:
             if ind.birth_prob(herbs.__len__()):
                 new_born = Herbivore(0, 0)
-                if ind.weight_decrease_birth(new_born.w) < ind.w: # You are reducing the weight in the if test as well. The mother is not supposed to lose weight if it will xi*babyweight > motherweight
+                if ind.weight_birth_check(new_born.w) < ind.w:
                     ind.weight_decrease_birth(new_born.w)
                     self.herb.append(new_born) #  You are also appending inside a for loop. which creates a confused for loop. See Hans Plessers note on that. You should never update a list while iterating over it.
 
@@ -76,7 +76,7 @@ class Tile:
         for ind in carns:
             if ind.birth_prob(carns.__len__()):
                 new_born = Carnivore(0, 0)
-                if ind.weight_decrease_birth(new_born.w) < ind.w:
+                if ind.weight_birth_check(new_born.w) < ind.w:
                     ind.weight_decrease_birth(new_born.w)
                     self.carn.append(new_born) # Same here
 
@@ -230,7 +230,7 @@ if __name__ == '__main__':
         print("Avg Fitness: " + str(sum_6 / max(mini_map.carn.__len__(), 1)))
         print('\n')
 
-        if teller == 500:
+        if teller == 50:
             for i in range(20):
                 mini_map.fauna('Carnivore', 5, 20)
 
