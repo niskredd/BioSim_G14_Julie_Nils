@@ -44,6 +44,9 @@ class TestAnimal:
             create_ani.age_update()
         assert 8 == create_ani.a
 
+    def test_feed_returns_zero_if_param_zero(self, create_ani):
+        assert create_ani.feed(0) == 0
+
     def test_death_prob_if_w_is_zero(self, create_ani):
         """
         Tests if death_prob returns True if animal weight is zero or less
@@ -64,19 +67,26 @@ class TestHerbivore:
         herb.fitness_update()
         return herb
 
-    def test_fitness(self, create_herb):
-        """
-        tests if herbivore fitness is between 0 and 1.
-        """
-        create_herb.fitness_update()
-        assert 1 >= create_herb.phi >= 0
-
     def test_w_new_born_is_not_zero(self):
         """
         tests if weight of newborn herbivore is not zero.
         """
         an = Herbivore(0, 0)
         assert an.w != 0
+
+    def test_fitness_between_one_and_zero(self, create_herb):
+        """
+        tests if herbivore fitness is between 0 and 1.
+        """
+        create_herb.fitness_update()
+        assert 1 >= create_herb.phi >= 0
+
+    def test_fitness_increases_when_weight_increases(self, create_herb):
+        phi_unfed = create_herb.phi
+        create_herb.weight_increase(80)
+        create_herb.fitness_update()
+        phi_fed = create_herb.phi
+        assert phi_unfed < phi_fed
 
     def test_death_prob(self, create_herb):
         sum_d = 0
