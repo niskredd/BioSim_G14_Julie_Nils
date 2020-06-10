@@ -68,9 +68,9 @@ class Tile:
         for ind in herbs:
             if ind.birth_prob(herbs.__len__()):
                 new_born = Herbivore(0, 0)
-                if ind.weight_decrease_birth(new_born.w) < ind.w:
+                if ind.weight_decrease_birth(new_born.w) < ind.w: # You are reducing the weight in the if test as well. The mother is not supposed to lose weight if it will xi*babyweight > motherweight
                     ind.weight_decrease_birth(new_born.w)
-                    self.herb.append(new_born)
+                    self.herb.append(new_born) #  You are also appending inside a for loop. which creates a confused for loop. See Hans Plessers note on that. You should never update a list while iterating over it.
 
         carns = self.carn
         for ind in carns:
@@ -78,7 +78,7 @@ class Tile:
                 new_born = Carnivore(0, 0)
                 if ind.weight_decrease_birth(new_born.w) < ind.w:
                     ind.weight_decrease_birth(new_born.w)
-                    self.carn.append(new_born)
+                    self.carn.append(new_born) # Same here
 
     def death(self):
         index = 0
@@ -132,7 +132,7 @@ class Tile:
         for n in self.herb:
             n.age_update()
 
-    def animal_update(self):
+    def animal_update(self): # See comment on update status
         for n in self.herb:
             n.update_status()
 
