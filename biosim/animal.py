@@ -19,14 +19,16 @@ class Animal:
 
     def age_update(self):
         self.a += 1
-        # Should Update fitness
+        self.fitness_update()
 
     def yearly_weight_update(self):
         self.w -= self.w * self.params['eta']
-        # Should Update fitness
+        self.fitness_update()
 
     def weight_decrease_birth(self, newborn_weight): # See comment from landscape
         self.w -= newborn_weight * self.params['xi']
+
+    def weight_birth_check(self, newborn_weight):
         return newborn_weight * self.params['xi']
 
     def birth_prob(self, num_animals):
@@ -48,6 +50,12 @@ class Animal:
         pass
 
     def feed(self, fodder):
+        """
+        Function checks the amount of fodder that the animal can take
+        :param fodder: int
+                    fodder avalble
+        :return:
+        """
         if fodder >= self.params['F']:
             self.weight_increase(self.params['F'])
             return self.params['F']
@@ -58,6 +66,10 @@ class Animal:
             return 0
 
     def fitness_update(self):
+        """
+        Calculates fittness for the animal class and saves the value to self.phi
+        :return : None
+        """
         if self.w <= 0:
             self.phi = 0
         else:
@@ -68,14 +80,9 @@ class Animal:
                                         * self.params['phi_weight']))))
 
     def update_status(self):
-        self.fitness_update() # Your fitness is not being updated enough.
-        self.yearly_weight_update() # It should update after weight gain/loss
-        self.age_update()      # It should also update after aging
-# Also remember that ALL animals first eat
-# then ALL animals Procreate
-# then ALL animals Migrate
-# then ALL animals Age
-# then ALL animals Loses weight etc. They do not go through the whole cycle individually.
+        self.fitness_update()
+        self.yearly_weight_update()
+        self.age_update()
 
 
 class Herbivore(Animal):

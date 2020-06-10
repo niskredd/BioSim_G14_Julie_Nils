@@ -1,3 +1,13 @@
+# -*- coding: utf-8 -*-
+
+"""
+
+"""
+
+__author__ = 'Julie Martin, Nils Skreddernes'
+__email__ = ''
+
+
 from biosim.animal import *
 import time
 from random import sample, random
@@ -5,24 +15,24 @@ from random import sample, random
 
 class Island:
 
-    def __init__(self):
-        self.map = ""
+    def __init__(self, map):
+        self.map = map
         self.tiles_list = []
 
     def create_island(self):
-        self.map.split('\n')
+        maps = self.map.split("\n")
         x = 1
         y = 1
-        for n in map:
-            for l in n:
-                if l == "W":
-                    self.tiles_list.append(Water((x, y)))
-                elif l == "D":
-                    self.tiles_list.append(Desert((x, y)))
-                elif l == "L":
-                    self.tiles_list.append(Lowland((x, y)))
-                elif l == "H":
-                    self.tiles_list.append(Highland((x, y)))
+        for line in maps:
+            for letter in line:
+                if letter == "W":
+                    self.tiles_list.append(Water([x, y]))
+                elif letter == "D":
+                    self.tiles_list.append(Desert([x, y]))
+                elif letter == "L":
+                    self.tiles_list.append(Lowland([x, y]))
+                elif letter == "H":
+                    self.tiles_list.append(Highland([x, y]))
             x += 1
             y += 1
 
@@ -32,7 +42,12 @@ class Island:
 
     #Runs one year on tile
     def tile_update(self):
-        pass
+        for tile in self.tiles_list:
+            tile.feed_animals()
+            tile.birth()
+            tile.animal_update()
+            tile.death()
+            tile.update_fodder_anount()
 
 
 class Tile:
@@ -63,17 +78,17 @@ class Tile:
         for ind in herbs:
             if ind.birth_prob(herbs.__len__()):
                 new_born = Herbivore(0, 0)
-                if ind.weight_decrease_birth(new_born.w) < ind.w: # You are reducing the weight in the if test as well. The mother is not supposed to lose weight if it will xi*babyweight > motherweight
+                if ind.weight_birth_check(new_born.w) < ind.w:
                     ind.weight_decrease_birth(new_born.w)
-                    self.herb.append(new_born) #  You are also appending inside a for loop. which creates a confused for loop. See Hans Plessers note on that. You should never update a list while iterating over it.
+                    self.herb.append(new_born)
 
         carns = self.carn
         for ind in carns:
             if ind.birth_prob(carns.__len__()):
                 new_born = Carnivore(0, 0)
-                if ind.weight_decrease_birth(new_born.w) < ind.w:
+                if ind.weight_birth_check(new_born.w) < ind.w:
                     ind.weight_decrease_birth(new_born.w)
-                    self.carn.append(new_born) # Same here
+                    self.carn.append(new_born)
 
     def death(self):
         index = 0
@@ -92,6 +107,7 @@ class Tile:
         herbs = sample(self.herb, self.herb.__len__())
         for herb in herbs:
             self.fodder -= herb.feed(self.fodder)
+            herb.fitness_update()
 
         for index in range(self.herb.__len__()):
             min_phi = self.herb[0]
@@ -101,7 +117,9 @@ class Tile:
             self.herb.remove(min_phi)
             self.herb.insert(index, min_phi)
 
+        # herbs = sorted(herbs, key=fitness_key)
         carns = self.carn
+
         for index in range(carns.__len__()):
             max_phi = carns[0]
             for carn in carns[index:]:
@@ -110,10 +128,13 @@ class Tile:
             carns.remove(max_phi)
             carns.insert(index, max_phi)
 
+        # carns = sorted(carns, key=fitness_key, reverse=True)
+
         for carn in carns:
             for herb in self.herb:
                 if carn.kill_herbivore(herb):
                     self.herb.remove(herb)
+                    carn.fitness_update()
                     if carn.feed(herb.w) > 0:
                         break
 
@@ -128,12 +149,16 @@ class Tile:
         for n in self.carn:
             n.update_status()
 
+    def update_fodder_amount(self):
+        pass
+
 
 class Highland(Tile):
 
     def __init__(self, grid_pos):
-        Tile.__init__(grid_pos)
+        Tile.__init__(self, grid_pos)
         self.fodder = 300
+        self.grid_pos = []
         self.can_move = True
 
     def update_fodder_amount(self):
@@ -154,7 +179,7 @@ class Lowland(Tile):
 class Desert(Tile):
 
     def __init__(self, grid_pos):
-        Tile.__init__(grid_pos)
+        Tile.__init__(self, grid_pos)
         self.fodder = 0
         self.can_move = True
 
@@ -165,7 +190,7 @@ class Desert(Tile):
 class Water(Tile):
 
     def __init__(self, grid_pos):
-        Tile.__init__(grid_pos)
+        Tile.__init__(self, grid_pos)
         self.fodder = 0
         self.can_move = False
 
@@ -184,18 +209,6 @@ if __name__ == '__main__':
         print("Year: " + str(teller))
         print("Number of animals: " + str(mini_map.update_num_animals()))
 
-        if teller == 500:
-            for i in range(20):
-                mini_map.fauna('Carnivore', 5, 20)
-
-        mini_map.feed_animals()
-
-        mini_map.birth()
-
-        mini_map.animal_update()
-
-        mini_map.death()
-
         sum_1 = 0
         sum_2 = 0
         for animal in mini_map.herb:
@@ -208,14 +221,36 @@ if __name__ == '__main__':
             sum_3 += animal.w
             sum_4 += animal.a
 
-        print('\n'+"Herbivore:")
+        sum_5 = 0
+        sum_6 = 0
+        for amimal in mini_map.herb:
+            sum_5 += animal.phi
+
+        for animal in mini_map.carn:
+            sum_6 += animal.phi
+
+        print('\n' + "Herbivore:")
         print("Avg weight: " + str(sum_1 / max(mini_map.herb.__len__(), 1)))
         print("Avg age: " + str(sum_2 / max(mini_map.herb.__len__(), 1)))
+        print("Avg Fitness: " + str(sum_5 / max(mini_map.herb.__len__(), 1)))
 
-        print('\n'+"Carnivore: ")
+        print('\n' + "Carnivore: ")
         print("Avg weight: " + str(sum_3 / max(mini_map.carn.__len__(), 1)))
         print("Avg age: " + str(sum_4 / max(mini_map.carn.__len__(), 1)))
+        print("Avg Fitness: " + str(sum_6 / max(mini_map.carn.__len__(), 1)))
         print('\n')
+
+        if teller == 50:
+            for i in range(20):
+                mini_map.fauna('Carnivore', 5, 20)
+
+        mini_map.feed_animals()
+
+        mini_map.birth()
+
+        mini_map.animal_update()
+
+        mini_map.death()
 
         mini_map.update_fodder_amount()
 

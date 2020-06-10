@@ -31,7 +31,7 @@ class TestHerbivore:
 
     @pytest.fixture()
     def create_herb(self):
-        herb = Herbivore(5, 10)
+        herb = Herbivore(5, 20)
         herb.fitness_update()
         return herb
 
