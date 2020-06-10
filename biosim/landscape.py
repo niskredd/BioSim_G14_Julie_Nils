@@ -85,11 +85,17 @@ class Tile:
         elif species == "Carnivore":
             self.carn.append(Carnivore(age, weight))
 
-    def adding_animal(self, **animal):
-        if animal['species'] == "Herbivore":
-            self.herb.append(Herbivore(animal['age'], animal['weight']))
-        elif animal['species'] == "Carnivore":
-            self.herb.append(Carnivore(animal['age'], animal['weight']))
+    def adding_animal(self, **animal_dir):
+        """
+        Adds animals to this tiles
+        :param animal: {:}
+                      directory
+        :return:
+        """
+        if animal_dir['species'] == "Herbivore":
+            self.herb.append(Herbivore(animal_dir['age'], animal_dir['weight']))
+        elif animal_dir['species'] == "Carnivore":
+            self.herb.append(Carnivore(animal_dir['age'], animal_dir['weight']))
 
     def birth(self):
         herbs = self.herb
