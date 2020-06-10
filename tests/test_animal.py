@@ -74,6 +74,13 @@ class TestHerbivore:
         an = Herbivore(0, 0)
         assert an.w != 0
 
+    def test_a_newborn_is_zero(self):
+        """
+        tests if age of newborn is zero
+        """
+        newborn = Herbivore(0,0)
+        assert newborn.a == 0
+
     def test_fitness_between_one_and_zero(self, create_herb):
         """
         tests if herbivore fitness is between 0 and 1.
@@ -87,6 +94,9 @@ class TestHerbivore:
         create_herb.fitness_update()
         phi_fed = create_herb.phi
         assert phi_unfed < phi_fed
+
+    #def fitness_increase_calculates_right(self):
+    #    assert Herbivore(0,0).phi ==
 
     def test_death_prob(self, create_herb):
         sum_d = 0
