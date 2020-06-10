@@ -16,32 +16,50 @@ from random import sample, random
 class Island:
 
     def __init__(self, map):
-        self.map = map
         self.tiles_list = []
-
-    def create_island(self):
-        maps = self.map.split("\n")
+        """
+        Uses the data form the constuctor to create the island, the string is
+        converted to a list of tiles
+        :return:
+                None
+        """
+        maps = map.split("\n")
         x = 1
         y = 1
         for line in maps:
             for letter in line:
                 if letter == "W":
-                    self.tiles_list.append(Water([x, y]))
+                    self.tiles_list.append(Water((x, y)))
                 elif letter == "D":
-                    self.tiles_list.append(Desert([x, y]))
+                    self.tiles_list.append(Desert((x, y)))
                 elif letter == "L":
-                    self.tiles_list.append(Lowland([x, y]))
+                    self.tiles_list.append(Lowland((x, y)))
                 elif letter == "H":
-                    self.tiles_list.append(Highland([x, y]))
+                    self.tiles_list.append(Highland((x, y)))
             x += 1
             y += 1
 
     def adding_animals(self, tile, animals_to_add):
-        for ind in animals_to_add:
-            tile.adding_animal(ind)
+        """
+        Adding animals til the each tile on the island,
+        all animals, both species
+        :param tile: (int, int)
+        :param animals_to_add: []
+                        list of dictionary's
+        :return:
+                None
+        """
+        for tile_e in self.tiles_list:
+            if tile == tile_e.gridpos:
+                for ind in animals_to_add:
+                    tile.adding_animal(ind)
 
-    #Runs one year on tile
     def tile_update(self):
+        """
+        Runs all tiles on the island, one year
+        :return:
+            None
+        """
         for tile in self.tiles_list:
             tile.feed_animals()
             tile.birth()
