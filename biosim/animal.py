@@ -6,12 +6,13 @@ class Animal:
     params = None
 
     def __init__(self, age, weight):
+        self.phi = 0
         self.a = age
         if age == 0:
             self.w_new_born()
+            self.fitness_update()
         else:
             self.w = weight
-        self.phi = 0
 
     def w_new_born(self):
         self.w = np.random.normal(
