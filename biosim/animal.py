@@ -75,6 +75,10 @@ class Animal:
             self.weight_increase(fodder)
             return fodder
 
+    def migrate_prob(self):
+        self.fitness_update()
+        return self.phi * self.params['mu']
+
     def update_status(self):
         self.yearly_weight_update()
         self.age_update()
