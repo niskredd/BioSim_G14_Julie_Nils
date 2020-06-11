@@ -40,9 +40,6 @@ class Animal:
     def weight_decrease_birth(self, newborn_weight): # See comment from landscape
         return newborn_weight * self.params['xi']
 
-   # def weight_birth_check(self, newborn_weight):
-    #    return newborn_weight * self.params['xi']
-
     def birth_prob(self, num_animals):
         if self.w < self.params['zeta'] * (self.params['w_birth']
                                            + self.params['sigma_birth']):
@@ -63,19 +60,20 @@ class Animal:
 
     def feed(self, fodder):
         """
-        Function checks the amount of fodder that the animal can take
+        Function checks the available amount of fodder.
         :param fodder: int
-                    fodder avalble
-        :return:
+                    Amount of available fodder
+        :return: int
+                    Remaining amount of available fodder
         """
-        if fodder >= self.params['F']:
+        if fodder == 0:
+            return 0
+        elif fodder >= self.params['F']:
             self.weight_increase(self.params['F'])
             return self.params['F']
-        elif 0 < fodder < self.params['F']:
+        else:
             self.weight_increase(fodder)
             return fodder
-        else:
-            return 0
 
     def update_status(self):
         self.yearly_weight_update()
@@ -169,9 +167,12 @@ class Carnivore(Animal):
 
 
 if __name__ == '__main__':
-    for i in range(30):
+    for i in range(3):
         herb = Herbivore(0, 0)
-
-        herb.fitness_update()
-
         print(herb.w)
+        print(herb.phi)
+        herb.weight_increase(80)
+        herb.fitness_update()
+        herb.age_update()
+        print(herb.w)
+        print(herb.phi)
