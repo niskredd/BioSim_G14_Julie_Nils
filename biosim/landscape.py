@@ -9,7 +9,6 @@ __email__ = ''
 
 
 from biosim.animal import *
-import time
 from random import sample
 
 
@@ -22,36 +21,26 @@ class Island:
         :return:
                 None
         """
-        self.tiles_list = []
         if len(map) > 1:
             maps = map.split("\n")
-            x = 1
-            for line in maps:
-                y = 1
-                for letter in line:
-                    if letter == "W":
-                        self.tiles_list.append(Water((x, y)))
-                    elif letter == "D":
-                        self.tiles_list.append(Desert((x, y)))
-                    elif letter == "L":
-                        self.tiles_list.append(Lowland((x, y)))
-                    elif letter == "H":
-                        self.tiles_list.append(Highland((x, y)))
-                    y += 1
+        self.tiles_lists = [[] * maps[0].__len__() for _ in range(maps.__len__())]
+        y = 0
+        for line in maps:
+            x = 0
+            for letter in line:
+                if letter == "W":
+                    self.tiles_lists[y].append(Water((x + 1, y + 1)))
+                elif letter == "D":
+                    self.tiles_lists[y].append(Desert((x + 1, y + 1)))
+                elif letter == "L":
+                    self.tiles_lists[y].append(Lowland((x + 1, y + 1)))
+                    print(str(x+1) + ", " + str(y+1))
+                elif letter == "H":
+                    self.tiles_lists[y].append(Highland((x + 1, y + 1)))
                 x += 1
-        else:
-            x = 1
-            y = 1
-            if map == "W":
-                self.tiles_list.append(Water((x, y)))
-            elif map == "D":
-                self.tiles_list.append(Desert((x, y)))
-            elif map == "L":
-                self.tiles_list.append(Lowland((x, y)))
-            elif map == "H":
-                self.tiles_list.append(Highland((x, y)))
+            y += 1
 
-    def adding_animals(self, *tile, animals_to_add):
+    def adding_animals(self, pop):
         """
         Adding animals til the each tile on the island,
         all animals, both species
@@ -61,13 +50,15 @@ class Island:
         :return:
                 None
         """
-        index = 0
-        for tile_e in self.tiles_list:
-            pos = tile[index]
-            if pos == tile_e.grid_pos:
-                for ind in animals_to_add:
-                    tile_e.adding_animal(animal_dir=ind)
-            index += 0
+        index_y = 0
+        for tiles_in_row in self.tiles_lists:
+            index_x = 0
+            for tile_e in tiles_in_row:
+                pos = pop['loc']
+                if pos == tile_e.grid_pos:
+                    tile_e.adding_animal(pop['pop'])
+                index_x += 1
+            index_y += 1
 
     def tile_update(self):
         """
@@ -76,15 +67,63 @@ class Island:
         :return:
             None
         """
-        for tile in self.tiles_list:
-            tile.feed_animals()
-            tile.birth()
-            tile.animal_update()
-            tile.death()
-            tile.update_fodder_amount()
+        for tile_row in self.tiles_lists:
+            for tile_ in tile_row:
+                tile_.feed_animals()
+                self.migration()
+                tile_.birth()
+                tile_.animal_update()
+                tile_.death()
+                tile_.update_fodder_amount()
+
+    def is_list_of_list_empty(self, list_of_list):
+        for num in list_of_list:
+            if num:
+                return True
+        return False
 
     def migration(self):
-        pass
+
+        for tile_row_m in self.tiles_lists:
+            for tile_m in tile_row_m:
+                to_move = tile_m.migrate_direction()
+                (x, y) = tile_m.grid_pos
+                if self.tiles_lists[y-2][x-1].can_move:
+                    for ind in to_move:
+                        if ind['dir'] == 'north':
+                            if ind['species'] == 'Herbivore':
+                                tile_m.herb.remove(ind['ind'])
+                                self.tiles_lists[y-2][x-1].herb.append(ind['ind'])
+                            if ind['species'] == 'Carnivore':
+                                tile_m.carn.remove(ind['ind'])
+                                self.tiles_lists[y-2][x-1].carn.append(ind['ind'])
+                if self.tiles_lists[y][x-1].can_move:
+                    for ind in to_move:
+                        if ind['dir'] == 'south':
+                            if ind['species'] == 'Herbivore':
+                                tile_m.herb.remove(ind['ind'])
+                                self.tiles_lists[y - 2][x - 1].herb.append(ind['ind'])
+                            if ind['species'] == 'Carnivore':
+                                tile_m.carn.remove(ind['ind'])
+                                self.tiles_lists[y - 2][x - 1].carn.append(ind['ind'])
+                if self.tiles_lists[y-1][x].can_move:
+                    for ind in to_move:
+                        if ind['dir'] == 'east':
+                            if ind['species'] == 'Herbivore':
+                                tile_m.herb.remove(ind['ind'])
+                                self.tiles_lists[y - 2][x - 1].herb.append(ind['ind'])
+                            if ind['species'] == 'Carnivore':
+                                tile_m.carn.remove(ind['ind'])
+                                self.tiles_lists[y - 2][x - 1].carn.append(ind['ind'])
+                if self.tiles_lists[y-1][x-2].can_move:
+                    for ind in to_move:
+                        if ind['dir'] == 'west':
+                            if ind['species'] == 'Herbivore':
+                                tile_m.herb.remove(ind['ind'])
+                                self.tiles_lists[y - 2][x - 1].herb.append(ind['ind'])
+                            if ind['species'] == 'Carnivore':
+                                tile_m.carn.remove(ind['ind'])
+                                self.tiles_lists[y - 2][x - 1].carn.append(ind['ind'])
 
 
 class Tile:
@@ -104,17 +143,17 @@ class Tile:
         elif species == "Carnivore":
             self.carn.append(Carnivore(age, weight))
 
-    def adding_animal(self, **animal_dir):
+    def adding_animal(self, animal_dir):
         """
         Adds animals to this tiles
         :param animal_dir: {:}
                       directory
         """
-        animal_dir = animal_dir['animal_dir']
-        if animal_dir['species'] == 'Herbivore':
-            self.herb.append(Herbivore(animal_dir['age'], animal_dir['weight']))
-        elif animal_dir['species'] == 'Carnivore':
-            self.carn.append(Carnivore(animal_dir['age'], animal_dir['weight']))
+        for ind in animal_dir:
+            if ind['species'] == 'Herbivore':
+                self.herb.append(Herbivore(ind['age'], ind['weight']))
+            elif ind['species'] == 'Carnivore':
+                self.carn.append(Carnivore(ind['age'], ind['weight']))
 
     def birth(self):
         herbs = []
@@ -198,25 +237,18 @@ class Tile:
         pass
 
     def migrate_direction(self):
-        north = []
-        south = []
-        east = []
-        west = []
-        dir_list_herb = [north, south, east, west]
+        carns = []
+        herbs = []
 
         for ind in self.herb:
-            if random() > ind.migrate_prob:
-                direction = random()
-                if direction < 0.25:
-                    dir_list_herb[north].append(ind)
-                if 0.25 < direction < 0.5:
-                    dir_list_herb[east].append(ind)
-                if 0.5 < direction < 0.75:
-                    dir_list_herb[south].append(ind)
-                if 0.75 < direction:
-                    dir_list_herb[west].append(ind)
+            herbs.append(ind.migrate_prob())
 
-        return dir_list_herb
+        for ind in self.carn:
+            carns.append(ind.migrate_prob())
+
+        move_pop = {'move_from': self.grid_pos, 'herbivore': herbs, 'carnivore': carns}
+
+        return move_pop
 
 
 class Highland(Tile):
@@ -224,7 +256,6 @@ class Highland(Tile):
     def __init__(self, grid_pos):
         Tile.__init__(self, grid_pos)
         self.fodder = 300
-        self.grid_pos = []
         self.can_move = True
 
     def update_fodder_amount(self):
@@ -265,25 +296,27 @@ class Water(Tile):
 
 
 if __name__ == '__main__':
-    island = Island("WWW\nWLW\nWWW")
+    island = Island("WWWW\nWLHW\nWLDW\nWWWW")
 
-    ani_pip = []
+    ani_pop = []
     for imd in range(150):
-        ani_pip.append({'species': 'Herbivore', 'age': 1, 'weight': 10.})
+        ani_pop.append({'species': 'Herbivore', 'age': 1, 'weight': 10.})
 
     for imd in range(20):
-        ani_pip.append({'species': 'Carnivore', 'age': 1, 'weight': 10.})
+        ani_pop.append({'species': 'Carnivore', 'age': 1, 'weight': 10.})
 
-    island.adding_animals((2, 2), animals_to_add=ani_pip)
+    island.adding_animals({'loc': (2, 2), 'pop': ani_pop})
 
     year = 0
     for i in range(100):
         print("Year: " + str(year))
         island.tile_update()
-        for tile in island.tiles_list:
-            if tile.can_move:
-                print("Carn: " + str(tile.carn.__len__()))
-                print("Herb: " + str(tile.herb.__len__()))
+        for tile_row in island.tiles_lists:
+            for tile in tile_row:
+                if tile.can_move:
+                    print("Tile: " + str(tile.grid_pos))
+                    print("Carn: " + str(tile.carn.__len__()))
+                    print("Herb: " + str(tile.herb.__len__()))
         year += 1
 
 """
