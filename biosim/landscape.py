@@ -34,7 +34,6 @@ class Island:
                     self.tiles_lists[y].append(Desert((x + 1, y + 1)))
                 elif letter == "L":
                     self.tiles_lists[y].append(Lowland((x + 1, y + 1)))
-                    print(str(x+1) + ", " + str(y+1))
                 elif letter == "H":
                     self.tiles_lists[y].append(Highland((x + 1, y + 1)))
                 x += 1
@@ -88,36 +87,30 @@ class Island:
             for tile_m in tile_row_m:
                 to_move = tile_m.migrate_direction()
                 (x, y) = tile_m.grid_pos
-                if self.tiles_lists[y-2][x-1].can_move:
-                    for ind in to_move:
-                        if ind['dir'] == 'north':
+                if self.is_list_of_list_empty(to_move['animals']):
+                    for ind in to_move['animals']:
+                        if self.tiles_lists[y-2][x-1].can_move and ind['dir'] == 'north':
                             if ind['species'] == 'Herbivore':
                                 tile_m.herb.remove(ind['ind'])
                                 self.tiles_lists[y-2][x-1].herb.append(ind['ind'])
                             if ind['species'] == 'Carnivore':
                                 tile_m.carn.remove(ind['ind'])
                                 self.tiles_lists[y-2][x-1].carn.append(ind['ind'])
-                if self.tiles_lists[y][x-1].can_move:
-                    for ind in to_move:
-                        if ind['dir'] == 'south':
+                        if self.tiles_lists[y][x-1].can_move and ind['dir'] == 'south':
                             if ind['species'] == 'Herbivore':
                                 tile_m.herb.remove(ind['ind'])
                                 self.tiles_lists[y - 2][x - 1].herb.append(ind['ind'])
                             if ind['species'] == 'Carnivore':
                                 tile_m.carn.remove(ind['ind'])
                                 self.tiles_lists[y - 2][x - 1].carn.append(ind['ind'])
-                if self.tiles_lists[y-1][x].can_move:
-                    for ind in to_move:
-                        if ind['dir'] == 'east':
+                        if self.tiles_lists[y-1][x].can_move and ind['dir'] == 'east':
                             if ind['species'] == 'Herbivore':
                                 tile_m.herb.remove(ind['ind'])
                                 self.tiles_lists[y - 2][x - 1].herb.append(ind['ind'])
                             if ind['species'] == 'Carnivore':
                                 tile_m.carn.remove(ind['ind'])
                                 self.tiles_lists[y - 2][x - 1].carn.append(ind['ind'])
-                if self.tiles_lists[y-1][x-2].can_move:
-                    for ind in to_move:
-                        if ind['dir'] == 'west':
+                        if self.tiles_lists[y-1][x-2].can_move and ind['dir'] == 'west':
                             if ind['species'] == 'Herbivore':
                                 tile_m.herb.remove(ind['ind'])
                                 self.tiles_lists[y - 2][x - 1].herb.append(ind['ind'])
@@ -237,16 +230,15 @@ class Tile:
         pass
 
     def migrate_direction(self):
-        carns = []
-        herbs = []
+        animal_list = []
 
         for ind in self.herb:
-            herbs.append(ind.migrate_prob())
+            animal_list.append(ind.migrate_prob())
 
         for ind in self.carn:
-            carns.append(ind.migrate_prob())
+            animal_list.append(ind.migrate_prob())
 
-        move_pop = {'move_from': self.grid_pos, 'herbivore': herbs, 'carnivore': carns}
+        move_pop = {'move_from': self.grid_pos, 'animals': animal_list}
 
         return move_pop
 
