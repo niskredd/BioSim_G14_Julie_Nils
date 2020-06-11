@@ -197,6 +197,27 @@ class Tile:
     def update_fodder_amount(self):
         pass
 
+    def migrate_direction(self):
+        north = []
+        south = []
+        east = []
+        west = []
+        dir_list_herb = [north, south, east, west]
+
+        for ind in self.herb:
+            if random() > ind.migrate_prob:
+                direction = random()
+                if direction < 0.25:
+                    dir_list_herb[north].append(ind)
+                if 0.25 < direction < 0.5:
+                    dir_list_herb[east].append(ind)
+                if 0.5 < direction < 0.75:
+                    dir_list_herb[south].append(ind)
+                if 0.75 < direction:
+                    dir_list_herb[west].append(ind)
+
+        return dir_list_herb
+
 
 class Highland(Tile):
 
@@ -256,7 +277,7 @@ if __name__ == '__main__':
     island.adding_animals((2, 2), animals_to_add=ani_pip)
 
     year = 0
-    for i in range(1000):
+    for i in range(100):
         print("Year: " + str(year))
         island.tile_update()
         for tile in island.tiles_list:
