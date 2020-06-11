@@ -37,7 +37,6 @@ class Island:
                         self.tiles_list.append(Lowland((x, y)))
                     elif letter == "H":
                         self.tiles_list.append(Highland((x, y)))
-                    print(str(x) + ", " + str(y))
                     y += 1
                 x += 1
         else:
@@ -52,8 +51,6 @@ class Island:
             elif map == "H":
                 self.tiles_list.append(Highland((x, y)))
 
-            print("One tile:   " + str(map))
-
     def adding_animals(self, *tile, animals_to_add):
         """
         Adding animals til the each tile on the island,
@@ -64,14 +61,18 @@ class Island:
         :return:
                 None
         """
+        index = 0
         for tile_e in self.tiles_list:
-            if tile == tile_e.grid_pos:
+            pos = tile[index]
+            if pos == tile_e.grid_pos:
                 for ind in animals_to_add:
-                    tile.adding_animal(**ind)
+                    tile_e.adding_animal(animal_dir=ind)
+            index += 0
 
     def tile_update(self):
         """
-        Runs all tiles on the island, one year
+        Runs all tiles on the island, one year.
+        Updates all values
         :return:
             None
         """
@@ -80,7 +81,10 @@ class Island:
             tile.birth()
             tile.animal_update()
             tile.death()
-            tile.update_fodder_anount()
+            tile.update_fodder_amount()
+
+    def migration(self):
+        pass
 
 
 class Tile:
@@ -100,17 +104,17 @@ class Tile:
         elif species == "Carnivore":
             self.carn.append(Carnivore(age, weight))
 
-    def adding_animal(self, animal_dir):
+    def adding_animal(self, **animal_dir):
         """
         Adds animals to this tiles
         :param animal_dir: {:}
                       directory
-        :return:
         """
-        if animal_dir['species'] == "Herbivore":
+        animal_dir = animal_dir['animal_dir']
+        if animal_dir['species'] == 'Herbivore':
             self.herb.append(Herbivore(animal_dir['age'], animal_dir['weight']))
-        elif animal_dir['species'] == "Carnivore":
-            self.herb.append(Carnivore(animal_dir['age'], animal_dir['weight']))
+        elif animal_dir['species'] == 'Carnivore':
+            self.carn.append(Carnivore(animal_dir['age'], animal_dir['weight']))
 
     def birth(self):
         herbs = []
@@ -240,34 +244,26 @@ class Water(Tile):
 
 
 if __name__ == '__main__':
-    island = Island("L")
-    ani_pip = [{'species': 'Herbivore', 'age': 1, 'weight': 10.},
-               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-               {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-               {'species': 'Carnivore', 'age': 1, 'weight': 10.},
-               {'species': 'Carnivore', 'age': 1, 'weight': 10.},
-               {'species': 'Carnivore', 'age': 1, 'weight': 10.},
-               {'species': 'Carnivore', 'age': 1, 'weight': 10.}]
+    island = Island("WWW\nWLW\nWWW")
 
-    island.adding_animals((1, 1), ani_pip)
+    ani_pip = []
+    for imd in range(150):
+        ani_pip.append({'species': 'Herbivore', 'age': 1, 'weight': 10.})
 
-    for i in range(10):
+    for imd in range(20):
+        ani_pip.append({'species': 'Carnivore', 'age': 1, 'weight': 10.})
+
+    island.adding_animals((2, 2), animals_to_add=ani_pip)
+
+    year = 0
+    for i in range(100):
         island.tile_update()
         for tile in island.tiles_list:
-            print(tile.carn.__len__())
-            print(tile.herb.__len__())
+            if tile.can_move:
+                print("Carn: " + str(tile.carn.__len__()))
+                print("Herb: " + str(tile.herb.__len__()))
+        year += 1
+
 """
 if __name__ == '__main__':
     teller = 0
