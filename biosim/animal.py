@@ -8,27 +8,36 @@ class Animal:
     def __init__(self, age, weight):
         self.a = age
         if age == 0:
-            self._new_born()
+            self.w_new_born()
         else:
             self.w = weight
         self.phi = 0
 
-    def _new_born(self):
+    def w_new_born(self):
         self.w = np.random.normal(
             scale=self.params['sigma_birth'], loc=self.params['w_birth'])
 
+    def fitness_update(self):
+        """
+        Calculates fitness for the animal class and saves the value to self.phi
+        :return : None
+        """
+        if self.w <= 0:
+            self.phi = 0
+        else:
+            self.phi = (
+                    1 / (1 + np.exp((self.a - self.params['a_half'])
+                                    * self.params['phi_age']))
+                    * 1 / (1 + np.exp(-((self.w - self.params['w_half'])
+                                        * self.params['phi_weight']))))
+
     def age_update(self):
         self.a += 1
-        self.fitness_update()
 
     def yearly_weight_update(self):
         self.w -= self.w * self.params['eta']
-        self.fitness_update()
 
     def weight_decrease_birth(self, newborn_weight): # See comment from landscape
-        self.w -= newborn_weight * self.params['xi']
-
-    def weight_birth_check(self, newborn_weight):
         return newborn_weight * self.params['xi']
 
     def birth_prob(self, num_animals):
@@ -46,43 +55,31 @@ class Animal:
             probability = self.params['omega'] * (1 - self.phi)
             return random() < probability
 
-    def weight_increase(self):
+    def weight_increase(self, food):
         pass
 
     def feed(self, fodder):
         """
-        Function checks the amount of fodder that the animal can take
+        Function checks the available amount of fodder.
         :param fodder: int
-                    fodder avalble
-        :return:
+                    Amount of available fodder
+        :return: int
+                    Remaining amount of available fodder
         """
-        if fodder >= self.params['F']:
+        if fodder == 0:
+            return 0
+        elif fodder >= self.params['F']:
             self.weight_increase(self.params['F'])
             return self.params['F']
-        elif 0 < fodder < self.params['F']:
+        else:
             self.weight_increase(fodder)
             return fodder
-        else:
-            return 0
-
-    def fitness_update(self):
-        """
-        Calculates fittness for the animal class and saves the value to self.phi
-        :return : None
-        """
-        if self.w <= 0:
-            self.phi = 0
-        else:
-            self.phi = (
-                    1 / (1 + np.exp((self.a - self.params['a_half'])
-                                    * self.params['phi_age']))
-                    * 1 / (1 + np.exp(-((self.w - self.params['w_half'])
-                                        * self.params['phi_weight']))))
 
     def update_status(self):
-        self.fitness_update()
         self.yearly_weight_update()
         self.age_update()
+        self.fitness_update()
+
 
 class Herbivore(Animal):
     """
@@ -170,9 +167,12 @@ class Carnivore(Animal):
 
 
 if __name__ == '__main__':
-    for i in range(30):
+    for i in range(3):
         herb = Herbivore(0, 0)
-
-        herb.fitness_update()
-
         print(herb.w)
+        print(herb.phi)
+        herb.weight_increase(80)
+        herb.fitness_update()
+        herb.age_update()
+        print(herb.w)
+        print(herb.phi)
