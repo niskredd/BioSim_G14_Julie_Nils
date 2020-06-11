@@ -256,7 +256,8 @@ if __name__ == '__main__':
     island.adding_animals((2, 2), animals_to_add=ani_pip)
 
     year = 0
-    for i in range(100):
+    for i in range(1000):
+        print("Year: " + str(year))
         island.tile_update()
         for tile in island.tiles_list:
             if tile.can_move:
