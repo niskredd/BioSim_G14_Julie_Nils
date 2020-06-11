@@ -167,9 +167,12 @@ class Carnivore(Animal):
 
 
 if __name__ == '__main__':
-    for i in range(30):
+    for i in range(3):
         herb = Herbivore(0, 0)
-
-        herb.fitness_update()
-
         print(herb.w)
+        print(herb.phi)
+        herb.weight_increase(80)
+        herb.fitness_update()
+        herb.age_update()
+        print(herb.w)
+        print(herb.phi)

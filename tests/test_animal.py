@@ -81,7 +81,7 @@ class TestHerbivore:
         newborn = Herbivore(0, 0)
         assert newborn.a == 0
 
-    def test_fitness_between_one_and_zero(self, create_herb):
+    def test_fitness_update(self, create_herb):
         """
         tests if herbivore fitness is between 0 and 1.
         """
@@ -96,22 +96,18 @@ class TestHerbivore:
         assert phi_unfed < phi_fed
 
     def test_fitness_update_gives_right_value(self, create_herb):
+        create_herb.params['a_half'] = 40
+        create_herb.params['phi_age'] = 0.2
+        create_herb.params['phi_weight'] = 0.1
+        create_herb.params['w_half'] = 10
+        create_herb.fitness_update()
         assert create_herb.phi == pytest.approx(0.7303925)
-
-    def test_fitness_update_given_parameters(self, create_herb):
-        herbivore = create_herb
-        herbivore.params['a_half'] = 0
-        herbivore.params['phi_age'] = 0
-        herbivore.params['phi_weight'] = 0
-        herbivore.params['w_half'] = 0
-        herbivore.fitness_update()
-        assert herbivore.phi == pytest.approx(1/4)
 
     def test_yearly_weight_update(self, create_herb):
         weight_1 = create_herb.w
         create_herb.yearly_weight_update()
         weight_2 = create_herb.w
-        assert weight_1 < weight_2
+        assert weight_2 < weight_1
 
     def test_death_prob(self, create_herb):
         sum_d = 0
