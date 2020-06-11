@@ -89,6 +89,7 @@ class Island:
                 (x, y) = tile_m.grid_pos
                 if self.is_list_of_list_empty(to_move['animals']):
                     for ind in to_move['animals']:
+                        print(ind['dir'])
                         if self.tiles_lists[y-2][x-1].can_move and ind['dir'] == 'north':
                             if ind['species'] == 'Herbivore':
                                 tile_m.herb.remove(ind['ind'])
