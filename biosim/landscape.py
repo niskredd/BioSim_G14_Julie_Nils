@@ -16,7 +16,7 @@ class Island:
 
     def __init__(self, map):
         """
-        Uses the data form the constuctor to create the island, the string is
+        Uses the data from the constructor to create the island, the string is
         converted to a list of tiles
         :return:
                 None
@@ -41,7 +41,7 @@ class Island:
 
     def adding_animals(self, pop):
         """
-        Adding animals til the each tile on the island,
+        Adding animals to each tile on the island,
         all animals, both species
         :param tile: (int, int)
         :param animals_to_add: []
@@ -74,6 +74,15 @@ class Island:
                 tile_.animal_update()
                 tile_.death()
                 tile_.update_fodder_amount()
+
+    def tile_neighbours(self, tile):
+        neighbour_west = (tile(0), tile(1) - 1)
+        neighbour_east = (tile(0), tile(1) + 1)
+        neighbour_north = (tile(0) + 1, tile(1))
+        neighbour_south = (tile(0) - 1, tile(1))
+        return(
+            neighbour_north, neighbour_south, neighbour_east, neighbour_west
+        )
 
     def is_list_of_list_empty(self, list_of_list):
         for num in list_of_list:
