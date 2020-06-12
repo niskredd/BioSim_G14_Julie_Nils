@@ -13,6 +13,7 @@ class Animal:
             self.fitness_update()
         else:
             self.w = weight
+        self.has_moved = False
 
     def w_new_born(self):
         self.w = np.random.normal(

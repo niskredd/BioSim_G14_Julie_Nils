@@ -89,12 +89,10 @@ class Island:
 
     def migrate(self, **tile):
         for animal in tile['population']:
-            if animal.has_moved:
             if animal.can_migrate():
                 destination = random.choice(self.tile_neighbours(tile['location']))
                 if destination.can_move:
 
-                    animal['has_moved'] = 'Y'
 
         for destination in self.tile_neighbours(tile['location']):
             destination.adding_animals(tile['population'])
