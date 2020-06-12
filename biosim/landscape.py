@@ -43,6 +43,7 @@ class Island:
         """
         Adding animals to each tile on the island,
         all animals, both species
+
         :param tile: (int, int)
         :param animals_to_add: []
                         list of dictionary's
@@ -88,8 +89,12 @@ class Island:
 
     def migrate(self, **tile):
         for animal in tile['population']:
+            if animal.has_moved:
             if animal.can_migrate():
-                animal['location'] = random.choice(self.tile_neighbours(tile['location']))
+                destination = random.choice(self.tile_neighbours(tile['location']))
+                if destination.can_move:
+
+                    animal['has_moved'] = 'Y'
 
         for destination in self.tile_neighbours(tile['location']):
             destination.adding_animals(tile['population'])

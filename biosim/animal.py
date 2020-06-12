@@ -12,6 +12,7 @@ class Animal:
         else:
             self.w = weight
         self.phi = 0
+        self.has_moved = False
 
     def w_new_born(self):
         self.w = np.random.normal(
@@ -79,6 +80,7 @@ class Animal:
         self.yearly_weight_update()
         self.age_update()
         self.fitness_update()
+        self.has_moved = False
 
 
 class Herbivore(Animal):
@@ -113,16 +115,17 @@ class Herbivore(Animal):
 
     def migrate_prob(self):
         self.fitness_update()
-        if random() < self.phi * self.params['mu']:
-            direction = random()
-            if direction < 0.25:
-                return {'species': 'Herbivore', 'ind': self, 'dir': 'north'}
-            if 0.25 < direction < 0.5:
-                return {'species': 'Herbivore', 'ind': self, 'dir': 'east'}
-            if 0.5 < direction < 0.75:
-                return {'species': 'Herbivore', 'ind': self, 'dir': 'south'}
-            if 0.75 < direction:
-                return {'species': 'Herbivore', 'ind': self, 'dir': 'west'}
+        if not self.has_moved:
+            if random() < self.phi * self.params['mu']:
+                direction = random()
+                if direction < 0.25:
+                    return {'species': 'Herbivore', 'ind': self, 'dir': 'north'}
+                if 0.25 < direction < 0.5:
+                    return {'species': 'Herbivore', 'ind': self, 'dir': 'east'}
+                if 0.5 < direction < 0.75:
+                    return {'species': 'Herbivore', 'ind': self, 'dir': 'south'}
+                if 0.75 < direction:
+                    return {'species': 'Herbivore', 'ind': self, 'dir': 'west'}
 
 
 class Carnivore(Animal):
