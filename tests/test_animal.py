@@ -17,7 +17,7 @@ class TestAnimal:
         """
         tests if fitness is zero when weight of animal is zero
         """
-        if create_ani.w == 0:
+        if create_ani.w <= 0:
             assert create_ani.phi == 0
 
     def test_w_new_born_normal_distribution(self):
@@ -235,13 +235,8 @@ class TestCarnivore:
         herb = create_herb
         herb.phi = 0.1
         create_carn.phi = 0.9
-        assert create_carn.kill_herbivore(herb) is True
+        a = 0
+        for i in range(100):
+            if create_carn.kill_herbivore(herb):
+                a += 1
 
-    def test_kill_herbivore_when_altering_deltaphimax(
-            self, create_carn, create_herb
-    ):
-        herb = create_herb
-        herb.phi = 0.55
-        create_carn.phi = 0.4
-
-        create_carn.params['DeltaPhiMax'] = 0
