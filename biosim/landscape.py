@@ -329,7 +329,7 @@ if __name__ == '__main__':
     island.adding_animals({'loc': (2, 2), 'pop': ani_pop})
 
     year = 0
-    for i in range(100):
+    for i in range(1000):
         print("Year: " + str(year))
         island.tile_update()
         for tile_row in island.tiles_lists:
