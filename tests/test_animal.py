@@ -87,6 +87,14 @@ class TestHerbivore:
         newborn = Herbivore(0, 0)
         assert newborn.a == 0
 
+    def test_params_are_right(self, create_herb):
+        assert create_herb.params == {'w_birth': 8.0, 'sigma_birth': 1.5,
+                                      'beta': 0.9, 'eta': 0.05, 'a_half': 40.,
+                                      'phi_age': 0.2, 'w_half': 10.,
+                                      'phi_weight': 0.1, 'mu': 0.25,
+                                      'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2,
+                                      'omega': 0.4, 'F': 10.}
+
     def test_fitness_update(self, create_herb):
         """
         tests if herbivore fitness is between 0 and 1.
@@ -154,21 +162,22 @@ class TestHerbivore:
         assert w1 + create_herb.params['beta']*food == w2
         assert food == create_herb.params['F']
 
-
     def test_feed_when_fodder_equals_desired_amount(self, create_herb):
         available_fodder = create_herb.params['F']
         food_eaten = create_herb.feed(available_fodder)
         assert food_eaten == available_fodder
 
-    def migrate_probability_is_right(self, create_herb):
+    def test_migrate_prob_is_right(self, create_herb):
         assert \
             create_herb.migrate_prob() == \
             create_herb.phi * create_herb.params['mu']
 
-    def migrate_probability_increases_when_phi_increases(self, create_herb):
-        create_herb.phi = 0.1
+    def test_migrate_prob_increases_when_phi_increases(self, create_herb):
+        create_herb.w = 10
+        create_herb.a = 60
         m1 = create_herb.migrate_prob()
-        create_herb.phi = 0.9
+        create_herb.w = 50
+        create_herb.a = 20
         m2 = create_herb.migrate_prob()
         assert m1 < m2
 
@@ -184,7 +193,15 @@ class TestHerbivore:
         assert a1 != a2
         assert phi1 != phi2
 
+    def test_weight_increase_when_fodder_zero(self, create_herb):
+        w1 = create_herb.w
+        create_herb.weight_increase(0)
+        assert create_herb.w == w1
 
+    def test_weight_increase_when_fodder_not_zero(self, create_herb):
+        w1 = create_herb.w
+        create_herb.weight_increase(80)
+        assert w1 < create_herb.w
 
 class TestCarnivore:
 
@@ -200,15 +217,31 @@ class TestCarnivore:
         herb.fitness_update()
         return herb
 
-    def test_carnivores(self, create_carn):
-        assert create_carn.params['gamma'] == 0.8
-        assert create_carn.params['F'] == 50.0
+    def test_carnivores_params(self, create_carn):
+        assert create_carn.params == {
+            'w_birth': 6., 'sigma_birth': 1., 'beta': 0.75, 'eta': 0.125,
+            'a_half': 40., 'phi_age': 0.3, 'w_half': 4., 'phi_weight': 0.4,
+            'mu': 0.4, 'gamma': 0.8, 'zeta': 3.5, 'xi': 1.5, 'omega': 0.8,
+            'F': 50., 'DeltaPhiMax': 10.
+        }
 
-    def test_kill_herbivore(self, create_carn, create_herb):
-        test_val = 0
+    def test_kill_herbivore_when_herb_phi_high(self, create_carn, create_herb):
+        herb = create_herb
+        herb.phi = 0.9
+        create_carn.phi = 0.1
+        assert create_carn.kill_herbivore(herb) is False
 
-        for i in range(100):
-            res = create_carn.kill_herbivore(create_herb)
-            if res:
-                test_val += 1
-        assert 0 <= test_val <= 100
+    def test_kill_herbivore_when_herb_phi_low(self, create_carn, create_herb):
+        herb = create_herb
+        herb.phi = 0.1
+        create_carn.phi = 0.9
+        assert create_carn.kill_herbivore(herb) is True
+
+    def test_kill_herbivore_when_altering_deltaphimax(
+            self, create_carn, create_herb
+    ):
+        herb = create_herb
+        herb.phi = 0.55
+        create_carn.phi = 0.4
+
+        create_carn.params['DeltaPhiMax'] = 0
