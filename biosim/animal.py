@@ -113,7 +113,7 @@ class Herbivore(Animal):
 
     def migrate_prob(self):
         self.fitness_update()
-        if random() > self.phi * self.params['mu']:
+        if random() < self.phi * self.params['mu']:
             direction = random()
             if direction < 0.25:
                 return {'species': 'Herbivore', 'ind': self, 'dir': 'north'}

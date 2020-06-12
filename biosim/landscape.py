@@ -53,9 +53,9 @@ class Island:
         for tiles_in_row in self.tiles_lists:
             index_x = 0
             for tile_e in tiles_in_row:
-                pos = pop['loc']
+                pos = pop['location']
                 if pos == tile_e.grid_pos:
-                    tile_e.adding_animal(pop['pop'])
+                    tile_e.adding_animal(pop['population'])
                 index_x += 1
             index_y += 1
 
@@ -75,14 +75,24 @@ class Island:
                 tile_.death()
                 tile_.update_fodder_amount()
 
+    @staticmethod
     def tile_neighbours(self, tile):
         neighbour_west = (tile(0), tile(1) - 1)
         neighbour_east = (tile(0), tile(1) + 1)
         neighbour_north = (tile(0) + 1, tile(1))
         neighbour_south = (tile(0) - 1, tile(1))
-        return(
-            neighbour_north, neighbour_south, neighbour_east, neighbour_west
-        )
+        return {
+            'north': neighbour_north, 'south': neighbour_south,
+            'west': neighbour_west, 'east': neighbour_east
+        }
+
+    def migrate(self, **tile):
+        for animal in tile['population']:
+            if animal.can_migrate():
+                animal['location'] = random.choice(self.tile_neighbours(tile['location']))
+
+        for destination in self.tile_neighbours(tile['location']):
+            destination.adding_animals(tile['population'])
 
     def is_list_of_list_empty(self, list_of_list):
         for num in list_of_list:
@@ -238,6 +248,10 @@ class Tile:
 
     def update_fodder_amount(self):
         pass
+
+    def can_migrate(self, animal):
+        animal.fitness_update()
+        return random() < animal.phi * animal.params['mu']
 
     def migrate_direction(self):
         animal_list = []
