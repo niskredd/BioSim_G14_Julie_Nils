@@ -47,7 +47,13 @@ class TestAnimal:
     def test_feed_returns_zero_if_param_zero(self, create_ani):
         assert create_ani.feed(0) == 0
 
-    def test_death_prob_if_w_is_zero(self, create_ani):
+    def test_feed_does_not_alter_w_when_param_zero(self, create_ani):
+        w1 = create_ani.w
+        create_ani.feed(0)
+        w2 = create_ani.w
+        assert w1 == w2
+
+    def test_death_prob_if_weight_is_zero(self, create_ani):
         """
         Tests if death_prob returns True if animal weight is zero or less
         """
@@ -109,23 +115,75 @@ class TestHerbivore:
         weight_2 = create_herb.w
         assert weight_2 < weight_1
 
-    def test_death_prob(self, create_herb):
+    def test_weight_decrease_birth_returns_right_value(self, create_herb):
+        assert \
+            create_herb.weight_decrease_birth(8) == 8*create_herb.params['xi']
+
+    def test_weight_decrease_birth_is_positive(self, create_herb):
+        assert create_herb.weight_decrease_birth(8) > 0
+
+    def test_birth_prob_when_mothers_weight_too_low(self, create_herb):
+        create_herb.w =(
+            create_herb.params['zeta']*create_herb.params['w_birth']
+            + create_herb.params['sigma_birth']
+            - 1
+        )
+        assert create_herb.birth_prob(100) is False
+
+    def test_birth_prob_is_zero_when_animal_is_alone(self, create_herb):
+        assert create_herb.birth_prob(1) is False
+
+    def test_death_prob_given_fitness(self, create_herb):
+        create_herb.params['omega'] = 0.4
+        create_herb.phi = 0.5
         sum_d = 0
         for i in range(100):
             if create_herb.death_prob():
                 sum_d += 1
-        assert 0 <= sum_d <= 100
+        assert sum_d/100 == pytest.approx(0.2, rel=1e0)
 
-    def test_birth_prob(self, create_herb):
-        assert create_herb.birth_prob(1) is False
-        create_herb.w = 25
+    def test_death_prob_when_fitness_is_one(self, create_herb):
+        create_herb.w = 40
+        create_herb.phi = 1
+        assert create_herb.death_prob() is False
 
-        sum_b = 0
-        for i in range(100):
-            create_herb.w += 1
-            if create_herb.birth_prob(50):
-                sum_b += 1
-        assert 10 < sum_b < 95
+    def test_feed_when_fodder_more_than_desired_amount(self, create_herb):
+        w1 = create_herb.w
+        food = create_herb.feed(create_herb.params['F'] + 200)
+        w2 = create_herb.w
+        assert w1 + create_herb.params['beta']*food == w2
+        assert food == create_herb.params['F']
+
+
+    def test_feed_when_fodder_equals_desired_amount(self, create_herb):
+        available_fodder = create_herb.params['F']
+        food_eaten = create_herb.feed(available_fodder)
+        assert food_eaten == available_fodder
+
+    def migrate_probability_is_right(self, create_herb):
+        assert \
+            create_herb.migrate_prob() == \
+            create_herb.phi * create_herb.params['mu']
+
+    def migrate_probability_increases_when_phi_increases(self, create_herb):
+        create_herb.phi = 0.1
+        m1 = create_herb.migrate_prob()
+        create_herb.phi = 0.9
+        m2 = create_herb.migrate_prob()
+        assert m1 < m2
+
+    def test_update_status_alters_params(self, create_herb):
+        w1 = create_herb.w
+        a1 = create_herb.a
+        phi1 = create_herb.phi
+        create_herb.update_status()
+        w2 = create_herb.w
+        a2 = create_herb.a
+        phi2 = create_herb.phi
+        assert w1 != w2
+        assert a1 != a2
+        assert phi1 != phi2
+
 
 
 class TestCarnivore:
