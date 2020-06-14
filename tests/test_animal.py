@@ -148,6 +148,13 @@ class TestHerbivore:
     def test_birth_prob_is_zero_when_animal_is_alone(self, create_herb):
         assert create_herb.birth_prob(1) is False
 
+    def test_birth_prob_true_when_number_of_animals_is_high(self, create_herb):
+        herb = create_herb
+        herb.w = 50
+        herb.phi = 0.7
+        assert herb.birth_prob(100)
+
+
     def test_death_prob_given_fitness(self, create_herb):
         create_herb.params['omega'] = 0.4
         create_herb.phi = 0.5
