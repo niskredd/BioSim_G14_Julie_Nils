@@ -92,10 +92,10 @@ class Island:
             if animal.can_migrate():
                 destination = random.choice(self.tile_neighbours(tile['location']))
                 if destination.can_move:
+                    animal['location'] = destination
+                    animal.move()
 
-
-        for destination in self.tile_neighbours(tile['location']):
-            destination.adding_animals(tile['population'])
+    def
 
     def is_list_of_list_empty(self, list_of_list):
         for num in list_of_list:
@@ -268,6 +268,9 @@ class Tile:
         move_pop = {'move_from': self.grid_pos, 'animals': animal_list}
 
         return move_pop
+
+    def move(self, destination):
+        self.has_moved = True
 
 
 class Highland(Tile):
