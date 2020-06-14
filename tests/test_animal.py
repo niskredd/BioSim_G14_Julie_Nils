@@ -58,7 +58,7 @@ class TestAnimal:
         Tests if death_prob returns True if animal weight is zero or less
         """
         if create_ani.w <= 0:
-            assert create_ani.death_prob()
+            assert create_ani.death_prob() is True
 
 
 class TestHerbivore:
@@ -167,6 +167,11 @@ class TestHerbivore:
         food_eaten = create_herb.feed(available_fodder)
         assert food_eaten == available_fodder
 
+    def test_feed_when_fodder_less_than_desired_amount(self, create_herb):
+        available_fodder = create_herb.params['F'] - 20
+        food_eaten = create_herb.feed(available_fodder)
+        assert food_eaten < create_herb.params['F']
+
     def test_migrate_prob_is_right(self, create_herb):
         assert \
             create_herb.migrate_prob() == \
@@ -239,4 +244,35 @@ class TestCarnivore:
         for i in range(100):
             if create_carn.kill_herbivore(herb):
                 a += 1
+        assert a < 100
 
+    def test_kill_herbivore_when_probability_is_one(
+            self, create_herb, create_carn
+    ):
+        herb = create_herb
+        herb.phi = 0.1
+        carn = create_carn
+        carn.phi = 100
+        assert carn.kill_herbivore(herb)
+
+    def test_weight_increase_when_weight_of_herb_is_lower_than_param_f(
+            self, create_carn, create_herb
+    ):
+        herb = create_herb
+        herb.w = create_carn.params['F'] - 5
+        carn = create_carn
+        w1 = carn.w
+        carn.weight_increase(herb.w)
+        w2 = carn.w
+        assert w2 < w1 + carn.params['F'] * carn.params['beta']
+
+    def test_weight_increase_when_herb_w_equals_param_f(
+            self, create_carn, create_herb
+    ):
+        herb = create_herb
+        herb.w = create_carn.params['F']
+        carn = create_carn
+        w1 = carn.w
+        carn.weight_increase(herb.w)
+        w2 = carn.w
+        assert w2 == w1 + carn.params['F'] * carn.params['beta']
