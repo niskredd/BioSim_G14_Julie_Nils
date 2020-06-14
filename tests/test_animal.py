@@ -60,6 +60,13 @@ class TestAnimal:
         if create_ani.w <= 0:
             assert create_ani.death_prob() is True
 
+    def test_weight_increase_cannot_alter_weight_without_overriding(
+            self, create_ani
+    ):
+        animal = create_ani
+        w1 = animal.w
+        animal.weight_increase(100)
+        assert w1 == animal.w
 
 class TestHerbivore:
 
@@ -263,8 +270,7 @@ class TestCarnivore:
         carn = create_carn
         w1 = carn.w
         carn.weight_increase(herb.w)
-        w2 = carn.w
-        assert w2 < w1 + carn.params['F'] * carn.params['beta']
+        assert carn.w == w1 + herb.w * carn.params['beta']
 
     def test_weight_increase_when_herb_w_equals_param_f(
             self, create_carn, create_herb
