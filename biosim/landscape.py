@@ -76,7 +76,6 @@ class Island:
                 tile_.death()
                 tile_.update_fodder_amount()
 
-    @staticmethod
     def tile_neighbours(self, tile):
         neighbour_west = (tile(0), tile(1) - 1)
         neighbour_east = (tile(0), tile(1) + 1)
@@ -87,15 +86,28 @@ class Island:
             'west': neighbour_west, 'east': neighbour_east
         }
 
-    def migrate(self, **tile):
-        for animal in tile['population']:
-            if animal.can_migrate():
-                destination = random.choice(self.tile_neighbours(tile['location']))
-                if destination.can_move:
-                    animal['location'] = destination
-                    animal.move()
+    def migrate(self, island_population):
+        """
 
-    def
+        :param island_population: list
+                                    List of dictionaries representing each
+                                    tile on the island with their respective
+                                    populations.
+        :return: list
+                    list of updated dictionaries representing each tile on the
+                    island with their respective populations after migration.
+        """
+        initial_pop = island_population
+        for tile in initial_pop:
+            for animal in tile['pop']:
+                if animal.can_migrate():
+                    destination = random.choice(self.tile_neighbours(tile['location']))
+                    if destination.can_move:
+                        for location in island_population:
+                            if location['loc'] == destination:
+                                location['pop'].append(animal)
+                                animal.has_moved = True
+        return island_population
 
     def is_list_of_list_empty(self, list_of_list):
         for num in list_of_list:
