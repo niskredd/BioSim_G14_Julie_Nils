@@ -131,7 +131,7 @@ class TestHerbivore:
         assert create_herb.weight_decrease_birth(8) > 0
 
     def test_birth_prob_when_mothers_weight_too_low(self, create_herb):
-        create_herb.w =(
+        create_herb.w = (
             create_herb.params['zeta']*create_herb.params['w_birth']
             + create_herb.params['sigma_birth']
             - 1

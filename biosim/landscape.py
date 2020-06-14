@@ -39,24 +39,28 @@ class Island:
                 x += 1
             y += 1
 
+        self.population = []
+        for tile_row in self.tiles_lists:
+            for tile in tile_row:
+                self.population.append({'loc': tile, 'pop': []})
+
     def adding_animals(self, pop):
         """
         Adding animals to each tile on the island,
-        all animals, both species
+        all animals, both species.
 
-        :param tile: (int, int)
-        :param animals_to_add: []
-                        list of dictionary's
-        :return:
-                None
+        :param population: list
+                            containing both the tile location (loc) and its
+                            respective population (pop).
+        :return: None
         """
         index_y = 0
         for tiles_in_row in self.tiles_lists:
             index_x = 0
             for tile_e in tiles_in_row:
-                pos = pop['location']
+                pos = pop['loc']
                 if pos == tile_e.grid_pos:
-                    tile_e.adding_animal(pop['population'])
+                    tile_e.adding_animal(pop['pop'])
                 index_x += 1
             index_y += 1
 
@@ -70,7 +74,7 @@ class Island:
         for tile_row in self.tiles_lists:
             for tile_ in tile_row:
                 tile_.feed_animals()
-                self.migration()
+                self.migrate(tile_)
                 tile_.birth()
                 tile_.animal_update()
                 tile_.death()
@@ -86,28 +90,24 @@ class Island:
             'west': neighbour_west, 'east': neighbour_east
         }
 
-    def migrate(self, island_population):
+    def migrate(self, tile):
         """
 
-        :param island_population: list
-                                    List of dictionaries representing each
-                                    tile on the island with their respective
-                                    populations.
-        :return: list
-                    list of updated dictionaries representing each tile on the
-                    island with their respective populations after migration.
+        :param tile: dict
+                        dictionary representing a tile with its respective
+                        population.
+        :return: None
         """
-        initial_pop = island_population
-        for tile in initial_pop:
-            for animal in tile['pop']:
-                if animal.can_migrate():
-                    destination = random.choice(self.tile_neighbours(tile['location']))
-                    if destination.can_move:
-                        for location in island_population:
-                            if location['loc'] == destination:
-                                location['pop'].append(animal)
+        initial_pop = self.tiles_lists
+        for animal in tile['pop']:
+            if animal.can_migrate():
+                destination = random.choice(self.tile_neighbours(tile['loc']))
+                if destination.can_move:
+                    for tiles_row in initial_pop:
+                        for initial_tile in tiles_row:
+                            if initial_tile['loc'] == destination:
+                                initial_tile['pop'].append(animal)
                                 animal.has_moved = True
-        return island_population
 
     def is_list_of_list_empty(self, list_of_list):
         for num in list_of_list:
@@ -171,13 +171,12 @@ class Tile:
         elif species == "Carnivore":
             self.carn.append(Carnivore(age, weight))
 
-    def adding_animal(self, animal_dir):
+    def adding_animal(self, animals):
         """
-        Adds animals to this tiles
-        :param animal_dir: {:}
-                      directory
+        Adds animals to a specific tile.
+        :param animals: dict
         """
-        for ind in animal_dir:
+        for ind in animals:
             if ind['species'] == 'Herbivore':
                 self.herb.append(Herbivore(ind['age'], ind['weight']))
             elif ind['species'] == 'Carnivore':
