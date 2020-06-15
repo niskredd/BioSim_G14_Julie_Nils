@@ -10,7 +10,6 @@ class Animal:
         """Set parameters for class."""
         cls.params.update(params)
 
-
     def __init__(self, age, weight):
         self.phi = 0
         self.a = age
@@ -120,20 +119,6 @@ class Herbivore(Animal):
         self.w += self.params['beta'] * food
         # Update fitness
 
-    def migrate_prob(self):
-        self.fitness_update()
-        if not self.has_moved:
-            if random() < self.phi * self.params['mu']:
-                direction = random()
-                if direction < 0.25:
-                    return {'species': 'Herbivore', 'ind': self, 'dir': 'north'}
-                if 0.25 < direction < 0.5:
-                    return {'species': 'Herbivore', 'ind': self, 'dir': 'east'}
-                if 0.5 < direction < 0.75:
-                    return {'species': 'Herbivore', 'ind': self, 'dir': 'south'}
-                if 0.75 < direction:
-                    return {'species': 'Herbivore', 'ind': self, 'dir': 'west'}
-
 
 class Carnivore(Animal):
     """
@@ -187,28 +172,3 @@ class Carnivore(Animal):
             self.w += self.params['F'] * self.params['beta']
         else:
             self.w += w_herb * self.params['beta']
-
-    def migrate_prob(self):
-        self.fitness_update()
-        if random() > self.phi * self.params['mu']:
-            direction = random()
-            if direction < 0.25:
-                return {'species': 'Carnivore', 'ind': self, 'dir': 'north'}
-            if 0.25 < direction < 0.5:
-                return {'species': 'Carnivore', 'ind': self, 'dir': 'east'}
-            if 0.5 < direction < 0.75:
-                return {'species': 'Carnivore', 'ind': self, 'dir': 'south'}
-            if 0.75 < direction:
-                return {'species': 'Carnivore', 'ind': self, 'dir': 'west'}
-
-
-if __name__ == '__main__':
-    for i in range(3):
-        herb = Herbivore(0, 0)
-        print(herb.w)
-        print(herb.phi)
-        herb.weight_increase(80)
-        herb.fitness_update()
-        herb.age_update()
-        print(herb.w)
-        print(herb.phi)
