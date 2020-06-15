@@ -9,7 +9,7 @@ __email__ = ''
 
 
 from biosim.animal import *
-from random import sample
+from random import sample, choice
 
 
 class Island:
@@ -38,11 +38,6 @@ class Island:
                     self.tiles_lists[y].append(Highland((x + 1, y + 1)))
                 x += 1
             y += 1
-
-        self.population = []
-        for tile_row in self.tiles_lists:
-            for tile in tile_row:
-                self.population.append({'loc': tile, 'pop': []})
 
     def adding_animals(self, pop):
         """
@@ -80,11 +75,21 @@ class Island:
                 tile_.death()
                 tile_.update_fodder_amount()
 
-    def tile_neighbours(self, tile):
-        neighbour_west = (tile(0), tile(1) - 1)
-        neighbour_east = (tile(0), tile(1) + 1)
-        neighbour_north = (tile(0) + 1, tile(1))
-        neighbour_south = (tile(0) - 1, tile(1))
+    def tile_neighbours(self, position):
+        """
+        Takes tile position as coordinate and returns its neighbour coordinates
+        in a dictionary with key=orientation and val=coordinate.
+
+        :param position: tuple
+                        tile coordinate (x, y)
+        :return: dict
+                    {'neighbour orientation': (x, y), ...}
+                    where neighbour orientation can be North, South, West, East
+        """
+        neighbour_west = (position[0], position[1]-1)
+        neighbour_east = (position[0], position[1]+1)
+        neighbour_north = (position[0]+1, position[1])
+        neighbour_south = (position[0]-1, position[1])
         return {
             'north': neighbour_north, 'south': neighbour_south,
             'west': neighbour_west, 'east': neighbour_east
@@ -99,15 +104,26 @@ class Island:
         :return: None
         """
         initial_pop = self.tiles_lists
-        for animal in tile['pop']:
-            if animal.can_migrate():
-                destination = random.choice(self.tile_neighbours(tile['loc']))
-                if destination.can_move:
-                    for tiles_row in initial_pop:
-                        for initial_tile in tiles_row:
-                            if initial_tile['loc'] == destination:
-                                initial_tile['pop'].append(animal)
-                                animal.has_moved = True
+        if len(tile.herb) > 0:
+            for herb in tile.herb:
+                if tile.can_migrate(herb):
+                    destination = choice(self.tile_neighbours(tile.grid_pos))
+                    if destination.can_move:
+                        for tiles_row in initial_pop:
+                            for initial_tile in tiles_row:
+                                if initial_tile['loc'] == destination:
+                                    initial_tile['pop'].append(herb)
+                                    herb.has_moved = True
+        if len(tile.carn) > 0:
+            for carn in tile.carn:
+                if tile.can_migrate(carn):
+                    destination = choice(self.tile_neighbours(tile.grid_pos))
+                    if destination.can_move:
+                        for tiles_row in initial_pop:
+                            for initial_tile in tiles_row:
+                                if initial_tile['loc'] == destination:
+                                    initial_tile['pop'].append(carn)
+                                    carn.has_moved = True
 
     def is_list_of_list_empty(self, list_of_list):
         for num in list_of_list:
@@ -183,23 +199,23 @@ class Tile:
                 self.carn.append(Carnivore(ind['age'], ind['weight']))
 
     def birth(self):
-        herbs = []
+        newborn_herbs = []
         for ind in self.herb:
             if ind.birth_prob(self.herb.__len__()):
                 new_born = Herbivore(0, 0)
                 if ind.weight_decrease_birth(new_born.w) < ind.w:
                     ind.w -= ind.weight_decrease_birth(new_born.w)
-                    herbs.append(new_born)
-        self.herb.extend(herbs)
+                    newborn_herbs.append(new_born)
+        self.herb.extend(newborn_herbs)
 
-        carns = []
+        newborn_carns = []
         for ind in self.carn:
             if ind.birth_prob(self.carn.__len__()):
                 new_born = Carnivore(0, 0)
                 if ind.weight_decrease_birth(new_born.w) < ind.w:
                     ind.w -= ind.weight_decrease_birth(new_born.w)
-                    carns.append(new_born)
-        self.carn.extend(carns)
+                    newborn_carns.append(new_born)
+        self.carn.extend(newborn_carns)
 
     def death(self):
         index = 0
@@ -239,7 +255,7 @@ class Tile:
             carns.remove(max_phi)
             carns.insert(index, max_phi)
 
-        # carns = sorted(carns, key=fitness_key, reverse=True)
+        #carns = sorted(carns, key=(carn.phi for carn in carns), reverse=True)
 
         for carn in carns:
             for herb in self.herb:
