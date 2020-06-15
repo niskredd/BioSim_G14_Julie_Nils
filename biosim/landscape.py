@@ -90,10 +90,16 @@ class Island:
         neighbour_east = (position[0], position[1]+1)
         neighbour_north = (position[0]+1, position[1])
         neighbour_south = (position[0]-1, position[1])
-        return {
-            'north': neighbour_north, 'south': neighbour_south,
-            'west': neighbour_west, 'east': neighbour_east
-        }
+        neighbour_coordinates = [
+            neighbour_north, neighbour_south, neighbour_west, neighbour_east
+        ]
+        neighbours = []
+        for neighbour in neighbour_coordinates:
+            for tile_row in self.tiles_lists:
+                for tile in tile_row:
+                    if tile.grid_pos == neighbour:
+                        neighbours.append(tile)
+        return neighbours
 
     def migrate(self, tile):
         """
@@ -108,11 +114,12 @@ class Island:
             for herb in tile.herb:
                 if tile.can_migrate(herb):
                     destination = choice(self.tile_neighbours(tile.grid_pos))
+
                     if destination.can_move:
                         for tiles_row in initial_pop:
                             for initial_tile in tiles_row:
-                                if initial_tile['loc'] == destination:
-                                    initial_tile['pop'].append(herb)
+                                if initial_tile == destination:
+                                    initial_tile.herb.append(herb)
                                     herb.has_moved = True
         if len(tile.carn) > 0:
             for carn in tile.carn:
@@ -121,8 +128,8 @@ class Island:
                     if destination.can_move:
                         for tiles_row in initial_pop:
                             for initial_tile in tiles_row:
-                                if initial_tile['loc'] == destination:
-                                    initial_tile['pop'].append(carn)
+                                if initial_tile == destination:
+                                    initial_tile.carn.append(carn)
                                     carn.has_moved = True
 
     def is_list_of_list_empty(self, list_of_list):
