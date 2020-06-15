@@ -23,9 +23,12 @@ class Island:
         """
         if len(map) > 1:
             maps = map.split("\n")
-        self.tiles_lists = [[] * maps[0].__len__() for _ in range(maps.__len__())]
+        self.tiles_lists = [
+            [] * map.split("\n").__len__() for
+            _ in range(map.split("\n").__len__())
+        ]
         y = 0
-        for line in maps:
+        for line in map.split("\n"):
             x = 0
             for letter in line:
                 if letter == "W":
@@ -49,10 +52,14 @@ class Island:
                             respective population (pop).
         :return: None
         """
-        for one_location_list in population:
-            # print(one_location_list['loc'][0], one_location_list['loc'][1])
-            x, y = one_location_list['loc'][0], one_location_list['loc'][1]
-            self.tiles_lists[x][y].adding_animal( one_location_list['pop'])
+        if population.__len__() == 1:
+            x, y = population['loc'][0], population['loc'][1]
+            self.tiles_lists[x][y].adding_animal( population['pop'])
+        elif population.__len__() > 1:
+            for one_location_dict in population:
+                #print(population)#, one_location_dict[0])
+                x, y = one_location_dict['loc'][0], one_location_dict['loc'][1]
+                self.tiles_lists[x][y].adding_animal( one_location_dict['pop'])
 
         # index_y = 0
         # for tiles_in_row in self.tiles_lists:
@@ -186,6 +193,8 @@ class Island:
 
 
 class Tile:
+    params = None
+
     @classmethod
     def set_parameters(cls, params):
         """Set parameters for class."""
@@ -321,24 +330,28 @@ class Tile:
 
 class Highland(Tile):
 
+    params = {'fodder': 300}
+
     def __init__(self, grid_pos):
         Tile.__init__(self, grid_pos)
-        self.fodder = 300
+        self.fodder = self.params['fodder']
         self.can_move = True
 
     def update_fodder_amount(self):
-        self.fodder = 300
+        self.fodder = self.params['fodder']
 
 
 class Lowland(Tile):
 
+    params = {'fodder': 800}
+
     def __init__(self, grid_pos):
         Tile.__init__(self, grid_pos)
-        self.fodder = 800
+        self.fodder = self.params['fodder']
         self.can_move = True
 
     def update_fodder_amount(self):
-        self.fodder = 800
+        self.fodder = self.params['fodder']
 
 
 class Desert(Tile):
@@ -373,7 +386,7 @@ if __name__ == '__main__':
     for imd in range(20):
         ani_pop.append({'species': 'Carnivore', 'age': 1, 'weight': 10.})
 
-    island.adding_animals({'loc': (2, 2), 'pop': ani_pop})
+    island.adding_animals([{'loc': (2, 2), 'pop': ani_pop}])
 
     year = 0
     for i in range(1000):
