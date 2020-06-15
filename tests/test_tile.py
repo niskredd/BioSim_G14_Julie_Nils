@@ -36,5 +36,5 @@ class Test_Tile:
         avg_w = avg_w / 20.0
         avg_phi = avg_phi / 20.0
 
-        avg_phi == pytest.approx(0.75)
-        avg_w == pytest.approx(21)
+        assert avg_phi == pytest.approx(0.75)
+        assert avg_w == pytest.approx(21)
