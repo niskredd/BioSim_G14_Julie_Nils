@@ -21,12 +21,12 @@ class Island:
         :return:
                 None
         """
-        if len(map) > 1:
-            maps = map.split("\n")
+        self.map_test(map)
+
         self.tiles_lists = [
             [] * map.split("\n").__len__() for
-            _ in range(map.split("\n").__len__())
-        ]
+            _ in range(map.split("\n").__len__())]
+
         y = 0
         for line in map.split("\n"):
             x = 0
@@ -39,8 +39,32 @@ class Island:
                     self.tiles_lists[y].append(Lowland((x + 1, y + 1)))
                 elif letter == "H":
                     self.tiles_lists[y].append(Highland((x + 1, y + 1)))
+                else:
+                    raise ValueError
                 x += 1
             y += 1
+
+        self.size_test()
+
+    def map_test(self, map):
+        lines = map.split("\n")
+        for letter in lines[0]:
+            if not letter == 'W':
+                raise ValueError
+
+        for letter in lines[len(lines) - 1]:
+            if not letter == 'W':
+                raise ValueError
+
+        for line in lines:
+            if not line[0] == 'W' or not line[len(line) - 1] == 'W':
+                raise ValueError
+
+    def size_test(self):
+        tiles = iter(self.tiles_lists)
+        length_row = next(tiles).__len__()
+        if not all(len(tile) == length_row for tile in tiles):
+            raise ValueError
 
     def adding_animals(self, population):
         """
@@ -52,27 +76,23 @@ class Island:
                             respective population (pop).
         :return: None
         """
+
         if population.__len__() == 1:
-            x, y = population['loc'][0], population['loc'][1]
-            self.tiles_lists[x][y].adding_animal( population['pop'])
+            (x, y) = population[0]['loc']
+            self.tiles_lists[x-1][y-1].adding_animal(population[0]['pop'])
         elif population.__len__() > 1:
             for one_location_dict in population:
-                #print(population)#, one_location_dict[0])
-                x, y = one_location_dict['loc'][0], one_location_dict['loc'][1]
-                self.tiles_lists[x][y].adding_animal( one_location_dict['pop'])
+                (x, y) = one_location_dict['loc']
+                self.tiles_lists[x-1][y-1].adding_animal(one_location_dict['pop'])
 
-        # index_y = 0
         # for tiles_in_row in self.tiles_lists:
         #     # print(tiles_in_row)
-        #     index_x = 0
         #     for tile_e in tiles_in_row:
-        #         print( population['loc'])
+        #         print(population['loc'])
         #         pos = population['loc']
         #         if pos == tile_e.grid_pos:
         #             # tile_e.adding_animal(population['pop'])
         #             print(population['pop'] )
-        #         index_x += 1
-        #     index_y += 1
 
     def tile_update(self):
         """
@@ -129,67 +149,24 @@ class Island:
             for herb in tile.herb:
                 if tile.can_migrate(herb):
                     destination = choice(self.tile_neighbours(tile.grid_pos))
-
-                    if destination.can_move:
-                        for tiles_row in initial_pop:
-                            for initial_tile in tiles_row:
-                                if initial_tile == destination:
-                                    initial_tile.herb.append(herb)
-                                    herb.has_moved = True
+                    if not herb.has_moved:
+                        if destination.can_move:
+                            for tiles_row in initial_pop:
+                                for initial_tile in tiles_row:
+                                    if initial_tile == destination:
+                                        initial_tile.herb.append(herb)
+                                        herb.has_moved = True
         if len(tile.carn) > 0:
             for carn in tile.carn:
                 if tile.can_migrate(carn):
                     destination = choice(self.tile_neighbours(tile.grid_pos))
-                    if destination.can_move:
-                        for tiles_row in initial_pop:
-                            for initial_tile in tiles_row:
-                                if initial_tile == destination:
-                                    initial_tile.carn.append(carn)
-                                    carn.has_moved = True
-
-    def is_list_of_list_empty(self, list_of_list):
-        for num in list_of_list:
-            if num:
-                return True
-        return False
-
-    def migration(self):
-
-        for tile_row_m in self.tiles_lists:
-            for tile_m in tile_row_m:
-                to_move = tile_m.migrate_direction()
-                (x, y) = tile_m.grid_pos
-                if self.is_list_of_list_empty(to_move['animals']):
-                    for ind in to_move['animals']:
-                        print(ind['dir'])
-                        if self.tiles_lists[y-2][x-1].can_move and ind['dir'] == 'north':
-                            if ind['species'] == 'Herbivore':
-                                tile_m.herb.remove(ind['ind'])
-                                self.tiles_lists[y-2][x-1].herb.append(ind['ind'])
-                            if ind['species'] == 'Carnivore':
-                                tile_m.carn.remove(ind['ind'])
-                                self.tiles_lists[y-2][x-1].carn.append(ind['ind'])
-                        if self.tiles_lists[y][x-1].can_move and ind['dir'] == 'south':
-                            if ind['species'] == 'Herbivore':
-                                tile_m.herb.remove(ind['ind'])
-                                self.tiles_lists[y - 2][x - 1].herb.append(ind['ind'])
-                            if ind['species'] == 'Carnivore':
-                                tile_m.carn.remove(ind['ind'])
-                                self.tiles_lists[y - 2][x - 1].carn.append(ind['ind'])
-                        if self.tiles_lists[y-1][x].can_move and ind['dir'] == 'east':
-                            if ind['species'] == 'Herbivore':
-                                tile_m.herb.remove(ind['ind'])
-                                self.tiles_lists[y - 2][x - 1].herb.append(ind['ind'])
-                            if ind['species'] == 'Carnivore':
-                                tile_m.carn.remove(ind['ind'])
-                                self.tiles_lists[y - 2][x - 1].carn.append(ind['ind'])
-                        if self.tiles_lists[y-1][x-2].can_move and ind['dir'] == 'west':
-                            if ind['species'] == 'Herbivore':
-                                tile_m.herb.remove(ind['ind'])
-                                self.tiles_lists[y - 2][x - 1].herb.append(ind['ind'])
-                            if ind['species'] == 'Carnivore':
-                                tile_m.carn.remove(ind['ind'])
-                                self.tiles_lists[y - 2][x - 1].carn.append(ind['ind'])
+                    if not carn.has_moved:
+                        if destination.can_move:
+                            for tiles_row in initial_pop:
+                                for initial_tile in tiles_row:
+                                    if initial_tile == destination:
+                                        initial_tile.carn.append(carn)
+                                        carn.has_moved = True
 
 
 class Tile:
@@ -399,64 +376,3 @@ if __name__ == '__main__':
                     print("Carn: " + str(tile.carn.__len__()))
                     print("Herb: " + str(tile.herb.__len__()))
         year += 1
-
-"""
-if __name__ == '__main__':
-    teller = 0
-    mini_map = Lowland([1, 1])
-
-    for i in range(50):
-        mini_map.fauna('Herbivore', 5, 20)
-
-    while teller < 300:
-        print("Year: " + str(teller))
-        print("Number of animals: " + str(mini_map.update_num_animals()))
-
-        sum_1 = 0
-        sum_2 = 0
-        for animal in mini_map.herb:
-            sum_1 += animal.w
-            sum_2 += animal.a
-
-        sum_3 = 0
-        sum_4 = 0
-        for animal in mini_map.carn:
-            sum_3 += animal.w
-            sum_4 += animal.a
-
-        sum_5 = 0
-        sum_6 = 0
-        for animal in mini_map.herb:
-            sum_5 += animal.phi
-
-        for animal in mini_map.carn:
-            sum_6 += animal.phi
-
-        print('\n' + "Herbivore:")
-        print("Avg weight: " + str(sum_1 / max(mini_map.herb.__len__(), 1)))
-        print("Avg age: " + str(sum_2 / max(mini_map.herb.__len__(), 1)))
-        print("Avg Fitness: " + str(sum_5 / max(mini_map.herb.__len__(), 1)))
-
-        print('\n' + "Carnivore: ")
-        print("Avg weight: " + str(sum_3 / max(mini_map.carn.__len__(), 1)))
-        print("Avg age: " + str(sum_4 / max(mini_map.carn.__len__(), 1)))
-        print("Avg Fitness: " + str(sum_6 / max(mini_map.carn.__len__(), 1)))
-        print('\n')
-
-        if teller == 50:
-            for i in range(20):
-                mini_map.fauna('Carnivore', 5, 20)
-
-        mini_map.feed_animals()
-
-        mini_map.birth()
-
-        mini_map.animal_update()
-
-        mini_map.death()
-
-        mini_map.update_fodder_amount()
-
-        time.sleep(1)
-        teller += 1
-        """
