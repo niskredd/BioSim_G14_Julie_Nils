@@ -56,13 +56,16 @@ class BioSim:
             self.island.tile_update()
 
     def print_res(self):
-        for tile in Island.tiles_list:
-            print(tile.carn.__len__())
-            print(tile.herb.__len__())
+        for tile_row in self.island.tiles_lists:
+            for tile in tile_row:
+                if tile.can_move:
+                    print(tile.grid_pos)
+                    print(tile.carn.__len__())
+                    print(tile.herb.__len__())
 
 
 if __name__ == "__main__":
-    pop = {'loc': (1, 1),
+    pop = [{'loc': (2, 2),
            'pop': [{'species': 'Herbivore', 'age': 1, 'weight': 10.},
                    {'species': 'Herbivore', 'age': 1, 'weight': 10.},
                    {'species': 'Herbivore', 'age': 1, 'weight': 10.},
@@ -81,10 +84,47 @@ if __name__ == "__main__":
                    {'species': 'Carnivore', 'age': 1, 'weight': 10.},
                    {'species': 'Carnivore', 'age': 1, 'weight': 10.},
                    {'species': 'Carnivore', 'age': 1, 'weight': 10.},
-                   {'species': 'Carnivore', 'age': 1, 'weight': 10.}]}
+                   {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Carnivore', 'age': 1, 'weight': 10.}]}]
 
-    sim = BioSim("L", pop)
-    sim.add_population()
+    sim = BioSim("WWWWW\nWLDLW\nWLDLW\nWLHHW\nWWWWW", pop)
 
     sim.island_update(200)
 
