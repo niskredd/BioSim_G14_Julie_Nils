@@ -9,7 +9,9 @@ __email__ = ''
 
 from biosim.landscape import Island
 from biosim.visual import Visual_Plot
-
+from biosim.animal import Herbivore, Carnivore
+from biosim.landscape import Lowland, Highland
+import numpy
 
 class BioSim:
 
@@ -20,20 +22,38 @@ class BioSim:
         self.ymax_animals = ymax_animals
         self.cmax_animals = cmax_animals
         self.hist_specs = hist_specs
-        self.Island = Island(island_map)
+        self.island = Island(island_map)
+        # self.tiles_list = self.Island.tiles_lists
+
+        self.add_population(self.ini_pop)
+
+        # for tile in numpy.asarray( self.island.tiles_lists).flatten() :
+        #     if tile.herb:
+        #         print(len(tile.herb))
+
+
+
+
+        # call the add animals here to add animals to the island
 
     def set_animal_parameters(self, species, params):
-        pass
+        if species == "Herbivore":
+            Herbivore.set_parameters(params)
+        elif species == "Carnivore":
+            Carnivore.set_parameters(params)
 
     def set_landscape_parameters(self, lscape, params):
-        pass
+        if lscape == "L":
+            Lowland.set_parameters(params)
+        elif lscape == "H":
+            Highland.set_parameters(params)
 
-    def add_population(self):
-        Island.adding_animals(pop)
+    def add_population(self, population):
+        self.island.adding_animals(population)
 
     def island_update(self, years):
         for i in range(years):
-            self.Island.tile_update()
+            self.island.tile_update()
 
     def print_res(self):
         for tile in Island.tiles_list:

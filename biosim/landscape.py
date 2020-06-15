@@ -39,7 +39,7 @@ class Island:
                 x += 1
             y += 1
 
-    def adding_animals(self, pop):
+    def adding_animals(self, population):
         """
         Adding animals to each tile on the island,
         all animals, both species.
@@ -49,15 +49,23 @@ class Island:
                             respective population (pop).
         :return: None
         """
-        index_y = 0
-        for tiles_in_row in self.tiles_lists:
-            index_x = 0
-            for tile_e in tiles_in_row:
-                pos = pop['loc']
-                if pos == tile_e.grid_pos:
-                    tile_e.adding_animal(pop['pop'])
-                index_x += 1
-            index_y += 1
+        for one_location_list in population:
+            # print(one_location_list['loc'][0], one_location_list['loc'][1])
+            x, y = one_location_list['loc'][0], one_location_list['loc'][1]
+            self.tiles_lists[x][y].adding_animal( one_location_list['pop'])
+
+        # index_y = 0
+        # for tiles_in_row in self.tiles_lists:
+        #     # print(tiles_in_row)
+        #     index_x = 0
+        #     for tile_e in tiles_in_row:
+        #         print( population['loc'])
+        #         pos = population['loc']
+        #         if pos == tile_e.grid_pos:
+        #             # tile_e.adding_animal(population['pop'])
+        #             print(population['pop'] )
+        #         index_x += 1
+        #     index_y += 1
 
     def tile_update(self):
         """
@@ -178,6 +186,10 @@ class Island:
 
 
 class Tile:
+    @classmethod
+    def set_parameters(cls, params):
+        """Set parameters for class."""
+        cls.params.update(params)
 
     def __init__(self, grid_pos):
         self.grid_pos = grid_pos

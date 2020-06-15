@@ -5,6 +5,12 @@ from random import random
 class Animal:
     params = None
 
+    @classmethod
+    def set_parameters(cls, params):
+        """Set parameters for class."""
+        cls.params.update(params)
+
+
     def __init__(self, age, weight):
         self.phi = 0
         self.a = age
