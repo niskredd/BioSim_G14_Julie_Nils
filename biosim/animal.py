@@ -169,15 +169,3 @@ class Carnivore(Animal):
             self.w += self.params['F'] * self.params['beta']
         else:
             self.w += w_herb * self.params['beta']
-
-
-if __name__ == '__main__':
-    for i in range(3):
-        herb = Herbivore(0, 0)
-        print(herb.w)
-        print(herb.phi)
-        herb.weight_increase(80)
-        herb.fitness_update()
-        herb.age_update()
-        print(herb.w)
-        print(herb.phi)
