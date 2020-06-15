@@ -63,7 +63,7 @@ if __name__ == "__main__":
                    {'species': 'Carnivore', 'age': 1, 'weight': 10.},
                    {'species': 'Carnivore', 'age': 1, 'weight': 10.}]}
 
-    sim = BioSim("L", pop)
+    sim = BioSim("WWW\nWLW\nWWW", pop)
     sim.add_population()
 
     sim.island_update(200)

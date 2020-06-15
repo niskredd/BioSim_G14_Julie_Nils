@@ -49,15 +49,11 @@ class Island:
                             respective population (pop).
         :return: None
         """
-        index_y = 0
         for tiles_in_row in self.tiles_lists:
-            index_x = 0
             for tile_e in tiles_in_row:
                 pos = pop['loc']
                 if pos == tile_e.grid_pos:
                     tile_e.adding_animal(pop['pop'])
-                index_x += 1
-            index_y += 1
 
     def tile_update(self):
         """
@@ -352,7 +348,7 @@ class Water(Tile):
 
 
 if __name__ == '__main__':
-    island = Island("WWWW\nWLHW\nWLDW\nWWWW")
+    island = Island("WWW\nWLHW\nWLDW\nWWWW")
 
     ani_pop = []
     for imd in range(150):
