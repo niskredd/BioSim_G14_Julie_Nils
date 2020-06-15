@@ -57,8 +57,8 @@ class TestAnimal:
         """
         Tests if death_prob returns True if animal weight is zero or less
         """
-        if create_ani.w <= 0:
-            assert create_ani.death_prob() is True
+        create_ani.w = 0
+        assert create_ani.death_prob() is True
 
     def test_weight_increase_cannot_alter_weight_without_overriding(
             self, create_ani
@@ -153,7 +153,6 @@ class TestHerbivore:
         herb.w = 50
         herb.phi = 0.7
         assert herb.birth_prob(100)
-
 
     def test_death_prob_given_fitness(self, create_herb):
         create_herb.params['omega'] = 0.4
