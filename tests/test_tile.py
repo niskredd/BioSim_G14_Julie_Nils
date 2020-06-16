@@ -49,7 +49,15 @@ class TestTile:
         assert tile.herb[-1].a == 5
         assert tile.herb[-1].w == 20
 
-    det test_adding_animals_adds_to_right_list()
+    def test_adding_animals_increases_num_animals(self, create_tile):
+        animals_to_add = [{'species': 'Herbivore', 'age': 3, 'weight': 43},
+                          {'species': 'Carnivore', 'age': 1, 'weight': 28}]
+        tile = create_tile
+        (num_herbs, num_carns) = (tile.herb.__len__(), tile.carn.__len__())
+        tile.adding_animal(animals_to_add)
+        assert (
+                   tile.herb.__len__(), tile.carn.__len__()) == \
+               (num_herbs + 1, num_carns + 1)
 
     def test_birth_creates_new_animals(self, create_tile):
         tile = create_tile
@@ -79,6 +87,8 @@ class TestTile:
         for i in range(100):
             tile.birth()
         assert tile.herb.__len__() < tile.carn.__len__()
+
+    def test_death_
 
     def test_feed_animals(self, create_tile):
         for i in range(10):

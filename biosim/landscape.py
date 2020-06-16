@@ -42,7 +42,7 @@ class Tile:
         """
         for ind in animals:
             if ind['species'] == 'Herbivore':
-                self.herb.append(Herbivore(ind['age'], ind['weight']))
+                self.herb.append(Herbivore(ind['age'], ind['weight'])) # could we use fauna method here instead?
             elif ind['species'] == 'Carnivore':
                 self.carn.append(Carnivore(ind['age'], ind['weight']))
 
@@ -71,7 +71,8 @@ class Tile:
 
     def death(self):
         """
-        Checks the probability that a animal should live or die
+        Uses death probability to determine whether each animal will die.
+        Removes dead animals from the herb and carn lists.
         :return: none
         """
         index = 0
