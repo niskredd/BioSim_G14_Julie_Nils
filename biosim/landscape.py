@@ -313,7 +313,7 @@ class Tile:
 
         return move_pop
 
-    def move(self, destination):
+    def move(self):
         self.has_moved = True
 
 
