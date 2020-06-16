@@ -61,7 +61,7 @@ class Visualization:
                                                 , fontdict= { 'weight': 'bold', 'size': 16 })
         plt.pause(1e-6)
 
-    def update_plot(self, anim_distribution_dict=None, total_anim_dict= None):
+    def update_plot(self, anim_distribution_dict=None, total_anim_dict=None):
         self.steps += 1
         # Changing the Year in the text
         self.changing_text.set_text( "Year: "+str(self.steps))

@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from biosim.island import Island
 from biosim.animal import Herbivore, Carnivore
 from biosim.landscape import Lowland, Highland
-#from biosim.visual import Visualization
+from biosim.visual import Visualization
 import time
 
 
@@ -30,8 +30,10 @@ class BioSim:
 
         self.add_population(self.ini_pop)
         # call the add animals here to add animals to the island
-        #self.viual = Visualization()
-        #self.viual.set_plots_for_first_time(self.rgb_map)
+        self.viual = Visualization()
+        self.viual.set_plots_for_first_time(self.rgb_map)
+        self.year = 0
+        self.num_animals = 0
 
     @staticmethod
     def set_animal_parameters(species, params):
@@ -59,17 +61,18 @@ class BioSim:
                     print(tile.herb.__len__())
 
     def simulate(self, num_years=10, vis_years=100, img_years=100):
-        self.time = num_years
+        start_time = time.time()
+        self.year += num_years
         for i in range(num_years):
             print("--- %s seconds ---" % (time.time() - start_time))
             self.island.tile_update()
-            """
+
             self.viual.update_plot(anim_distribution_dict=self.animals_in_tile(),
-                                   total_anim_dict=self.sum_animals())
+                                   total_anim_dict=self.num_animals_per_species)
 
             self.viual.update_histogram(fit_list=self.fitness_list(), age_list=self.age_list(),
                                         wt_list=self.weight_list())
-            """
+
     def animals_in_tile(self):
         row_num = self.island.tiles_lists.__len__()
         col_num = self.island.tiles_lists[0].__len__()
@@ -88,18 +91,22 @@ class BioSim:
 
         return {'Herbivore': herb_mat, 'Carnivore': carn_mat}
 
-    def sum_animals(self):
+    @property
+    def num_animals_per_species(self):
 
         herb_total = sum(sum(self.animals_in_tile()['Herbivore']))
         carn_total = sum(sum(self.animals_in_tile()['Carnivore']))
-        animal_count_dict = {"Herbivore": herb_total, "Carnivore": carn_total}
-        return animal_count_dict
+
+        self.num_animals = herb_total + carn_total
+
+        return {'Herbivore': herb_total, 'Carnivore': carn_total}
 
     def fitness_list(self):
         herb_lt = [anim.phi for tile_row in self.island.tiles_lists for
                    tile in tile_row for anim in tile.herb]
         carn_lt = [anim.phi for tile_row in self.island.tiles_lists for
                    tile in tile_row for anim in tile.carn]
+
         return {'Herbivore': herb_lt, 'Carnivore': carn_lt}
 
     def age_list(self):
@@ -118,8 +125,8 @@ class BioSim:
                    tile in tile_row for anim in tile.carn]
         return {'Herbivore': herb_lt, 'Carnivore': carn_lt}
 
+
 if __name__ == "__main__":
-    start_time = time.time()
     pop = [{'loc': (2, 2),
            'pop': [{'species': 'Herbivore', 'age': 1, 'weight': 10.},
                    {'species': 'Herbivore', 'age': 1, 'weight': 10.},
