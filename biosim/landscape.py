@@ -257,7 +257,7 @@ class Tile:
         #    self.herb.remove(min_phi)
         #    self.herb.insert(index, min_phi)
 
-        herbs = sorted(self.herb, key=lambda x: x.phi)
+
 
         #carns = self.carn
 
@@ -272,7 +272,10 @@ class Tile:
         carns = sorted(self.carn, key=lambda x: x.phi, reverse=True)
 
         amount_eaten = 0
+
         for carn in carns:
+            herbs = sorted(self.herb, key=lambda x: x.phi)
+
             for herb in herbs:
                 if carn.kill_herbivore(herb):
                     self.herb.remove(herb)
