@@ -191,28 +191,3 @@ class Water(Tile):
 
     def update_fodder_amount(self):
         self.fodder = 0
-
-
-if __name__ == '__main__':
-    island = Island("WWWW\nWLHW\nWLDW\nWWWW")
-
-    ani_pop = []
-    for imd in range(150):
-        ani_pop.append({'species': 'Herbivore', 'age': 1, 'weight': 10.})
-
-    for imd in range(20):
-        ani_pop.append({'species': 'Carnivore', 'age': 1, 'weight': 10.})
-
-    island.adding_animals([{'loc': (2, 2), 'pop': ani_pop}])
-
-    year = 0
-    for i in range(1000):
-        print("Year: " + str(year))
-        island.tile_update()
-        for tile_row in island.tiles_lists:
-            for tile in tile_row:
-                if tile.can_move:
-                    print("Tile: " + str(tile.grid_pos))
-                    print("Carn: " + str(tile.carn.__len__()))
-                    print("Herb: " + str(tile.herb.__len__()))
-        year += 1
