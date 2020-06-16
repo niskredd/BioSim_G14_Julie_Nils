@@ -9,10 +9,10 @@ __email__ = ''
 
 import numpy as np
 import matplotlib.pyplot as plt
-from biosim.landscape import Island
+from biosim.island import Island
 from biosim.animal import Herbivore, Carnivore
 from biosim.landscape import Lowland, Highland
-from biosim.visual import Visualization
+#from biosim.visual import Visualization
 import time
 
 
@@ -30,8 +30,8 @@ class BioSim:
 
         self.add_population(self.ini_pop)
         # call the add animals here to add animals to the island
-        self.viual = Visualization()
-        self.viual.set_plots_for_first_time(self.rgb_map)
+        #self.viual = Visualization()
+        #self.viual.set_plots_for_first_time(self.rgb_map)
 
     @staticmethod
     def set_animal_parameters(species, params):
@@ -63,13 +63,13 @@ class BioSim:
         for i in range(num_years):
             print("--- %s seconds ---" % (time.time() - start_time))
             self.island.tile_update()
-
+            """
             self.viual.update_plot(anim_distribution_dict=self.animals_in_tile(),
                                    total_anim_dict=self.sum_animals())
 
             self.viual.update_histogram(fit_list=self.fitness_list(), age_list=self.age_list(),
                                         wt_list=self.weight_list())
-
+            """
     def animals_in_tile(self):
         row_num = self.island.tiles_lists.__len__()
         col_num = self.island.tiles_lists[0].__len__()
@@ -192,8 +192,91 @@ if __name__ == "__main__":
                    {'species': 'carnivore', 'age': 1, 'weight': 10.},
                    {'species': 'carnivore', 'age': 1, 'weight': 10.},
                    {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
                    {'species': 'Carnivore', 'age': 1, 'weight': 10.}]}]
-    """
+
     geogr = "WWWWWWWWWWWWWWWWWWWWW\n" \
             "WWWWWWWWHWWWWLLLLLLLW\n" \
             "WHHHHHLLLLWWLLLLLLLWW\n" \
@@ -207,8 +290,10 @@ if __name__ == "__main__":
             "WWHHHHLLLLLLLLWWWWWWW\n" \
             "WWWHHHHLLLLLLLWWWWWWW\n" \
             "WWWWWWWWWWWWWWWWWWWWW"
-            """
 
-    sim = BioSim("WWWW\nWLLW\nWLLW\nWWWW", pop)
+    map1 = "WWW\nWLW\nWWW"
+    map2 = "WWWW\nWLLW\nWLLW\nWWWW"
+
+    sim = BioSim(map2, pop)
 
     sim.simulate(num_years=400, vis_years=1, img_years=1)
