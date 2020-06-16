@@ -18,17 +18,48 @@ class Test_Tile:
     def create_tile(self):
         return Lowland((1, 1))
 
+    def test_update_num_animals_returns_right_numbers(self, create_tile):
+        tile = create_tile
+        tile.fauna('Herbivore', 5, 20)
+        assert tile.update_num_animals() == (0, 1)
+
+    def test_fauna_appends_herbivore_to_right_lists(self, create_tile):
+        tile = create_tile
+        initial_num_herbs = tile.herb.__len__()
+        tile.fauna('Herbivore', 5, 20)
+        num_herbs = tile.herb.__len__()
+        assert initial_num_herbs < num_herbs
+
+    def test_fauna_appends_right_amount_of_animals_to_list(self, create_tile):
+        tile = create_tile
+        initial_num_carns = tile.carn.__len__()
+        tile.fauna('Carnivore', 5, 30)
+        assert tile.carn.__len__() == initial_num_carns + 1
+
+    def test_fauna_appends_animal_objects_to_lists(self, create_tile):
+        tile = create_tile
+        tile.fauna('Carnivore', 5, 20)
+        tile.fauna('Herbivore', 5, 20)
+        assert type(tile.herb[-1]) is object
+
+    def test_fauna_does_not_alter_age_and_weight(self, create_tile):
+        tile = create_tile
+        tile.fauna('Herbivore', 5, 20)
+        assert tile.herb[-1].a == 5
+        assert tile.herb[-1].w == 20
+
     def test_birth_creates_new_animals(self, create_tile):
         tile = create_tile
         for i in range(10):
             tile.fauna('Herbivore', 5, 40)
         initial_pop = tile.herb
-        tile.birth()
+        for i in range(10):
+            tile.birth()
         assert len(tile.herb) >= len(initial_pop)
 
     def test_birth_cannot_happen_if_only_one_animal(self, create_tile):
         tile = create_tile
-        tile.herb = [Animal.Herbivore(5,20)]
+        tile.fauna('Herbivore', 5, 20)
         tile.fauna('Carnivore', 5, 20)
         tile.fauna('Carnivore', 5, 20)
         for i in range(100):
@@ -40,8 +71,8 @@ class Test_Tile:
         tile = create_tile
         tile.fauna('Herbivore', 5, 15)
         tile.fauna('Herbivore', 5, 15)
-        tile.fauna('Carnivore', 5, 30)
-        tile.fauna('Carnivore', 5, 30)
+        tile.fauna('Carnivore', 5, 50)
+        tile.fauna('Carnivore', 5, 50)
         for i in range(100):
             tile.birth()
         assert len(tile.herb) < len(tile.carn)

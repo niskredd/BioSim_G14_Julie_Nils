@@ -181,7 +181,7 @@ class Tile:
         self.grid_pos = grid_pos
         self.herb = []
         self.carn = []
-        self.fodder = 300
+        self.fodder = 0
 
     def update_num_animals(self):
         return self.carn.__len__(), self.herb.__len__()
@@ -268,15 +268,22 @@ class Tile:
             carns.remove(max_phi)
             carns.insert(index, max_phi)
 
-        #carns = sorted(carns, key=(carn.phi for carn in carns), reverse=True)
+        #carns = sorted(self.carn, key=self.carn.phi, reverse=True)
 
+        amount_eaten = 0
         for carn in carns:
             for herb in self.herb:
                 if carn.kill_herbivore(herb):
                     self.herb.remove(herb)
+                    if herb.w + amount_eaten > carn.params['F']:
+                        amount_eaten += carn.feed(
+                            carn.params['F'] - amount_eaten
+                        )
+                    else:
+                        amount_eaten += carn.feed(herb.w)
                     carn.fitness_update()
-                    if carn.feed(herb.w) > 0:
-                        break
+                    if amount_eaten == carn.params['F']:
+                        return 0
 
     def animal_ageing(self):
         """
