@@ -9,10 +9,10 @@ __email__ = ''
 
 
 import pytest
-from biosim.landscape import Lowland
+from biosim.landscape import Lowland, Carnivore, Herbivore
 
 
-class Test_Tile:
+class TestTile:
 
     @pytest.fixture()
     def create_tile(self):
@@ -40,7 +40,8 @@ class Test_Tile:
         tile = create_tile
         tile.fauna('Carnivore', 5, 20)
         tile.fauna('Herbivore', 5, 20)
-        assert type(tile.herb[-1]) is object
+        isinstance(tile.herb[-1], Herbivore)
+        isinstance(tile.carn[-1], Carnivore)
 
     def test_fauna_does_not_alter_age_and_weight(self, create_tile):
         tile = create_tile
@@ -69,13 +70,13 @@ class Test_Tile:
 
     def test_birth_depends_on_weight(self, create_tile):
         tile = create_tile
-        tile.fauna('Herbivore', 5, 15)
-        tile.fauna('Herbivore', 5, 15)
-        tile.fauna('Carnivore', 5, 50)
-        tile.fauna('Carnivore', 5, 50)
+        for i in range(10):
+            tile.fauna('Herbivore', 5, 1)
+            tile.fauna('Carnivore', 5, 50)
+
         for i in range(100):
             tile.birth()
-        assert len(tile.herb) < len(tile.carn)
+        assert tile.herb.__len__() < tile.carn.__len__()
 
     def test_feed_animals(self, create_tile):
         for i in range(10):

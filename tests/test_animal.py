@@ -84,6 +84,9 @@ class TestHerbivore:
         herb.fitness_update()
         return herb
 
+    def test_if_herbivore_inherits_from_animal(self, create_herb):
+        isinstance(create_herb, Animal)
+
     def test_w_new_born_is_not_zero(self):
         """
         tests if weight of newborn herbivore is not zero.
@@ -218,6 +221,9 @@ class TestCarnivore:
         carn = Carnivore(5, 20)
         carn.fitness_update()
         return carn
+
+    def test_if_carnivore_inherits_from_animal(self, create_carn):
+        isinstance(create_carn, Animal)
 
     @pytest.fixture()
     def create_herb(self):
