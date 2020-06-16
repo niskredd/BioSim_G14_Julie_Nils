@@ -13,6 +13,10 @@ class TestAnimal:
         anim = Animal(5, 10)
         return anim
 
+    def test_set_params_default_is_none(self, create_ani):
+        animal = create_ani
+        assert animal.params is None
+
     def test_phi_is_zero_when_w_is_zero(self, create_ani):
         """
         tests if fitness is zero when weight of animal is zero
