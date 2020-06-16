@@ -75,6 +75,17 @@ class Island:
         if not all(len(tile) == length_row for tile in tiles):
             raise ValueError
 
+    def rgb_for_map(self, input_raw_string):
+        rgb_value = {'W': (0.0, 0.0, 1.0),  # blue
+                     'L': (0.0, 0.6, 0.0),  # dark green
+                     'H': (0.5, 1.0, 0.5),  # light green
+                     'D': (1.0, 1.0, 0.5)}  # light yellow
+
+        map_rgb = [[rgb_value[column] for column in row]
+                    for row in input_raw_string.splitlines()]
+
+        return map_rgb
+
     def adding_animals(self, population):
         """
         Adding animals to each tile on the island,
