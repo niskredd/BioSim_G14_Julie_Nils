@@ -47,6 +47,11 @@ class Island:
         self.size_test()
 
     def map_test(self, map):
+        """
+        Checks if the map has a water boarder all the way around
+        :param map: string
+        :return: none
+        """
         lines = map.split("\n")
         for letter in lines[0]:
             if not letter == 'W':
@@ -61,6 +66,10 @@ class Island:
                 raise ValueError
 
     def size_test(self):
+        """
+        tests if the lines on the map is the same lenght
+        :return: None
+        """
         tiles = iter(self.tiles_lists)
         length_row = next(tiles).__len__()
         if not all(len(tile) == length_row for tile in tiles):
@@ -84,15 +93,6 @@ class Island:
             for one_location_dict in population:
                 (x, y) = one_location_dict['loc']
                 self.tiles_lists[x-1][y-1].adding_animal(one_location_dict['pop'])
-
-        # for tiles_in_row in self.tiles_lists:
-        #     # print(tiles_in_row)
-        #     for tile_e in tiles_in_row:
-        #         print(population['loc'])
-        #         pos = population['loc']
-        #         if pos == tile_e.grid_pos:
-        #             # tile_e.adding_animal(population['pop'])
-        #             print(population['pop'] )
 
     def tile_update(self):
         """
@@ -184,7 +184,7 @@ class Tile:
         self.fodder = 300
 
     def update_num_animals(self):
-        return len(self.carn), len(self.herb)
+        return self.carn.__len__(), self.herb.__len__()
 
     def fauna(self, species, age, weight):
         if species == "Herbivore":
@@ -204,6 +204,10 @@ class Tile:
                 self.carn.append(Carnivore(ind['age'], ind['weight']))
 
     def birth(self):
+        """
+        Checks all the animals in one tile and determent if they should give birth
+        :return: none
+        """
         newborn_herbs = []
         for ind in self.herb:
             if ind.birth_prob(self.herb.__len__()):
@@ -223,6 +227,10 @@ class Tile:
         self.carn.extend(newborn_carns)
 
     def death(self):
+        """
+        Checks the probability that a animal should live or die
+        :return: none
+        """
         index = 0
         for ind in self.herb:
             if ind.death_prob():
@@ -271,6 +279,10 @@ class Tile:
                         break
 
     def animal_ageing(self):
+        """
+        Adds one year to all animals
+        :return: none
+        """
         for n in self.herb:
             n.age_update()
 
