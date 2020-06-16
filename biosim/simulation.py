@@ -7,10 +7,13 @@
 __author__ = 'Julie Martin, Nils Skreddernes'
 __email__ = ''
 
-from biosim.landscape import Island
+import numpy as np
+import matplotlib.pyplot as plt
+from biosim.island import Island
 from biosim.animal import Herbivore, Carnivore
 from biosim.landscape import Lowland, Highland
-#import matplotlib.pyplot as plt
+#from biosim.visual import Visualization
+import time
 
 
 class BioSim:
@@ -23,22 +26,12 @@ class BioSim:
         self.cmax_animals = cmax_animals
         self.hist_specs = hist_specs
         self.island = Island(island_map)
-        # self.tiles_list = self.Island.tiles_lists
+        self.rgb_map = self.island.rgb_for_map(island_map)
 
         self.add_population(self.ini_pop)
-
-        # for tile in numpy.asarray( self.island.tiles_lists).flatten() :
-        #     if tile.herb:
-        #         print(len(tile.herb))
-
-        #self.fig = plt.figure()
-        #self.ax1 = self.fig.add_subplot(1, 1, 1)
-        self.y_herblist = []
-        self.y_carnlist = []
-        self.time = 0
-        self.island_time = []
-
         # call the add animals here to add animals to the island
+        #self.viual = Visualization()
+        #self.viual.set_plots_for_first_time(self.rgb_map)
 
     @staticmethod
     def set_animal_parameters(species, params):
@@ -57,13 +50,6 @@ class BioSim:
     def add_population(self, population):
         self.island.adding_animals(population)
 
-    def island_update(self, years):
-        self.time = years
-        for i in range(years):
-            self.animation_data()
-            self.island.tile_update()
-            self.island_time.append(i)
-
     def print_res(self):
         for tile_row in self.island.tiles_lists:
             for tile in tile_row:
@@ -72,19 +58,68 @@ class BioSim:
                     print(tile.carn.__len__())
                     print(tile.herb.__len__())
 
-    def animation_data(self):
-        sum_carn = 0
-        sum_herb = 0
-        for tile_row in self.island.tiles_lists:
-            for tile in tile_row:
-                if tile.can_move:
-                    sum_carn += tile.carn.__len__()
-                    sum_herb += tile.herb.__len__()
-        self.y_carnlist.append(sum_carn)
-        self.y_herblist.append(sum_herb)
+    def simulate(self, num_years=10, vis_years=100, img_years=100):
+        self.time = num_years
+        for i in range(num_years):
+            print("--- %s seconds ---" % (time.time() - start_time))
+            self.island.tile_update()
+            """
+            self.viual.update_plot(anim_distribution_dict=self.animals_in_tile(),
+                                   total_anim_dict=self.sum_animals())
 
+            self.viual.update_histogram(fit_list=self.fitness_list(), age_list=self.age_list(),
+                                        wt_list=self.weight_list())
+            """
+    def animals_in_tile(self):
+        row_num = self.island.tiles_lists.__len__()
+        col_num = self.island.tiles_lists[0].__len__()
+
+        herb_mat = np.zeros((row_num, col_num))
+        carn_mat = np.zeros((row_num, col_num))
+
+        y = 0
+        for tile_row in self.island.tiles_lists:
+            x = 0
+            for tile in tile_row:
+                herb_mat[y][x] = tile.herb.__len__()
+                carn_mat[y][x] = tile.carn.__len__()
+                x += 1
+            y += 1
+
+        return {'Herbivore': herb_mat, 'Carnivore': carn_mat}
+
+    def sum_animals(self):
+
+        herb_total = sum(sum(self.animals_in_tile()['Herbivore']))
+        carn_total = sum(sum(self.animals_in_tile()['Carnivore']))
+        animal_count_dict = {"Herbivore": herb_total, "Carnivore": carn_total}
+        return animal_count_dict
+
+    def fitness_list(self):
+        herb_lt = [anim.phi for tile_row in self.island.tiles_lists for
+                   tile in tile_row for anim in tile.herb]
+        carn_lt = [anim.phi for tile_row in self.island.tiles_lists for
+                   tile in tile_row for anim in tile.carn]
+        return {'Herbivore': herb_lt, 'Carnivore': carn_lt}
+
+    def age_list(self):
+
+        herb_lt = [anim.a for tile_row in self.island.tiles_lists for
+                   tile in tile_row for anim in tile.herb]
+        carn_lt = [anim.a for tile_row in self.island.tiles_lists for
+                   tile in tile_row for anim in tile.carn]
+        return {'Herbivore': herb_lt, 'Carnivore': carn_lt}
+
+    def weight_list(self):
+
+        herb_lt = [anim.w for tile_row in self.island.tiles_lists for
+                   tile in tile_row for anim in tile.herb]
+        carn_lt = [anim.w for tile_row in self.island.tiles_lists for
+                   tile in tile_row for anim in tile.carn]
+        return {'Herbivore': herb_lt, 'Carnivore': carn_lt}
 
 if __name__ == "__main__":
+    start_time = time.time()
     pop = [{'loc': (2, 2),
            'pop': [{'species': 'Herbivore', 'age': 1, 'weight': 10.},
                    {'species': 'Herbivore', 'age': 1, 'weight': 10.},
@@ -101,28 +136,68 @@ if __name__ == "__main__":
                    {'species': 'Herbivore', 'age': 1, 'weight': 10.},
                    {'species': 'Herbivore', 'age': 1, 'weight': 10.},
                    {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
                    {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
                    {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
                    {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
                    {'species': 'Carnivore', 'age': 1, 'weight': 10.},
-                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
-                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
                    {'species': 'Carnivore', 'age': 1, 'weight': 10.},
-                   {'species': 'Carnivore', 'age': 1, 'weight': 10.},
-                   {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
                    {'species': 'Carnivore', 'age': 1, 'weight': 10.},
                    {'species': 'Herbivore', 'age': 1, 'weight': 10.},
                    {'species': 'Herbivore', 'age': 1, 'weight': 10.},
@@ -139,23 +214,86 @@ if __name__ == "__main__":
                    {'species': 'Herbivore', 'age': 1, 'weight': 10.},
                    {'species': 'Herbivore', 'age': 1, 'weight': 10.},
                    {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Herbivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
                    {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
                    {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
                    {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'Carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
+                   {'species': 'carnivore', 'age': 1, 'weight': 10.},
                    {'species': 'Carnivore', 'age': 1, 'weight': 10.}]}]
 
-    sim = BioSim("WWWWW\nWLDLW\nWLDLW\nWLHHW\nWWWWW", pop)
+    geogr = "WWWWWWWWWWWWWWWWWWWWW\n" \
+            "WWWWWWWWHWWWWLLLLLLLW\n" \
+            "WHHHHHLLLLWWLLLLLLLWW\n" \
+            "WHHHHHHHHHWWLLLLLLWWW\n" \
+            "WHHHHHLLLLLLLLLLLLWWW\n" \
+            "WHHHHHLLLDDLLLHLLLWWW\n" \
+            "WHHLLLLLDDDLLLHHHHWWW\n" \
+            "WWHHHHLLLDDLLLHWWWWWW\n" \
+            "WHHHLLLLLDDLLLLLLLWWW\n" \
+            "WHHHHLLLLDDLLLLWWWWWW\n" \
+            "WWHHHHLLLLLLLLWWWWWWW\n" \
+            "WWWHHHHLLLLLLLWWWWWWW\n" \
+            "WWWWWWWWWWWWWWWWWWWWW"
 
-    sim.island_update(400)
+    map1 = "WWW\nWLW\nWWW"
+    map2 = "WWWW\nWLLW\nWLLW\nWWWW"
 
-    """
-    fig, ax = plt.subplots()
-    ax.plot(sim.island_time, sim.y_herblist)
-    ax.plot(sim.island_time, sim.y_carnlist)
+    sim = BioSim(map2, pop)
 
-    ax.set(xlabel='Years', ylabel='Animals', title='')
-    ax.grid()
-
-    fig.savefig("test.png")
-    plt.show()
-    """
+    sim.simulate(num_years=400, vis_years=1, img_years=1)
