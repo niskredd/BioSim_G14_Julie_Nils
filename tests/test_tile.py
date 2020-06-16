@@ -88,8 +88,6 @@ class TestTile:
             tile.birth()
         assert tile.herb.__len__() < tile.carn.__len__()
 
-    def test_death_
-
     def test_feed_animals(self, create_tile):
         for i in range(10):
             create_tile.fauna("Herbivore", 5, 20)
