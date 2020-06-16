@@ -49,6 +49,8 @@ class TestTile:
         assert tile.herb[-1].a == 5
         assert tile.herb[-1].w == 20
 
+    det test_adding_animals_adds_to_right_list()
+
     def test_birth_creates_new_animals(self, create_tile):
         tile = create_tile
         for i in range(10):

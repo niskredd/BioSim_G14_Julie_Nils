@@ -38,7 +38,7 @@ class Tile:
     def adding_animal(self, animals):
         """
         Adds animals to a specific tile.
-        :param animals: dict
+        :param animals: list
         """
         for ind in animals:
             if ind['species'] == 'Herbivore':
