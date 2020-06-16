@@ -57,12 +57,12 @@ class Island:
             if not letter == 'W':
                 raise ValueError
 
-        for letter in lines[len(lines) - 1]:
+        for letter in lines[lines.__len__() - 1]:
             if not letter == 'W':
                 raise ValueError
 
         for line in lines:
-            if not line[0] == 'W' or not line[len(line) - 1] == 'W':
+            if not line[0] == 'W' or not line[line.__len__() - 1] == 'W':
                 raise ValueError
 
     def size_test(self):
@@ -168,6 +168,16 @@ class Island:
                                         initial_tile.carn.append(carn)
                                         carn.has_moved = True
 
+    def rgb_for_map(self, input_raw_string):
+        rgb_value = {'W': (0.0, 0.0, 1.0),  # blue
+                     'L': (0.0, 0.6, 0.0),  # dark green
+                     'H': (0.5, 1.0, 0.5),  # light green
+                     'D': (1.0, 1.0, 0.5)}  # light yellow
+
+        map_rgb = [[rgb_value[column] for column in row]
+                    for row in input_raw_string.splitlines()]
+
+        return map_rgb
 
 class Tile:
     params = None
@@ -275,7 +285,7 @@ class Tile:
                 if carn.kill_herbivore(herb):
                     self.herb.remove(herb)
                     carn.fitness_update()
-                    if carn.feed(herb.w) > 0:
+                    if carn.feed(herb.w) < 0:
                         break
 
     def animal_ageing(self):
