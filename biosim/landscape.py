@@ -249,30 +249,31 @@ class Tile:
             self.fodder -= herb.feed(self.fodder)
             herb.fitness_update()
 
-        for index in range(self.herb.__len__()):
-            min_phi = self.herb[0]
-            for herb in self.herb[index:]:
-                if herb.phi < min_phi.phi:
-                    min_phi = herb
-            self.herb.remove(min_phi)
-            self.herb.insert(index, min_phi)
+        #for index in range(self.herb.__len__()):
+        #    min_phi = self.herb[0]
+        #    for herb in self.herb[index:]:
+        #        if herb.phi < min_phi.phi:
+        #            min_phi = herb
+        #    self.herb.remove(min_phi)
+        #    self.herb.insert(index, min_phi)
 
-        # herbs = sorted(herbs, key=fitness_key)
-        carns = self.carn
+        herbs = sorted(self.herb, key=lambda x: x.phi)
 
-        for index in range(carns.__len__()):
-            max_phi = carns[0]
-            for carn in carns[index:]:
-                if carn.phi > max_phi.phi:
-                    max_phi = carn
-            carns.remove(max_phi)
-            carns.insert(index, max_phi)
+        #carns = self.carn
 
-        #carns = sorted(self.carn, key=self.carn.phi, reverse=True)
+        #for index in range(carns.__len__()):
+        #    max_phi = carns[0]
+        #    for carn in carns[index:]:
+        #        if carn.phi > max_phi.phi:
+        #            max_phi = carn
+        #    carns.remove(max_phi)
+        #    carns.insert(index, max_phi)
+
+        carns = sorted(self.carn, key=lambda x: x.phi, reverse=True)
 
         amount_eaten = 0
         for carn in carns:
-            for herb in self.herb:
+            for herb in herbs:
                 if carn.kill_herbivore(herb):
                     self.herb.remove(herb)
                     if herb.w + amount_eaten > carn.params['F']:
