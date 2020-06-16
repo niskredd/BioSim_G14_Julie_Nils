@@ -185,20 +185,6 @@ class TestHerbivore:
         food_eaten = create_herb.feed(available_fodder)
         assert food_eaten < create_herb.params['F']
 
-    def test_migrate_prob_is_right(self, create_herb):
-        assert \
-            create_herb.migrate_prob() == \
-            create_herb.phi * create_herb.params['mu']
-
-    def test_migrate_prob_increases_when_phi_increases(self, create_herb):
-        create_herb.w = 10
-        create_herb.a = 60
-        m1 = create_herb.migrate_prob()
-        create_herb.w = 50
-        create_herb.a = 20
-        m2 = create_herb.migrate_prob()
-        assert m1 < m2
-
     def test_update_status_alters_params(self, create_herb):
         w1 = create_herb.w
         a1 = create_herb.a
