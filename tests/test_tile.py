@@ -167,11 +167,17 @@ class TestTile:
                             {'species': 'Herbivore', 'age': 70, 'weight': 15},
                             ])
         tile.animal_update()
-        for _ in range(30):
+        for _ in range(100):
             tile.feed_animals()
 
         assert tile.herb.__len__() == 0
         assert tile.carn[1].w > 40
         assert tile.carn[0].w < 3
 
-    def test_animal_ageing
+    def test_update_status(self, create_tile):
+        tile = create_tile
+        tile.fauna('Herbivore', 1, 15)
+        tile.animal_update()
+        assert tile.herb[0].a == 2
+        assert tile.herb[0].w < 15
+        assert tile.herb[0].has_moved == False
