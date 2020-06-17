@@ -17,8 +17,7 @@ class Island:
         """
         Uses the data from the constructor to create the island, the string is
         converted to a list of tiles
-        :return:
-                None
+        :param map: string
         """
         self.map_test(map)
 
@@ -75,6 +74,11 @@ class Island:
             raise ValueError
 
     def rgb_for_map(self, input_raw_string):
+        """
+        Takes the string of the map and adds color to the map
+        :param input_raw_string: string
+        :return: list of colors
+        """
         rgb_value = {'W': (0.0, 0.0, 1.0),  # blue
                      'L': (0.0, 0.6, 0.0),  # dark green
                      'H': (0.5, 1.0, 0.5),  # light green
@@ -148,7 +152,8 @@ class Island:
 
     def migrate(self, tile):
         """
-
+        Handles the migration and moves animals between tiles, this also makes sure no one moves
+        twice.
         :param tile: dict
                         dictionary representing a tile with its respective
                         population.
@@ -177,14 +182,3 @@ class Island:
                                     if initial_tile == destination:
                                         initial_tile.carn.append(carn)
                                         carn.has_moved = True
-
-    def rgb_for_map(self, input_raw_string):
-        rgb_value = {'W': (0.0, 0.0, 1.0),  # blue
-                     'L': (0.0, 0.6, 0.0),  # dark green
-                     'H': (0.5, 1.0, 0.5),  # light green
-                     'D': (1.0, 1.0, 0.5)}  # light yellow
-
-        map_rgb = [[rgb_value[column] for column in row]
-                    for row in input_raw_string.splitlines()]
-
-        return map_rgb
