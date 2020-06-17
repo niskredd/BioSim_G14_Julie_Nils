@@ -41,10 +41,7 @@ class Tile:
         :param animals: list
         """
         for ind in animals:
-            if ind['species'] == 'Herbivore':
-                self.herb.append(Herbivore(ind['age'], ind['weight'])) # could we use fauna method here instead?
-            elif ind['species'] == 'Carnivore':
-                self.carn.append(Carnivore(ind['age'], ind['weight']))
+            self.fauna(ind['species'], ind['age'], ind['weight'])
 
     def birth(self):
         """

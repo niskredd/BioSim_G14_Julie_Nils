@@ -57,6 +57,7 @@ class Animal:
             return random() < prob
 
     def death_prob(self):
+        self.fitness_update()
         if self.w <= 0:
             return True
         else:

@@ -88,6 +88,17 @@ class TestTile:
             tile.birth()
         assert tile.herb.__len__() < tile.carn.__len__()
 
+    def test_death_depends_on_death_prob(self, create_tile):
+        tile = create_tile
+        for i in range(10):
+            tile.fauna('Herbivore', 5, 0)
+            tile.fauna('Carnivore', 5, 0)
+        initial_num_animals = tile.carn.__len__() + tile.herb.__len__()
+        tile.death()
+        assert tile.carn.__len__() + tile.herb.__len__() == 0
+
+    #def test_death_removes_animals_
+
     def test_feed_animals(self, create_tile):
         for i in range(10):
             create_tile.fauna("Herbivore", 5, 20)
