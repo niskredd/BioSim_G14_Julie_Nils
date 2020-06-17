@@ -38,13 +38,10 @@ class Tile:
     def adding_animal(self, animals):
         """
         Adds animals to a specific tile.
-        :param animals: dict
+        :param animals: list
         """
         for ind in animals:
-            if ind['species'] == 'Herbivore':
-                self.herb.append(Herbivore(ind['age'], ind['weight']))
-            elif ind['species'] == 'Carnivore':
-                self.carn.append(Carnivore(ind['age'], ind['weight']))
+            self.fauna(ind['species'], ind['age'], ind['weight'])
 
     def birth(self):
         """
@@ -71,7 +68,8 @@ class Tile:
 
     def death(self):
         """
-        Checks the probability that a animal should live or die
+        Uses death probability to determine whether each animal will die.
+        Removes dead animals from the herb and carn lists.
         :return: none
         """
         index = 0

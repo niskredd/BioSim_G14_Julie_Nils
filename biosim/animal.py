@@ -48,6 +48,7 @@ class Animal:
         return newborn_weight * self.params['xi']
 
     def birth_prob(self, num_animals):
+        self.fitness_update()
         if self.w < self.params['zeta'] * (self.params['w_birth']
                                            + self.params['sigma_birth']):
             return False
@@ -56,6 +57,7 @@ class Animal:
             return random() < prob
 
     def death_prob(self):
+        self.fitness_update()
         if self.w <= 0:
             return True
         else:

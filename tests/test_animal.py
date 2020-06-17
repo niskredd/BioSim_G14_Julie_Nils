@@ -13,6 +13,10 @@ class TestAnimal:
         anim = Animal(5, 10)
         return anim
 
+    def test_set_params_default_is_none(self, create_ani):
+        animal = create_ani
+        assert animal.params is None
+
     def test_phi_is_zero_when_w_is_zero(self, create_ani):
         """
         tests if fitness is zero when weight of animal is zero
@@ -79,6 +83,9 @@ class TestHerbivore:
         herb = Herbivore(5, 20)
         herb.fitness_update()
         return herb
+
+    def test_if_herbivore_inherits_from_animal(self, create_herb):
+        isinstance(create_herb, Animal)
 
     def test_w_new_born_is_not_zero(self):
         """
@@ -214,6 +221,9 @@ class TestCarnivore:
         carn = Carnivore(5, 20)
         carn.fitness_update()
         return carn
+
+    def test_if_carnivore_inherits_from_animal(self, create_carn):
+        isinstance(create_carn, Animal)
 
     @pytest.fixture()
     def create_herb(self):
