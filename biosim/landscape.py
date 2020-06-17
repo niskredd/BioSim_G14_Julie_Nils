@@ -104,7 +104,7 @@ class Tile:
                     if amount_eaten >= carn.params['F']:
                         break
 
-    def animal_update(self): # See comment on update status
+    def animal_update(self):
         for n in self.herb:
             n.update_status()
 

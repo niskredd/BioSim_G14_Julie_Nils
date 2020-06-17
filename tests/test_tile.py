@@ -9,7 +9,7 @@ __email__ = ''
 
 
 import pytest
-from biosim.landscape import Lowland, Carnivore, Herbivore
+from biosim.landscape import Lowland, Highland, Desert, Water, Carnivore, Herbivore
 
 
 class TestTile:
@@ -174,10 +174,42 @@ class TestTile:
         assert tile.carn[1].w > 40
         assert tile.carn[0].w < 3
 
-    def test_update_status(self, create_tile):
+    def test_animal_update(self, create_tile):
         tile = create_tile
         tile.fauna('Herbivore', 1, 15)
         tile.animal_update()
         assert tile.herb[0].a == 2
         assert tile.herb[0].w < 15
         assert tile.herb[0].has_moved == False
+
+    def test_can_migrate(self, create_tile):
+        tile = create_tile
+        tile.adding_animal([{'species': 'Carnivore', 'age': 10, 'weight': 40}])
+        tile.animal_update()
+
+        migrations = 0
+        for _ in range(100):
+            tile.can_migrate(tile.carn[0])
+            migrations += 1
+
+        assert migrations/100 == pytest.approx(39.9, rel=1e02)
+
+    def test_highland_fodder_and_can_move(self):
+        tile = Highland((1,1))
+        assert tile.can_move is True
+        assert tile.fodder == tile.params['fodder']
+
+    def test_lowland_fodder_and_can_move(self):
+        tile = Lowland((1,1))
+        assert tile.can_move is True
+        assert tile.fodder == tile.params['fodder']
+
+    def test_water_fodder_and_can_move(self):
+        tile = Water((1,1))
+        assert tile.can_move is False
+        assert tile.fodder == 0
+
+    def test_desert_fodder_and_can_move(self):
+        tile = Desert((1,1))
+        assert tile.can_move is True
+        assert tile.fodder == 0
