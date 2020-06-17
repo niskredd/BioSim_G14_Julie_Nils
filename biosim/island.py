@@ -55,12 +55,12 @@ class Island:
             if not letter == 'W':
                 raise ValueError
 
-        for letter in lines[len(lines) - 1]:
+        for letter in lines[lines.__len__() - 1]:
             if not letter == 'W':
                 raise ValueError
 
         for line in lines:
-            if not line[0] == 'W' or not line[len(line) - 1] == 'W':
+            if not line[0] == 'W' or not line[line.__len__() - 1] == 'W':
                 raise ValueError
 
     def size_test(self):
@@ -165,20 +165,22 @@ class Island:
                 if tile.can_migrate(herb):
                     destination = choice(self.tile_neighbours(tile.grid_pos))
                     if not herb.has_moved:
+                        herb.has_moved = True
                         if destination.can_move:
                             for tiles_row in initial_pop:
                                 for initial_tile in tiles_row:
                                     if initial_tile == destination:
                                         initial_tile.herb.append(herb)
-                                        herb.has_moved = True
+                                        tile.herb.remove(herb)
         if len(tile.carn) > 0:
             for carn in tile.carn:
                 if tile.can_migrate(carn):
                     destination = choice(self.tile_neighbours(tile.grid_pos))
                     if not carn.has_moved:
+                        carn.has_moved = True
                         if destination.can_move:
                             for tiles_row in initial_pop:
                                 for initial_tile in tiles_row:
                                     if initial_tile == destination:
                                         initial_tile.carn.append(carn)
-                                        carn.has_moved = True
+                                        tile.carn.remove(carn)

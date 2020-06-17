@@ -14,11 +14,13 @@ from biosim.animal import Herbivore, Carnivore
 from biosim.landscape import Lowland, Highland
 from biosim.visual import Visualization
 import time
+import os, glob
 
 
 class BioSim:
 
-    def __init__(self, island_map, ini_pop, seed=1, ymax_animals=0, cmax_animals=0, hist_specs=0):
+    def __init__(self, island_map, ini_pop, seed=1, ymax_animals=0, cmax_animals=0, hist_specs=0,
+                 img_base=0, img_fmt='png'):
         self.island_map = island_map
         self.ini_pop = ini_pop
         self.seed = seed
@@ -28,12 +30,18 @@ class BioSim:
         self.island = Island(island_map)
         self.rgb_map = self.island.rgb_for_map(island_map)
 
+        self.img_base = img_base
+        self.img_fmt = img_fmt
         self.add_population(self.ini_pop)
         # call the add animals here to add animals to the island
         self.viual = Visualization()
         self.viual.set_plots_for_first_time(self.rgb_map)
         self.year = 0
         self.num_animals = 0
+
+        self.img_name = 00000
+        self.path = "C:\\Users\\Nils\\OneDrive\\Documents\\Programering\\Python\\" \
+                    "BioSim_G14_Julie_Nils\\biosim\\testfigroot\\"
 
     @staticmethod
     def set_animal_parameters(species, params):
@@ -52,27 +60,7 @@ class BioSim:
     def add_population(self, population):
         self.island.adding_animals(population)
 
-    def print_res(self):
-        for tile_row in self.island.tiles_lists:
-            for tile in tile_row:
-                if tile.can_move:
-                    print(tile.grid_pos)
-                    print(tile.carn.__len__())
-                    print(tile.herb.__len__())
-
-    def simulate(self, num_years=10, vis_years=100, img_years=100):
-        start_time = time.time()
-        self.year += num_years
-        for i in range(num_years):
-            print("--- %s seconds ---" % (time.time() - start_time))
-            self.island.tile_update()
-
-            self.viual.update_plot(anim_distribution_dict=self.animals_in_tile(),
-                                   total_anim_dict=self.num_animals_per_species)
-
-            self.viual.update_histogram(fit_list=self.fitness_list(), age_list=self.age_list(),
-                                        wt_list=self.weight_list())
-
+    @property
     def animals_in_tile(self):
         row_num = self.island.tiles_lists.__len__()
         col_num = self.island.tiles_lists[0].__len__()
@@ -94,41 +82,66 @@ class BioSim:
     @property
     def num_animals_per_species(self):
 
-        herb_total = sum(sum(self.animals_in_tile()['Herbivore']))
-        carn_total = sum(sum(self.animals_in_tile()['Carnivore']))
+        herb_total = sum(sum(self.animals_in_tile['Herbivore']))
+        carn_total = sum(sum(self.animals_in_tile['Carnivore']))
 
         self.num_animals = herb_total + carn_total
 
         return {'Herbivore': herb_total, 'Carnivore': carn_total}
 
     def fitness_list(self):
-        herb_lt = [anim.phi for tile_row in self.island.tiles_lists for
-                   tile in tile_row for anim in tile.herb]
-        carn_lt = [anim.phi for tile_row in self.island.tiles_lists for
-                   tile in tile_row for anim in tile.carn]
+        herb_lt = [herb.phi for tile_row in self.island.tiles_lists for
+                   tile in tile_row for herb in tile.herb]
+        carn_lt = [carn.phi for tile_row in self.island.tiles_lists for
+                   tile in tile_row for carn in tile.carn]
 
         return {'Herbivore': herb_lt, 'Carnivore': carn_lt}
 
     def age_list(self):
 
-        herb_lt = [anim.a for tile_row in self.island.tiles_lists for
-                   tile in tile_row for anim in tile.herb]
-        carn_lt = [anim.a for tile_row in self.island.tiles_lists for
-                   tile in tile_row for anim in tile.carn]
+        herb_lt = [herb.a for tile_row in self.island.tiles_lists for
+                   tile in tile_row for herb in tile.herb]
+        carn_lt = [carn.a for tile_row in self.island.tiles_lists for
+                   tile in tile_row for carn in tile.carn]
         return {'Herbivore': herb_lt, 'Carnivore': carn_lt}
 
     def weight_list(self):
 
-        herb_lt = [anim.w for tile_row in self.island.tiles_lists for
-                   tile in tile_row for anim in tile.herb]
-        carn_lt = [anim.w for tile_row in self.island.tiles_lists for
-                   tile in tile_row for anim in tile.carn]
+        herb_lt = [herb.w for tile_row in self.island.tiles_lists for
+                   tile in tile_row for herb in tile.herb]
+        carn_lt = [carn.w for tile_row in self.island.tiles_lists for
+                   tile in tile_row for carn in tile.carn]
         return {'Herbivore': herb_lt, 'Carnivore': carn_lt}
+
+    def take_screenshot(self):
+        str_n = str(self.img_name)
+        str_n = str_n.zfill(5)
+        string_ = "_"
+
+        plt.savefig(self.path + string_ + str_n + self.img_fmt)
+        self.img_name += 1
+
+    def simulate(self, num_years=10, vis_years=1, img_years=1):
+        self.viual.set_step_ln(vis_years)
+        self.year += num_years
+        for i in range(num_years):
+            self.island.tile_update()
+
+            if i % vis_years == 0:
+                self.viual.update_plot(anim_distribution_dict=self.animals_in_tile(),
+                                       total_anim_dict=self.num_animals_per_species)
+
+                self.viual.update_histogram(fit_list=self.fitness_list(), age_list=self.age_list(),
+                                            weight_list=self.weight_list())
+            if i % img_years == 0:
+                self.take_screenshot()
 
 
 if __name__ == "__main__":
+    start_time = time.time()
+
     herb_list = []
-    for i in range(150):
+    for i in range(120):
         herb_list.append({'species': 'Herbivore', 'age': 1, 'weight': 10.})
 
     carn_list = []
@@ -158,12 +171,21 @@ if __name__ == "__main__":
 
     map1 = "WWW\nWLW\nWWW"
     map2 = "WWWW\nWLLW\nWLLW\nWWWW"
-    map3 = "WWWWW\nWLLLW\nWLHLW\n\nWLLLW\nWWWWW"
+    map3 = "WWWWWWWWWWWW\n" \
+           "WLLDDLWWLLLW\n" \
+           "WLHDLHHLLDDW\n" \
+           "WLHHLHWWHLDW\n" \
+           "WWWLLHHWLDDW\n" \
+           "WWWLWWHHLWLW\n" \
+           "WWLLWWHWWWLW\n" \
+           "WLLLLDDDHLLW\n" \
+           "WLHHLDDDHLLW\n" \
+           "WLLLDDDDDLLW\n" \
+           "WWWWWWWWWWWW"
 
     sim = BioSim(map3, pop)
-
-    sim.simulate(num_years=50, vis_years=1, img_years=1)
-
+    sim.simulate(num_years=100, vis_years=15, img_years=15)
     sim.add_population(pop2)
+    sim.simulate(num_years=400)
 
-    sim.simulate(num_years=350)
+    print("--- %s seconds ---" % (time.time() - start_time))

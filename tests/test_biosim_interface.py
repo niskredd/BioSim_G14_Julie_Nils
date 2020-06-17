@@ -17,7 +17,6 @@ __email__ = 'hans.ekkehard.plesser@nmbu.no'
 
 
 import pytest
-import pandas
 import glob
 import os
 import os.path

@@ -123,6 +123,7 @@ class Tile:
         pass
 
     def can_migrate(self, animal):
+        # return True
         animal.fitness_update()
         return random() < animal.phi * animal.params['mu']
 
