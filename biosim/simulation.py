@@ -45,6 +45,12 @@ class BioSim:
 
     @staticmethod
     def set_animal_parameters(species, params):
+        """
+        Adds new parameters to de different animal classes
+        :param species: string
+        :param params: dictionary
+        :return: None
+        """
         if species == "Herbivore":
             Herbivore.set_parameters(params)
         elif species == "Carnivore":
@@ -52,12 +58,23 @@ class BioSim:
 
     @staticmethod
     def set_landscape_parameters(lscape, params):
+        """
+        Changes the parameters of Highland or Lowland tiles
+        :param lscape: stirng
+        :param params: dictionary
+        :return: none
+        """
         if lscape == "L":
             Lowland.set_parameters(params)
         elif lscape == "H":
             Highland.set_parameters(params)
 
     def add_population(self, population):
+        """
+        Adds the animal populatinon to the correct tile or tiles 
+        :param population: list of dictionary
+        :return: none
+        """
         self.island.adding_animals(population)
 
     @property
@@ -81,7 +98,11 @@ class BioSim:
 
     @property
     def num_animals_per_species(self):
-
+        """
+        Calculates the total number of animals, and both herbivore and carnivore
+        :return: Dictionary
+            whit the number of carnivore and herbivore on the island
+        """
         herb_total = sum(sum(self.animals_in_tile['Herbivore']))
         carn_total = sum(sum(self.animals_in_tile['Carnivore']))
 
@@ -90,6 +111,10 @@ class BioSim:
         return {'Herbivore': herb_total, 'Carnivore': carn_total}
 
     def fitness_list(self):
+        """
+        Mankes a list of all the fitness values on the island
+        :return: Dictionary
+        """
         herb_lt = [herb.phi for tile_row in self.island.tiles_lists for
                    tile in tile_row for herb in tile.herb]
         carn_lt = [carn.phi for tile_row in self.island.tiles_lists for
@@ -98,7 +123,10 @@ class BioSim:
         return {'Herbivore': herb_lt, 'Carnivore': carn_lt}
 
     def age_list(self):
-
+        """
+        Makes a list of the age of all the animals on the island and saves it in a dictionary
+        :return: dictionary
+        """
         herb_lt = [herb.a for tile_row in self.island.tiles_lists for
                    tile in tile_row for herb in tile.herb]
         carn_lt = [carn.a for tile_row in self.island.tiles_lists for
@@ -106,7 +134,10 @@ class BioSim:
         return {'Herbivore': herb_lt, 'Carnivore': carn_lt}
 
     def weight_list(self):
-
+        """
+        Makes a list of the weight of all the animalis on the island and saves in a dictionary
+        :return: dictionary
+        """
         herb_lt = [herb.w for tile_row in self.island.tiles_lists for
                    tile in tile_row for herb in tile.herb]
         carn_lt = [carn.w for tile_row in self.island.tiles_lists for
@@ -114,6 +145,10 @@ class BioSim:
         return {'Herbivore': herb_lt, 'Carnivore': carn_lt}
 
     def take_screenshot(self):
+        """
+        Captures a screenshot of the simulation window for logging
+        :return: none
+        """
         str_n = str(self.img_name)
         str_n = str_n.zfill(5)
         string_ = "_"
