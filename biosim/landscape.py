@@ -9,7 +9,7 @@ __email__ = ''
 
 
 from biosim.animal import *
-from random import sample, choice
+from random import sample
 
 
 class Tile:
@@ -45,7 +45,7 @@ class Tile:
 
     def birth(self):
         """
-        Checks all the animals in one tile and determent if they should give birth
+        Checks all the animals in one tile and determines if they give birth.
         :return: none
         """
         newborn_herbs = []
@@ -118,22 +118,6 @@ class Tile:
         animal.fitness_update()
         return random() < animal.phi * animal.params['mu']
 
-    def migrate_direction(self):
-        animal_list = []
-
-        for ind in self.herb:
-            animal_list.append(ind.migrate_prob())
-
-        for ind in self.carn:
-            animal_list.append(ind.migrate_prob())
-
-        move_pop = {'move_from': self.grid_pos, 'animals': animal_list}
-
-        return move_pop
-
-    def move(self):
-        self.has_moved = True
-
 
 class Highland(Tile):
 
@@ -181,28 +165,3 @@ class Water(Tile):
 
     def update_fodder_amount(self):
         self.fodder = 0
-
-
-if __name__ == '__main__':
-    island = Island("WWWW\nWLHW\nWLDW\nWWWW")
-
-    ani_pop = []
-    for imd in range(150):
-        ani_pop.append({'species': 'Herbivore', 'age': 1, 'weight': 10.})
-
-    for imd in range(20):
-        ani_pop.append({'species': 'Carnivore', 'age': 1, 'weight': 10.})
-
-    island.adding_animals([{'loc': (2, 2), 'pop': ani_pop}])
-
-    year = 0
-    for i in range(1000):
-        print("Year: " + str(year))
-        island.tile_update()
-        for tile_row in island.tiles_lists:
-            for tile in tile_row:
-                if tile.can_move:
-                    print("Tile: " + str(tile.grid_pos))
-                    print("Carn: " + str(tile.carn.__len__()))
-                    print("Herb: " + str(tile.herb.__len__()))
-        year += 1
