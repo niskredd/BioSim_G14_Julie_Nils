@@ -104,14 +104,6 @@ class Tile:
                     if amount_eaten >= carn.params['F']:
                         break
 
-    def animal_ageing(self):
-        """
-        Adds one year to all animals
-        :return: none
-        """
-        for n in self.herb:
-            n.age_update()
-
     def animal_update(self): # See comment on update status
         for n in self.herb:
             n.update_status()

@@ -88,34 +88,90 @@ class TestTile:
             tile.birth()
         assert tile.herb.__len__() < tile.carn.__len__()
 
-    def test_death_depends_on_death_prob(self, create_tile):
+    def test_death_depends_on_death_prob_and_weight(self, create_tile):
         tile = create_tile
-        for i in range(10):
-            tile.fauna('Herbivore', 5, 0)
-            tile.fauna('Carnivore', 5, 0)
-        initial_num_animals = tile.carn.__len__() + tile.herb.__len__()
+        tile.adding_animal([{'species': 'Herbivore', 'age': 3, 'weight': 0},
+                          {'species': 'Carnivore', 'age': 1, 'weight': 0}])
         tile.death()
         assert tile.carn.__len__() + tile.herb.__len__() == 0
 
-    #def test_death_removes_animals_
+    def test_death_removes_herbivores_from_right_list(self, create_tile):
+        tile = create_tile
+        tile.adding_animal([{'species': 'Herbivore', 'age': 3, 'weight': 0}])
+        initial_herbivores = tile.herb.__len__()
+        tile.death()
+        assert tile.herb.__len__() < initial_herbivores
 
-    def test_feed_animals(self, create_tile):
-        for i in range(10):
-            create_tile.fauna("Herbivore", 5, 20)
+    def test_death_removes_carnivores_from_right_list(self, create_tile):
+        tile = create_tile
+        tile.adding_animal([{'species': 'Carnivore', 'age': 3, 'weight': 0}])
+        initial_carnivores = tile.carn.__len__()
+        tile.death()
+        assert tile.carn.__len__() < initial_carnivores
 
-        create_tile.fodder = 19 * 10
+    def test_feed_animals_increases_herb_fitness_and_weight(self, create_tile):
+        tile = create_tile
+        tile.adding_animal([{'species': 'Herbivore', 'age': 3, 'weight': 10},
+                            {'species': 'Herbivore', 'age': 3, 'weight': 10},
+                            {'species': 'Herbivore', 'age': 3, 'weight': 10},
+                            {'species': 'Herbivore', 'age': 3, 'weight': 10},
+                            {'species': 'Herbivore', 'age': 3, 'weight': 10}
+                            ])
+        sum_w_herb, sum_phi_herb = 0.0, 0.0
+        for herb in tile.herb:
+            sum_w_herb += herb.w
+            sum_phi_herb += herb.phi
+        initial_avg_phi_herb = sum_phi_herb/tile.herb.__len__()
+        initial_avg_w_herb = sum_w_herb/tile.herb.__len__()
 
-        create_tile.feed_animals()
-        for ind in create_tile.herb:
-            ind.update_status()
+        tile.feed_animals()
 
-        avg_w, avg_phi = 0.0, 0.0
-        for ind in create_tile.herb:
-            avg_w += ind.w
-            avg_phi += ind.phi
+        sum_w_herb = 0
+        sum_phi_herb = 0
+        for herb in tile.herb:
+            sum_w_herb += herb.w
+            sum_phi_herb += herb.phi
+        avg_phi_herb = sum_phi_herb/tile.herb.__len__()
+        avg_w_herb = sum_w_herb/tile.herb.__len__()
 
-        avg_w = avg_w / 20.0
-        avg_phi = avg_phi / 20.0
+        assert (avg_phi_herb, avg_w_herb) > \
+               (initial_avg_phi_herb, initial_avg_w_herb)
 
-        assert avg_phi == pytest.approx(0.75)
-        assert avg_w == pytest.approx(21)
+    def test_feed_animals_less_fit_herbs_are_killed_first(self, create_tile):
+        tile = create_tile
+        tile.adding_animal([{'species': 'Carnivore', 'age': 3, 'weight': 30},
+                            {'species': 'Herbivore', 'age': 3, 'weight': 1},
+                            {'species': 'Herbivore', 'age': 3, 'weight': 1},
+                            {'species': 'Herbivore', 'age': 3, 'weight': 1},
+                            {'species': 'Herbivore', 'age': 3, 'weight': 1},
+                            {'species': 'Herbivore', 'age': 3, 'weight': 30}
+                            ])
+        sum_phi_herb = 0
+        for herb in tile.herb:
+            sum_phi_herb += herb.phi
+        initial_avg_phi_herb = sum_phi_herb/tile.herb.__len__()
+
+        tile.feed_animals()
+
+        sum_phi_herb = 0
+        for herb in tile.herb:
+            sum_phi_herb += herb.phi
+        avg_phi_herb = sum_phi_herb/tile.herb.__len__()
+
+        assert avg_phi_herb > initial_avg_phi_herb
+
+    def test_feed_animals_fittest_carnivores_eat_first(self, create_tile):
+        tile = create_tile
+        tile.adding_animal([{'species': 'Carnivore', 'age': 70, 'weight': 3},
+                            {'species': 'Carnivore', 'age': 3, 'weight': 40},
+                            {'species': 'Herbivore', 'age': 70, 'weight': 15},
+                            ])
+        tile.animal_update()
+        for _ in range(30):
+            tile.feed_animals()
+
+        assert tile.herb.__len__() == 0
+        assert tile.carn[1].w > 40
+        assert tile.carn[0].w < 3
+
+    def test_animal_ageing
