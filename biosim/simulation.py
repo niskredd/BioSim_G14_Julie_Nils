@@ -227,10 +227,10 @@ if __name__ == "__main__":
     for i in range(50):
         carn_list.append({'species': 'Carnivore', 'age': 1, 'weight': 10.})
 
-    pop = [{'loc': (2, 2),
+    pop = [{'loc': (3, 2),
            'pop': herb_list}]
 
-    pop2 = [{'loc': (2, 2),
+    pop2 = [{'loc': (3, 2),
             'pop': carn_list}]
 
     geogr = "WWWWWWWWWWWWWWWWWWWWW\n" \
@@ -262,8 +262,8 @@ if __name__ == "__main__":
            "WWWWWWWWWWWW"
 
     sim = BioSim(geogr, pop)
-    sim.simulate(num_years=100, vis_years=10, img_years=10)
+    sim.simulate(num_years=100, vis_years=1, img_years=1)
     sim.add_population(pop2)
-    sim.simulate(num_years=400, vis_years=10, img_years=10)
+    sim.simulate(num_years=400, vis_years=1, img_years=1)
 
     print("--- %s seconds ---" % (time.time() - start_time))
