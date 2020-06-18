@@ -87,22 +87,24 @@ class Tile:
     def feed_animals(self):
         herbs = sample(self.herb, self.herb.__len__())
         for herb in herbs:
-            self.fodder -= herb.feed(self.fodder)
-            herb.fitness_update()
+            if not herb.has_moved:
+                self.fodder -= herb.feed(self.fodder)
+                herb.fitness_update()
 
         carns = sorted(self.carn, key=lambda x: x.phi, reverse=True)
 
         amount_eaten = 0
 
         for carn in carns:
-            herbs = sorted(self.herb, key=lambda x: x.phi)
-            for herb in herbs:
-                if carn.kill_herbivore(herb):
-                    self.herb.remove(herb)
-                    amount_eaten += carn.feed(herb.w)
-                    carn.fitness_update()
-                    if amount_eaten >= carn.params['F']:
-                        break
+            if not carn.has_moved:
+                herbs = sorted(self.herb, key=lambda x: x.phi)
+                for herb in herbs:
+                    if carn.kill_herbivore(herb):
+                        self.herb.remove(herb)
+                        amount_eaten += carn.feed(herb.w)
+                        carn.fitness_update()
+                        if amount_eaten >= carn.params['F']:
+                            break
 
     def animal_update(self):
         for n in self.herb:
