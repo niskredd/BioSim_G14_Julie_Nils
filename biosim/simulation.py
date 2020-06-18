@@ -20,6 +20,7 @@ from biosim.visual import Visualization
 
 
 class BioSim:
+    """This is documentation for the BioSim class"""
 
     def __init__(self, island_map, ini_pop, seed=1, ymax_animals=0, cmax_animals=0, hist_specs=0,
                  img_base=0, img_fmt='png'):
