@@ -92,15 +92,19 @@ class TestIsland:
         assert island.tiles_lists[1][1].herb.__len__() == 1
 
     def test_migrate_removes_animals_from_old_tile(self, mocker):
+        # This test doesn't pass. We think there's something about the way
+        # 'mocker' is used, but we did not get the time to figure it out.
         island = Island('WWWWW\nWLLLW\nWLLLW\nWLLLW\nWWWWW')
         population = [
             {'loc': (3, 3),
-             'pop': [{'species': 'Carnivore', 'age': 3, 'weight': 44}]}
+             'pop': [{'species': 'Carnivore', 'age': 3, 'weight': 44},
+                     {'species': 'Herbivore', 'age': 1, 'weight': 15}]}
         ]
         island.adding_animals(population)
         mocker.patch('random.random', return_value=0)
         island.migrate(island.tiles_lists[2][2])
         assert island.tiles_lists[2][2].carn.__len__() == 0
+        assert island.tiles_lists[2][2].herb.__len__() == 0
 
 
 
