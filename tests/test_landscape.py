@@ -175,6 +175,14 @@ class TestTile:
         assert tile.carn[1].w > 40
         assert tile.carn[0].w < 3
 
+    def test_feed_animals_only_if_animal_has_not_moved_yet(self, create_tile):
+        tile = create_tile
+        tile.adding_animal([{'species': 'Carnivore', 'age': 70, 'weight': 3}])
+        tile.carn[0].has_moved = True
+        tile.feed_animals()
+        assert tile.carn[0].w == 3
+
+
     def test_animal_update(self, create_tile):
         tile = create_tile
         tile.fauna('Herbivore', 1, 15)
