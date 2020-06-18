@@ -9,7 +9,7 @@ __email__ = ''
 
 
 from biosim.animal import *
-from random import sample, choice
+from random import sample, random
 
 
 class Tile:
@@ -45,7 +45,7 @@ class Tile:
 
     def birth(self):
         """
-        Checks all the animals in one tile and determent if they should give birth
+        Checks all the animals in one tile and determines if they give birth.
         :return: none
         """
         newborn_herbs = []
@@ -106,15 +106,7 @@ class Tile:
                         if amount_eaten >= carn.params['F']:
                             break
 
-    def animal_ageing(self):
-        """
-        Adds one year to all animals
-        :return: none
-        """
-        for n in self.herb:
-            n.age_update()
-
-    def animal_update(self): # See comment on update status
+    def animal_update(self):
         for n in self.herb:
             n.update_status()
 
@@ -128,22 +120,6 @@ class Tile:
         # return True
         animal.fitness_update()
         return random() < animal.phi * animal.params['mu']
-
-    def migrate_direction(self):
-        animal_list = []
-
-        for ind in self.herb:
-            animal_list.append(ind.migrate_prob())
-
-        for ind in self.carn:
-            animal_list.append(ind.migrate_prob())
-
-        move_pop = {'move_from': self.grid_pos, 'animals': animal_list}
-
-        return move_pop
-
-    def move(self):
-        self.has_moved = True
 
 
 class Highland(Tile):
