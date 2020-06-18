@@ -9,24 +9,25 @@ __author__ = 'Julie Martin, Nils Skreddernes'
 __email__ = ''
 
 from biosim.landscape import *
+from random import choice
 
 
 class Island:
 
-    def __init__(self, map):
+    def __init__(self, map_string):
         """
         Uses the data from the constructor to create the island, the string is
         converted to a list of tiles
-        :param map: string
+        :param map_string: string
         """
-        self.map_test(map)
+        self.map_test(map_string)
 
         self.tiles_lists = [
-            [] * map.split("\n").__len__() for
-            _ in range(map.split("\n").__len__())]
+            [] * map_string.split("\n").__len__() for
+            _ in range(map_string.split("\n").__len__())]
 
         y = 0
-        for line in map.split("\n"):
+        for line in map_string.split("\n"):
             x = 0
             for letter in line:
                 if letter == "W":
@@ -38,46 +39,48 @@ class Island:
                 elif letter == "H":
                     self.tiles_lists[y].append(Highland((x + 1, y + 1)))
                 else:
-                    raise ValueError
+                    raise ValueError('Not valid landscape type')
                 x += 1
             y += 1
 
         self.size_test()
 
-    def map_test(self, map):
+    def map_test(self, map_string):
         """
         Checks if the map has a water boarder all the way around
-        :param map: string
+        :param map_string: string
         :return: none
         """
-        lines = map.split("\n")
+        lines = map_string.split("\n")
         for letter in lines[0]:
             if not letter == 'W':
-                raise ValueError
+                raise ValueError('The island is not surrounded by water')
 
         for letter in lines[lines.__len__() - 1]:
             if not letter == 'W':
-                raise ValueError
+                raise ValueError('The island is not surrounded by water')
 
         for line in lines:
             if not line[0] == 'W' or not line[line.__len__() - 1] == 'W':
-                raise ValueError
+                raise ValueError('The island is not surrounded by water')
 
     def size_test(self):
         """
-        tests if the lines on the map is the same lenght
+        tests if the lines on the map are of the same length
         :return: None
         """
         tiles = iter(self.tiles_lists)
         length_row = next(tiles).__len__()
         if not all(len(tile) == length_row for tile in tiles):
-            raise ValueError
+            raise ValueError('The map rows are not of the same length')
 
     def rgb_for_map(self, input_raw_string):
         """
         Takes the string of the map and adds color to the map
         :param input_raw_string: string
-        :return: list of colors
+                                    map, specifying the tile landscapes
+        :return: list
+                    map tile colors
         """
         rgb_value = {'W': (0.0, 0.0, 1.0),  # blue
                      'L': (0.0, 0.6, 0.0),  # dark green
@@ -85,7 +88,7 @@ class Island:
                      'D': (1.0, 1.0, 0.5)}  # light yellow
 
         map_rgb = [[rgb_value[column] for column in row]
-                    for row in input_raw_string.splitlines()]
+                   for row in input_raw_string.splitlines()]
 
         return map_rgb
 
@@ -95,8 +98,8 @@ class Island:
         all animals, both species.
 
         :param population: list
-                            containing both the tile location (loc) and its
-                            respective population (pop).
+                            list of dictionaries containing both the tile
+                            location (loc) and its respective population (pop).
         :return: None
         """
 
@@ -152,8 +155,8 @@ class Island:
 
     def migrate(self, tile):
         """
-        Handles the migration and moves animals between tiles, this also makes sure no one moves
-        twice.
+        Handles the migration and moves animals between tiles, this also makes
+        sure no one moves twice.
         :param tile: dict
                         dictionary representing a tile with its respective
                         population.
