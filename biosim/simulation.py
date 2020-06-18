@@ -7,20 +7,41 @@
 __author__ = 'Julie Martin, Nils Skreddernes'
 __email__ = ''
 
-import numpy as np
+import os
+import time
+
 import matplotlib.pyplot as plt
-from biosim.island import Island
+import numpy as np
+
 from biosim.animal import Herbivore, Carnivore
+from biosim.island import Island
 from biosim.landscape import Lowland, Highland
 from biosim.visual import Visualization
-import time
-import os, glob
 
 
 class BioSim:
 
     def __init__(self, island_map, ini_pop, seed=1, ymax_animals=0, cmax_animals=0, hist_specs=0,
                  img_base=0, img_fmt='png'):
+        """
+        The BioSim class controls the entire simulation and all its attributes.
+        :param island_map: string
+            A string that contains the layout of the island
+        :param ini_pop: dictionary
+            Contains the population that starts on the island and the start location.
+        :param seed: int
+            Contains a random seed, this is not implemented due to time restrains
+        :param ymax_animals: int
+            Not implemented due to time restrains
+        :param cmax_animals: int
+            Not implemented due to time restrains
+        :param hist_specs: int
+            Not implemented due to time restrains
+        :param img_base: int
+            default store location
+        :param img_fmt: string
+            The file type that the images are being stored as.
+        """
         self.island_map = island_map
         self.ini_pop = ini_pop
         self.seed = seed
@@ -29,7 +50,10 @@ class BioSim:
         self.hist_specs = hist_specs
         self.island = Island(island_map)
 
-        self._img_base = img_base
+        if img_base == 0:
+            self._img_base = os.path.join('.', 'images\\')
+        else:
+            self._img_base = img_base
         self._img_fmt = img_fmt
         self._img_ctr = 0
 
@@ -37,13 +61,11 @@ class BioSim:
 
         # call the add animals here to add animals to the island
         self.viual = Visualization()
-        self.viual.set_plots_for_first_time(self.rgb_map)
         self.rgb_map = self.island.rgb_for_map(island_map)
+        self.viual.set_plots_for_first_time(self.rgb_map)
 
         self.year = 0
         self.num_animals = 0
-
-        self.path = os.path.join('.', 'images\\')
 
     @staticmethod
     def set_animal_parameters(species, params):
@@ -81,6 +103,11 @@ class BioSim:
 
     @property
     def animals_in_tile(self):
+        """
+        This method creates a dictionary with two matrix's that contains information on how
+        many animals of each species in every tile on the island.
+        :return: dictionary
+        """
         row_num = self.island.tiles_lists.__len__()
         col_num = self.island.tiles_lists[0].__len__()
 
