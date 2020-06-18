@@ -109,7 +109,9 @@ class Island:
         elif population.__len__() > 1:
             for one_location_dict in population:
                 (x, y) = one_location_dict['loc']
-                self.tiles_lists[x-1][y-1].adding_animal(one_location_dict['pop'])
+                self.tiles_lists[x-1][y-1].adding_animal(
+                    one_location_dict['pop']
+                )
 
     def tile_update(self):
         """

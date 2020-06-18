@@ -37,17 +37,58 @@ class TestIsland:
     def test_adding_animals(self, create_island):
         island = create_island
         population = [
-            {'loc': (1,1),
+            {'loc': (2, 2),
              'pop': [{'species': 'Herbivore', 'age': 1, 'weight': 15}]}
         ]
-        create_island.adding_animals(population)
-        isinstance(create_island.tiles_lists[0][0].herb[0], Herbivore)
-        assert create_island.tiles_lists[0][0].herb[0].a == 1
-        assert create_island.tiles_lists[0][0].herb[0].w == 15
+        island.adding_animals(population)
+        isinstance(island.tiles_lists[1][1].herb[0], Herbivore)
+        assert island.tiles_lists[1][1].herb[0].a == 1
+        assert island.tiles_lists[1][1].herb[0].w == 15
 
     def test_tile_update(self, create_island):
         island = create_island
+        population = [
+            {'loc': (2, 2),
+             'pop': [{'species': 'Herbivore', 'age': 1, 'weight': 15}]}
+        ]
+        island.adding_animals(population)
+        island.tile_update()
+        assert island.tiles_lists[1][1].herb[0].a == 2
+        assert island.tiles_lists[1][1].herb[0].has_moved is False
 
+    def test_tile_neighbours_are_right_types(self, create_island):
+        island = create_island
+        island_neighbours = island.tile_neighbours((2, 2))
+        assert isinstance(island_neighbours[0], Water)
+        assert isinstance(island_neighbours[1], Water)
+        assert isinstance(island_neighbours[2], Water)
+        assert isinstance(island_neighbours[3], Water)
+
+    def test_tile_neighbours_for_corner_tile(self, create_island):
+        island = create_island
+        island_neighbours = island.tile_neighbours((1, 1))
+        assert island_neighbours.__len__() == 2
+
+    def test_migrate_not_when_animal_already_moved(self):
+        island = Island('WWWWW\nWLLLW\nWLLLW\nWLLLW\nWWWWW')
+        population = [
+            {'loc': (3, 3),
+             'pop': [{'species': 'Herbivore', 'age': 1, 'weight': 15}]}
+        ]
+        island.adding_animals(population)
+        island.tiles_lists[2][2].herb[0].has_moved = True
+        island.migrate(island.tiles_lists[2][2])
+        assert island.tiles_lists[2][2].herb.__len__() == 1
+
+    def test_migrate_not_when_surrounded_by_water(self, create_island):
+        island = create_island
+        population = [
+            {'loc': (2, 2),
+             'pop': [{'species': 'Herbivore', 'age': 1, 'weight': 15}]}
+        ]
+        island.adding_animals(population)
+        island.migrate(island.tiles_lists[1][1])
+        assert island.tiles_lists[1][1].herb.__len__() == 1
 
 
 
