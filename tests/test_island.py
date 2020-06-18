@@ -7,7 +7,7 @@ class TestIsland:
 
     @pytest.fixture()
     def create_island(self):
-        return Island("WWW\nWDW\nWWW")
+        return Island("WWW\nWHW\nWWW")
 
     def test_tiles_list(self, create_island):
         island = create_island
