@@ -30,7 +30,8 @@ class Visualization:
         self.weight_plot = self.fig.add_subplot(6, 3, 18)
         self.weight_plot.title.set_text('Weight Histogram')
 
-        # # The HeatMaps
+        """
+        Heat maps setup                 """
         self.herb_heatmap_axis = self.fig.add_axes([0.1, 0.28, 0.35, 0.3])  # llx, lly, w, h
         self.herb_axis = None
         self.herb_heatmap_axis.title.set_text('Herb Heatmap')
@@ -43,7 +44,8 @@ class Visualization:
         self.carn_heatmap_axis.set_yticklabels([])
         self.carn_heatmap_axis.set_xticklabels([])
 
-        # The island map
+        """
+        Island map set up only called once in the beginning """
         self.island_axis =  self.fig.add_axes([0.1, 0.65, 0.35, 0.3])  # llx, lly, w, h
         self.island_axis.title.set_text('Island Map')
         self.island_axis.set_yticklabels([])

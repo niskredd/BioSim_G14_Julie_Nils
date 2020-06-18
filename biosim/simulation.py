@@ -261,7 +261,7 @@ if __name__ == "__main__":
            "WLLLDDDDDLLW\n" \
            "WWWWWWWWWWWW"
 
-    sim = BioSim(map3, pop)
+    sim = BioSim(geogr, pop)
     sim.simulate(num_years=100, vis_years=10, img_years=10)
     sim.add_population(pop2)
     sim.simulate(num_years=400, vis_years=10, img_years=10)
