@@ -15,5 +15,18 @@ class TestIsland:
         assert isinstance(island.tiles_lists[0][0], Water)
 
     def test_map_test(self, create_island):
-        create_island.map_test("")
+        tile = create_island
+        with pytest.raises(ValueError):
+            assert tile.map_test("DWWWHWWWW")
+            assert tile.map_test("WWWDWWWWW")
+            assert tile.map_test("WWWWWDWWW")
+
+    def test_size_test(self):
+        with pytest.raises(ValueError):
+            assert Island("WWWWDDDWWW").size_test()
+
+
+
+
+
 
