@@ -1,5 +1,6 @@
 
 import pytest
+from pytest_mock import *
 from biosim.island import Island, Water, Herbivore
 
 
@@ -89,6 +90,18 @@ class TestIsland:
         island.adding_animals(population)
         island.migrate(island.tiles_lists[1][1])
         assert island.tiles_lists[1][1].herb.__len__() == 1
+
+    def test_migrate_removes_animals_from_old_tile(self, mocker):
+        island = Island('WWWWW\nWLLLW\nWLLLW\nWLLLW\nWWWWW')
+        population = [
+            {'loc': (3, 3),
+             'pop': [{'species': 'Carnivore', 'age': 3, 'weight': 44}]}
+        ]
+        island.adding_animals(population)
+        mocker.patch('random.random', return_value=0)
+        island.migrate(island.tiles_lists[2][2])
+        assert island.tiles_lists[2][2].carn.__len__() == 0
+
 
 
 

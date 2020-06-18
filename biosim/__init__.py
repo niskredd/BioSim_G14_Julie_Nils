@@ -5,4 +5,4 @@
 """
 
 __author__ = 'Julie Martin, Nils Skreddernes'
-__email__ = ''
+__email__ = 'julimart@nmbu.no, niskredd@nmbu.no'

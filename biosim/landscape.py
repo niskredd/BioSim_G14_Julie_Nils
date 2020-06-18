@@ -9,7 +9,7 @@ __email__ = ''
 
 
 from biosim.animal import *
-from random import sample
+from random import sample, random
 
 
 class Tile:
