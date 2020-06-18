@@ -12,6 +12,7 @@ from biosim.landscape import *
 
 
 class Island:
+    """This is the documentation for Island class"""
 
     def __init__(self, map):
         """
