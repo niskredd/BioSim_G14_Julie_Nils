@@ -44,7 +44,7 @@ class Animal:
     def yearly_weight_update(self):
         self.w -= self.w * self.params['eta']
 
-    def weight_decrease_birth(self, newborn_weight): # See comment from landscape
+    def weight_decrease_birth(self, newborn_weight):  # See comment from landscape
         return newborn_weight * self.params['xi']
 
     def birth_prob(self, num_animals):
